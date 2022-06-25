@@ -10,7 +10,7 @@ _G['debug']=false
 function Config()
   M.base_options = nil
   M.config = function()
-    local key_cfg = require("wez_keys")(M)
+    local key_cfg = require("wez_key_new")(M)
 
     local options_static = require("lib.wez_static_opt")
     local options_dynamic = require('lib.wez_dynamic_opt')
