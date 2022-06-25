@@ -229,7 +229,7 @@ local function make_bitop_uncached(t, m)
     local res,p = 0,1
     while a ~= 0 and b ~= 0 do
       local am, bm = a%m, b%m
-      print(string.format("%s, %s, %s, %s", t, am, bm, p))
+      -- print(string.format("%s, %s, %s, %s", t, am, bm, p))
       local tam = t[am] or nil
       local tambm = 0
       if tam then

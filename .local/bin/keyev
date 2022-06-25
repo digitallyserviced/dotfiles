@@ -1,0 +1,3 @@
+#!/bin/zsh 
+
+stdbuf -i0 -o0 -e0 xkbcli interactive-evdev

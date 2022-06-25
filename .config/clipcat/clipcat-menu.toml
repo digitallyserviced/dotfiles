@@ -1,0 +1,16 @@
+server_host = '127.0.0.1' # host address of clipcat gRPC server
+server_port = 45045       # port number of clipcat gRPC server
+finder = 'custom'           # the default finder to invoke when no "--finder=<finder>" option provided
+
+[rofi]                    # options for "rofi"
+line_length = 100         # length of line
+menu_length = 30          # length of menu
+
+[dmenu]                   # options for "dmenu"
+line_length = 100         # length of line
+menu_length = 30          # length of menu
+
+[custom_finder]           # customize your finder
+# program = 'fzf-clipcat'           # external program name
+program = 'sk'           # external program name
+args = []                 # arguments for calling external programii

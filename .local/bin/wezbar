@@ -1,0 +1,259 @@
+#!/bin/zsh
+emulate -L zsh
+# NAME — DESCRIPTION...
+
+  source ~/.config/zsh/zsh.d/functions.zsh
+# logger -s hi there
+THISSCRIPT=$(realpath $0)
+if (( ZDEBUG )); then
+  setopt xtrace
+  # trap 'log::dump' DEBUG
+  # emulate -L zsh -o err_return -o no_unset -o xtrace
+  print -rn -- $'\e]0;ZDEBUG\a' >$TTY
+  # export PROFILE_STARTUP=true
+fi
+
+usage() {
+  print "Usage: foo subcommand
+  no arguments launches wezterm bar config collapsed
+  subcomands
+  expand         expand wezterm bar
+  collapse       collapse wezterm bar
+  runline        focus a collapsed wezterm bar
+Example:
+  % $0 expand
+"
+  exit 1
+}
+typeset -ga reply=()
+# typeset -gA reply2=()
+typeset -g REPLY=""
+typeset -gA xdoopts=(
+  ["windowsize"]="--sync --usehints %s %s %s" 
+  ["windowmove"]="--sync %s %d %d" 
+  ["windowactivate"]="--sync %s"
+  ["windowfocus"]="--sync %s"
+  ["windowraise"]="--sync %s"
+  ["set_window"]="--overrideredirect %2\$i %1\$s" 
+  ["windowunmap"]="--sync %s"
+  ["windowmap"]="--sync %s"
+  ["sleep"]=" %s"
+)
+
+typeset -gA window_states=(
+             MODAL 0
+            STICKY 0
+    MAXIMIZED_VERT 0
+    MAXIMIZED_HORZ 0
+             ABOVE 0
+             BELOW 0
+      SKIP_TASKBAR 0
+        SKIP_PAGER 0
+        FULLSCREEN 0
+            HIDDEN 0
+            SHADED 0
+ DEMANDS_ATTENTION 0
+)
+
+typeset -a addrem=("--remove" "--add")
+typeset -ga wezbarcmd=(wezterm --config-file "$HOME/.config/wezterm/wezterm_bar.lua" start --class wezbar --position "0,0")
+typeset -ga xdotool=(xdotool)
+typeset -ga wininfo=(getwindowgeometry --shell)
+typeset -ga wezbar=(${xdotool[@]} search --sync --class wezbar)
+typeset -ga wezbarinfo=(${wezbar[@]} ${wininfo[@]})
+typeset -ga wezbarpid=(${wezbar[@]} getwindowpid)
+typeset -ga currentwininfo=(${xdotool[@]} getwindowfocus -f ${wininfo[@]})
+
+
+getxdowinstate(){
+  typeset -a states=(${@:1})
+  typeset -A allstates=(${(kv)window_states[@]})
+  while [[ ${#states} -gt 0 ]]; do
+    local state=${states[1]}
+    allstates[$state]=1
+    shift states
+  done
+  
+  typeset -a windowstate=()
+  
+  for k v in ${(kv)allstates[@]}
+  do
+    local str=""
+    printf -v str "%s %s" "${addrem[$v+1]}" "${k}"
+    windowstate+="${str}"
+  done
+  reply=() 
+  reply+="windowstate"
+  reply+="${windowstate[@]}"
+}
+
+getxdoopt(){
+  local opt=$1
+  # [[ -n "${xdoopts[$opt]}" ]] || return 1 
+  reply+="$opt" 
+  reply+="${xdoopts[$opt]}"
+}
+
+makexdoopt(){
+  local opt 
+  typeset -a wid=() params=() opts=()
+  zparseopts -a opts o:=opt w::=wid -a params p+:=params
+  
+  print -v opt ${opt[@]//-o} 
+  print -v params ${params[@]//-p}
+  
+  # printf "%s %s %s" ${opt} ${wid} ${params}
+  [[ ! -n "${wid}" ]] && wid="%1" || wid=${wid/-w/}
+  opts=($(getxdoopt $opt && echo $reply))
+  typeset format="${opts[@]}"
+  printf -v reply "${format}" ${wid} ${(s. .)params}
+}
+
+runline (){
+  typeset -a col=()
+  
+  col=(xdotool search --sync --class wezbar) 
+  col+=$(makexdoopt -o "set_window" -p "1" && echo ${reply[@]})
+  col+=$(makexdoopt -o "windowunmap" && echo ${reply[@]})
+  col+=$(makexdoopt -o "windowmap" && echo ${reply[@]})
+  col+=$(getxdowinstate MODAL STICKY BELOW SKIP_PAGER SKIP_TASKBAR && echo ${reply[@]})
+  col+=$(makexdoopt -o "windowmove" -p "0" -p "0" && echo ${reply[@]})
+  col+=$(makexdoopt -o "windowsize" -p "100%" -p "6%" && echo ${reply[@]})
+  col+=$(makexdoopt -o "windowfocus" && echo ${reply[@]})
+  
+  reply=(${col[@]})
+  reply=(${(j. .)reply[@]})
+  # reply3=(${wezbar[@]} behave %@ blur sleep 1 )
+}
+
+collapse (){
+  typeset -a col=()
+  
+  col=(xdotool search --sync --class wezbar) 
+  col+=$(makexdoopt -o "set_window" -p "1" && echo ${reply[@]})
+  col+=$(makexdoopt -o "windowunmap" && echo ${reply[@]})
+  col+=$(makexdoopt -o "windowmap" && echo ${reply[@]})
+  col+=$(getxdowinstate MODAL STICKY BELOW SKIP_PAGER SKIP_TASKBAR && echo ${reply[@]})
+  col+=$(makexdoopt -o "windowmove" -p "0" -p "0" && echo ${reply[@]})
+  col+=$(makexdoopt -o "windowsize" -p "100%" -p "6%" && echo ${reply[@]})
+  
+  reply=(${col[@]})
+  reply=(${(j. .)reply[@]})
+  # reply3=(${wezbar[@]} behave %@ blur sleep 1 )
+}
+
+expand (){
+  typeset -a col=()
+  
+  col=(xdotool search --sync --class wezbar) 
+  col+=$(makexdoopt -o "set_window" -p "1" && echo ${reply[@]})
+  col+=$(makexdoopt -o "windowunmap" --sync && echo ${reply[@]})
+  col+=$(makexdoopt -o "windowmap" && echo ${reply[@]})
+  col+=$(getxdowinstate MODAL STICKY ABOVE SKIP_PAGER SKIP_TASKBAR && echo ${reply[@]})
+  col+=$(makexdoopt -o "windowmove" -p "0" -p "0" && echo ${reply[@]})
+  col+=$(makexdoopt -o "windowsize" -p "100%" -p "44%" && echo ${reply[@]})
+  col+=$(makexdoopt -o "windowfocus" && echo ${reply[@]})
+  
+  reply=(${col[@]})
+  reply=(${(j. .)reply[@]})
+  # reply3=(${wezbar[@]} behave %@ blur sleep 1)
+}
+
+
+get_action_collapsed (){
+  local action="$1"
+  [[ -n "${action}" && -n ${collapse[$action]} ]] || return 1
+  # actionwopts=("${action}" "${collapse[${action}]}")
+  print -v reply -f "%s %s" "${action}" ${collapse[${action}]}
+  return 0
+}
+
+startbar(){
+  : (${wezbarcmd[@]})
+  existing=(${wezbarid[@]})
+}
+
+doxdo(){
+  typeset -a actions=(${@:2})
+  local wid=$1 cmd=""
+  # cmd+="xdotool search --class wezbar  "
+  cmd+="${actions[@]}"
+  reply=$(echo $cmd)
+}
+
+sourceinfo(){
+  eval $(cat -)
+  reply2=(
+    ["WID"]=${WINDOW}
+    ["WIDTH"]=${WIDTH}
+    ["HEIGHT"]=${HEIGHT}
+    ["X"]=${X}
+    ["Y"]=${Y}
+    ["SCREEN"]=${SCREEN}
+  )
+  
+}
+
+wezbarinfo(){
+  (${wezbarinfo[@]}) | sourceinfo
+  zsh::log info "${(@kv)reply2}"
+  : ${+existing:-${reply2[WID]}}
+}
+
+
+currentwindowinfo(){
+  (${currentwininfo[@]}) | sourceinfo
+}
+
+(){
+  local prevfocus currentfocus barpid barwid bargeom barheight barx bary barscreen
+  local existed=0
+  typeset -gA reply2=()
+  typeset -ga reply=() reply3=()
+  typeset -A current=($(currentwindowinfo && echo "${(kv)reply2[@]}"))
+  trap 'echo $EXCEPTION' ZERR 
+  ## eval the output in scoped context to not mess with env vars
+  {
+    typeset -a opts=() scripts=() 
+    typeset -i 32 existing=0
+    
+    typeset -gA barinfo=($(wezbarinfo && echo ${(kv)reply2}))
+    chwb -s 0 ${barinfo[WID]}
+    while [ $# -ne 0 ]; do
+      case $1 in
+        (collapse) opts+="collapse" ;;
+        (runline) opts+="runline" ;;
+        (expand) opts+="expand" ;;
+        (reset) opts+="reset" ;;
+        (*) [[ ${#opts} = "0" ]] && usage ; exit 0 || usage ; exit 1 ;;
+      esac
+      shift
+    done
+    
+    for i in ${opts[@]};
+    do
+      typeset -a xdoargs=($(${i} && echo ${reply[@]}))
+      # echo ${xdoargs}
+      x=$(${xdoargs} && echo $?) 
+      # echo $x
+      behavior=${reply3[@]}
+      # [[ "$x" -eq "0" ]] && {
+      #   [[ -n ${behavior} ]] && {
+      #     ${behavior[@]} ; $THISSCRIPT --collapse || {
+      #       echo "failed to xdo"
+      #     } &
+      #   }
+      # }
+    done
+
+  } 
+  
+} $@ 
+# ꡀꡐꡠꡰꡱꡡꡑꡁꡂꡃꡄꡅꡆꡇꡈꡉꡊꡋꡌꡍꡎꡏꡐꡑꡒꡓꡔꡕꡖꡗꡘꡙꡚꡛꡜꡝꡞꡟꡠꡡꡢꡣꡤꡥꡦꡧꡨꡩꡪꡫꡬꡭꡮꡯꡰꡱꡲꡳ꡴꡵꡶꡷ꤰꤱꤲꤳꤴꤵꤶꤷꤸꤸꤹꤺꤻꤼꤽꤾꤿꥀꥁꥂꥃꥄꥅꥆᮄᮅ ᮇ ᮊ ᮋ ᮌ ᮍ ᮎ ᮏ ᮟ ᮞ ᮝ ᮜ ᮛ ᮚ ᮙ ᮘ ᮗ ᮖ ᮕ ᮔ ᮓ ᮒ ᮑ ᮐ ᮠᮡ᮰᮱᮲᮳᮴᮵᮶᮷᮸᮹ᮺᮻᮼᮽᮾᮿᮮᮯ᳀᳁᳂᳃᳄᳅᳆᳇🢐🢑🢒🢓🢔🢕🢖🢗🢗⸌⸍⸎⸏⸐⸑⸒⸔⸕⸪⸫⸬⸭⸮⸦⸧⸨⸩⸥⸤⸣⸢⸡⸠⹐⹑⹒⹕⹖⹗⹘⹙⹚⹛⹜⹝⹍⸺⸻⸼⸽ 
+# ⬤ ⭕ ⭘ ⬠ ⬡ ⯁ ⏣ ⎆⯂ ⌬ ⎔⎊⎊⎊ ⚸⟁⟐⌼⌻⌺⌹⌸⌷     ⍁⍂⍃⍄⍅⍆⍇⍈⍊⍋⍌⍍⍎⍏⍐⍑⍓⍔    ◍◢◣◤◥🞅🞔🞕🞖🞦🞗🞘🞙🞚🞛🞜🞝🞞🞟🞟🞠v🮤🮥
+# ︻︼︽︾︿﹀﹇﹈︵︶⌍⌎⌏⌟⌞⌝⌜
+# ᳀᳁᳂᳃᳄ ᳅ ᳆ ᳇ ᮄ ᮅ ᮆ ᮇ ᮈ ᮉ ᮊ ᮋ ᮌ ᮍ ᮎ ᮏ ᮐ ᮑ ᮒ ᮓ ᮔ ᮔ ᮕ ᮖ ᮗ ᮘ ᮙ ᮚ ᮛ ᮜ ᮝ ᮞ ᮟ ᮠᮡᮢᮣᮤᮥᮦᮧᮨᮩ᮪᮫ᮬᮭ ᮮ ᮯ ᮰ ᮱ ᮲ ᮳ 
+# ᮴ ᮵ ᮶ ᮷ ᮸ ᮹ ᮺ ᮻ ᮼ ᮽ ᮾ ᮿ 𑗊 𑗋 𑗌 𑗍 𑗎 𑗏 𑗐 𑗑 𑗒 𑗓 𑗔 𑗕 𑗖 𑗗 𑗘 ꤰ ꤱ ꤲ 
+ #   ꤳ ꤴ ꤵ ꤶ ꤷ ꤸ ꤹ ꤹꤺꤻꤼꤽꤾꤿꥀꥁꥁꥂꥃꥄꥅꥆꥇ𐇺🙹🙺🙻🙼🙽🙾🙿⑀⑀
+# ⑁⑂⑃⑄⑅⑆⑇⑈⑉⑊⌌⌍⌎⌏⌟⌞⌝⌜⚸⟁⟐
+#

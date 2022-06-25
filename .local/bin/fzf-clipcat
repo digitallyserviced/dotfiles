@@ -1,0 +1,95 @@
+#!/bin/zsh
+emulate zsh
+
+FZF_COLORS="
+--color=fg:regular:green:dim,fg+:regular:bright-green:dim
+--color=hl:regular:red:dim:bold,hl+:regular:yellow:dim:bold
+--color=bg:-1,bg+:0
+--color=pointer:#fabd2f,marker:#fe8019,spinner:#b8bb26
+--color=header:#fb4934,prompt:#b16286
+"
+FZF_FILE_PREVIEW="([[ -f {} ]] && (bat --style=numbers --color=always -- {}))"
+FZF_DIR_PREVIEW="([[ -d {} ]] && (exa -T {} | less))"
+# FZF_BIN_PREVIEW="([[ \$(file --mime-type -b {}) = *binary* ]] && (echo {} is a binary file))"
+
+export FZF_FILE_PREVIEW FZF_DIR_PREVIEW FZF_BIN_PREVIEW
+# --preview-window=':hidden,right:60%'
+
+export FZF_DEFAULT_OPTS="
+--prompt '❱ '
+--pointer '➤'
+--marker '┃'
+--cycle
+$FZF_COLORS
+--reverse --min-height 14 --ansi --info=hidden
+--bind=ctrl-s:toggle-sort
+--bind=alt-p:preview-up,alt-n:preview-down
+--bind=ctrl-k:preview-up,ctrl-j:preview-down
+--bind=ctrl-u:half-page-up,ctrl-d:half-page-down
+--bind=alt-,:first,alt-.:last,change:first"
+# --bind='?:toggle-preview,alt-w:toggle-preview-wrap'
+# --preview \"echo ($FZF_FILE_PREVIEW || $FZF_DIR_PREVIEW) | head -200\"
+# --bind='alt-a:select-all,ctrl-r:toggle-all'
+# --bind='ctrl-b:execute(bat --paging=always -f {+})'
+
+ZERODIR=$(dirname $0)
+0="${ZERO:-${${0:#$ZSH_ARGZERO}:-${(%):-%N}}}"
+0="${${(M)0:#/*}:-$PWD/$0}"
+ARGZERO=$0
+
+if (( ZDEBUG )); then
+  emulate -L zsh -o err_return -o no_unset -o xtrace
+  print -rn -- $'\e]0;ZDEBUG\a' >$TTY
+  # export PROFILE_STARTUP=true
+fi
+
+accept(){
+  # [[ $# -ge 1 ]] || return 1
+  local editor=$1
+  while read add sub file; do
+    echo $file;
+    # ${ZERODIR}/nvr $HOME/$file
+  done
+}
+local clipcatctl="/home/chris/Documents/clipcat/target/debug/clipcatctl"
+fzfs(){
+  (){
+    cat - | sort | uniq | sort 
+  } < <(${clipcatctl} list) > >(fzf_list)
+}
+
+previewer(){
+  
+  {
+    ${clipcatctl} info ${1}
+    ${clipcatctl} get ${1} 
+  } > >(grcat conf.common | bat --color=always --style "grid,snip") # 2>/dev/null
+}
+typeset -a binds=("enter:accept-non-empty" "change:first" "ctrl-space:execute(nvr {})" "ctrl-g:reload:$0 all")
+typeset -a previewer=("$ARGZERO" "previewer" '{q}' '{1}' ) bind=('--bind')
+
+fzf_list(){
+  print -v HEADER -f "Clipboard Selection"
+  local WHFZF="fzf" # ,~4,+3/2"
+  {
+    {cat /dev/stdin} | \
+      ${WHFZF} --with-nth 3 --header "${HEADER}"\
+      --tabstop=2 \
+      --delimiter=":" --nth=2.. --with-nth=2..\
+      --preview-window="down,99%,border-rounded,nofollow,nohidden,~2,+3/2"\
+      -1 --preview="${previewer}" --header-first --disabled 
+  } > >(accept nvr)
+}
+
+{
+  typeset -a cmd=()
+  LISTER=${1:-${stdinput[@]}}
+  case "$LISTER" in
+    accept) echo ${@:2} | accept nvr;
+    ;;
+  previewer) previewer ${@:2};
+    ;;
+    *)   fzfs listclips
+    ;;
+  esac
+}

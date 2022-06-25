@@ -1,0 +1,59 @@
+#!/bin/zsh
+setopt xtrace
+pix(){
+  local color="${1}"
+  print -v pixel -n -P -f "%%K{#%s} %%k" ${color} # ${chr}
+}
+
+print_txt(){
+  unsetopt xtrace
+  local -A pixarr=()
+  local chr="🮋"
+  local PREV_Y=0 OUT="$(tput sgr0)" LAST_COLOR=""
+  local -i x y r g b
+  local css=""
+  local pixel=""
+  # OIFS=${IFS}
+  # IFS=":,"
+  # read junk w h min max ctype
+  # IFS=${OIFS}
+  while read x y r g b css junk; do
+    pix $css
+    OUT+=${pixel}
+    [[ ${PREV_Y} -ne ${y} ]] && PREV_Y=$y OUT+="$(tput sgr0)\n"
+  done #  < <(cat - | tail -n +2 | tr -cs '0-9A-F\n' ' ')
+  # OUT+="$(tput sgr0)"
+  print -P -f "%b" "$OUT"
+  read -t 10 -A shit -d "#"
+  sleep 10
+}
+
+capture_and_convert(){
+  local outp="${1}"
+  local outw="${2:-50}"
+  local -a dim=($(tmux -L default display -t "${outp}" -p -F "#{pane_width} #{pane_height}"))
+  local -i w=$dim[1] h=$dim[2]
+  local -F 4 aspect=0.0000
+  local -i ow=${outw} oh=0
+  local -i tw=0 th=0
+  (( aspect=w / h ))
+  ((tw=w*8))
+  ((th=h*16))
+  # (( tw=w*0.8 ))
+  # (( th=(w/aspect) ))
+  # (( ow=w*aspect ))
+  (( oh=(ow/aspect) ))
+  # tmux capture-pane -e -p -Nt ${outp} |  
+}
+
+converty(){
+  cat /dev/stdin | textimg -f ~/.fonts/iosevka.ttf -F 12 -o - #  ~/.cache/cap.png
+  convert ~/.cache/cap.png -sigmoidal-contrast 3x5% -filter point -resize 80x24! txt:-  
+}
+
+{
+  {print_txt} < <(cat /dev/stdin | tail +2 | tr -cs '0-9A-F\n' ' ')
+    sleep 10
+} < <(converty < /dev/stdin)
+read
+sleep 10

@@ -1,0 +1,3 @@
+server_host = '127.0.0.1' # host address of clipcat gRPC server
+server_port = 45045       # port number of clipcat gRPC server
+log_level = 'INFO'        # log level

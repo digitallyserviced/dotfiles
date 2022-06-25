@@ -1,0 +1,8 @@
+#!/bin/zsh -l
+
+blacklist="\.git|powerlevel10k|secret|gitignore|log|patches|config/surf|BetterDiscord|\.ccls-cache|png|jpg|ttf|cpp|\.h|Makefile|powerline|\.vim"
+
+files="$(git --git-dir="$HOME/.cfg/" --work-tree="$HOME" ls-files --full-name $HOME | tee /tmp/cfiles)"
+items=$(echo "$files" | grep -Ev $blacklist)
+
+printf "%s" "$files" | $(dirname $0)/dmenu_nvr

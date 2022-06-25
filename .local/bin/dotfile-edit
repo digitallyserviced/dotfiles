@@ -1,0 +1,125 @@
+#!/bin/zsh
+emulate zsh
+
+FZF_COLORS="
+--color=fg:regular:green:dim,fg+:regular:bright-green:dim
+--color=hl:regular:red:dim:bold,hl+:regular:yellow:dim:bold
+--color=bg:-1,bg+:0
+--color=pointer:#fabd2f,marker:#fe8019,spinner:#b8bb26
+--color=header:#fb4934,prompt:#b16286
+"
+FZF_FILE_PREVIEW="([[ -f {} ]] && (bat --style=numbers --color=always -- {}))"
+FZF_DIR_PREVIEW="([[ -d {} ]] && (exa -T {} | less))"
+# FZF_BIN_PREVIEW="([[ \$(file --mime-type -b {}) = *binary* ]] && (echo {} is a binary file))"
+
+export FZF_FILE_PREVIEW FZF_DIR_PREVIEW FZF_BIN_PREVIEW
+# --preview-window=':hidden,right:60%'
+
+export FZF_DEFAULT_OPTS="
+--prompt '❱ '
+--pointer '➤'
+--marker '┃'
+--cycle
+$FZF_COLORS
+--reverse --height 100% --ansi --info=inline --multi --border
+--bind=ctrl-s:toggle-sort
+--bind=alt-p:preview-up,alt-n:preview-down
+--bind=ctrl-k:preview-up,ctrl-j:preview-down
+--bind=ctrl-u:half-page-up,ctrl-d:half-page-down
+--bind=alt-,:first,alt-.:last,change:first"
+# --bind='?:toggle-preview,alt-w:toggle-preview-wrap'
+# --preview \"echo ($FZF_FILE_PREVIEW || $FZF_DIR_PREVIEW) | head -200\"
+# --bind='alt-a:select-all,ctrl-r:toggle-all'
+# --bind='ctrl-b:execute(bat --paging=always -f {+})'
+
+ZERODIR=$(dirname $0)
+0="${ZERO:-${${0:#$ZSH_ARGZERO}:-${(%):-%N}}}"
+0="${${(M)0:#/*}:-$PWD/$0}"
+ARGZERO=$0
+
+if (( ZDEBUG )); then
+  emulate -L zsh -o err_return -o no_unset -o xtrace
+  print -rn -- $'\e]0;ZDEBUG\a' >$TTY
+  # export PROFILE_STARTUP=true
+fi
+blacklist="\.git|powerlevel10k|secret|gitignore|log|patches|config/surf|BetterDiscord|\.ccls-cache|png|jpg|ttf|cpp|\.h|Makefile|powerline|\.vim"
+
+# 🮦🮦🮧🮧🮧🮧🮧🮧 ━━╺━━━━━ 🮠🮡 🮨 🮨🮨🮨🮨🮣 🮨🮨🮨🮦🮨🮦🮨🮦🮨🮤🮥🮵🮶🮷🮸🮼 
+# files="$(git --git-dir="$HOME/.cfg/" --work-tree="$HOME" ls-files --full-name $HOME | tee /tmp/cfiles)"
+humanize(){
+  local value=$1
+  REPLY=$(numfmt --to=si ${value})
+}
+listgits(){
+  typeset -a dotfiles=(git --git-dir="$HOME/.cfg" --work-tree="$HOME")
+  initial=$(${dotfiles[@]} rev-list --max-parents=0 "HEAD")
+  cmd=(${dotfiles[@]} diff-index --numstat ${initial} -- $HOME);
+  ${cmd}
+}
+
+listall(){
+  cmd=(fd --max-depth 2 --glob '*' --type 'f' -- $HOME/.config/); 
+  ${cmd}
+}
+
+accept(){
+  [[ $# -ge 1 ]] || return 1
+  local editor=$1
+  while read add sub file; do
+    echo $file;
+    ${ZERODIR}/nvr $HOME/$file
+  done
+}
+
+fzfs(){
+  local lister=$1
+  (){
+    while read line; do echo $line; done
+  } < <(${lister}) > >(fzf_list)
+}
+
+previewer(){
+  bat --color=always --style "header,header-filename,header-filesize,grid,snip" -- $1 # 2>/dev/null
+}
+typeset -a binds=("enter:accept-non-empty" "change:first" "ctrl-space:execute(nvr {})" "ctrl-g:reload:$0 all")
+typeset -a previewer=("$ARGZERO" "previewer" '{3}' '{1}:{2}') bind=('--bind')
+
+fzf_list(){
+  print -v HEADER -f "Dotfile/Configs [%b] NVR Edit (%s)" "C-g" "C-<space>"
+  local WHFZF="fzf"
+  {
+    {cat /dev/stdin} | \
+      ${WHFZF} --with-nth 3 --header "${HEADER}"\
+      --preview-window="down,60%,border-rounded,nofollow,nohidden,~4,+3/2"\
+      -1 --preview="${previewer}" --header-first
+  } > >(accept nvr)
+}
+# --ansi --cycle --keep-right --margin 1% --padding 0% \
+#       --nth 1 --with-nth 3 --header "${HEADER}"\
+#     --layout reverse-list --preview-window="right,60%,border-rounded,nofollow,nohidden,~4,+3/2"\
+#     ${bind:^^binds}\
+#     -1 --preview="${previewer}"
+# functions -T fzf_list previewer
+
+{
+  typeset -a cmd=()
+  LISTER=${1:-git}
+  case "$LISTER" in
+    accept) echo ${@:2} | accept nvr;
+    ;;
+    listgit) listgits
+    ;;
+    listall) listall
+    ;;
+    git) fzfs listgits
+    ;;
+    all) fzfs listall
+    ;;
+  previewer) previewer ${@:2}
+    ;;
+    *)   fzfs listgits
+      
+    ;;
+  esac
+
+}

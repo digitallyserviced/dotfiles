@@ -1,0 +1,110 @@
+#!/bin/zsh
+zstyle ':fzf-tab:complete:_zlua:*' query-string input
+zstyle ':fzf-tab:complete:kill:argument-rest' fzf-preview 'ps --pid=$word -o cmd --no-headers -w -w'
+zstyle ':fzf-tab:complete:kill:argument-rest' fzf-flags '--preview-window=down:3:wrap'
+zstyle ':fzf-tab:complete:kill:*' popup-pad 0 3
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+zstyle ':fzf-tab:complete:cd:*' popup-pad 30 0
+zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+zstyle ':fzf-tab:*' switch-group ',' '.'
+zstyle ":completion:*:git-checkout:*" sort false
+zstyle ':completion:*' file-sort modification
+zstyle ':completion:*:exa' sort false
+zstyle ':completion:files' sort false
+zstyle ':fzf-tab:*:*argument-rest*' popup-pad 100 0
+zstyle ':completion:*' use-compctl false
+
+# zstyle ':completion:*:complete:*' use-cache true
+# zstyle ':completion:*:complete:*' cache-policy _aloxaf_caching_policy
+# _aloxaf_caching_policy() {
+#     # 缓存策略：若不存在或 14 天以前则认定为失效
+#     [[ ! -f $1 && -n "$1"(Nm+14) ]]
+# }
+
+# 补全顺序:
+# _complete - 普通补全函数  _extensions - 通过 *.\t 选择扩展名
+# _match    - 和 _complete 类似但允许使用通配符
+# _expand_alias - 展开别名 _ignored - 被 ignored-patterns 忽略掉的
+# zstyle ':completion:*' completer _expand_alias _complete _extensions _match _files
+# 由于某些 completer 调用的代价比较昂贵，第一次调用时不考虑它们
+zstyle -e ':completion:*' completer '
+  if [[ $_last_try != "$HISTNO$BUFFER$CURSOR" ]]; then
+    _last_try="$HISTNO$BUFFER$CURSOR"
+    reply=(_expand_alias _complete _extensions _match _files)
+  else
+    reply=(_complete _ignored _correct _approximate)
+  fi'
+
+zstyle ':completion:*:(argument-rest|files):*' matcher-list '' \
+    'm:{[:lower:]-}={[:upper:]_}' \
+    'r:|[.,_-]=* r:|=*' \
+    'r:|.=* r:|=*'
+zstyle ':completion:*' matcher-list 'b:=*'
+
+zstyle ':completion:*' regular false
+
+# zstyle ':completion:*' menu select # search
+zstyle ':completion:*' list-grouped true
+zstyle ':completion:*' list-separator ''
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*:matches' group 'yes'
+zstyle ':completion:*:warnings' format '%B-- No match for: %d --%b'
+zstyle ':completion:*:messages' format '%d'
+zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm,cmd -w -w"
+zstyle ':completion:*:manuals'    separate-sections true
+zstyle ':completion:*:manuals.*'  insert-sections   true
+zstyle ':completion:*:*:git:*' user-commands ${${(M)${(k)commands}:#git-*}/git-/}
+zstyle ':completion:*:*:*:*'   file-patterns '^*.(zwc|pyc):compiled-files' '*:all-files'
+zstyle ':completion:*:*:rm:*'  file-patterns '*:all-files'
+zstyle ':completion:*:*:gio:*' file-patterns '*:all-files'
+zstyle ':completion:*:*:docker:*' option-stacking yes
+zstyle ':completion:*:*:docker-*:*' option-stacking yes
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*:jobs' verbose true
+zstyle ':completion:*:jobs' numbers true
+setopt complete_in_word
+setopt no_beep
+# zstyle ':completion:*' completer _complete _match _approximate
+zstyle ':completion:*:match:*' original only
+zstyle -e ':completion:*:approximate:*' max-errors 'reply=($((($#PREFIX+$#SUFFIX)/3>7?7:($#PREFIX+$#SUFFIX)/3))numeric)'
+#
+# zstyle ':completion:*:matches' group 'yes'
+# zstyle ':completion:*:options' description 'yes'
+# zstyle ':completion:*:options' auto-description '%d'
+# zstyle ':completion:*:corrections' format ' -- %d (errors: %e) --'
+# zstyle ':completion:*:descriptions' format ' -- %d --'
+# zstyle ':completion:*:messages' format '  -- %d --'
+# zstyle ':completion:*:warnings' format ' -- no matches found --'
+zstyle ':completion:*:default' list-prompt '%S%M matches%s'
+zstyle ':completion:*' format ' -- %d --'
+# zstyle ':completion:*' group-name ''
+zstyle ':completion:*' verbose yes
+# zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+# zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec))'
+zstyle ':completion:*' use-cache true
+zstyle ':completion:*' rehash true
+#
+# zstyle ':completion:*' menu select
+# zstyle ':completion:*' list-colors '${(s.:.)LS_COLORS}'
+zstyle ':fzf-tab:*' show-group full
+#
+zstyle ':fzf-tab:*' fzf-bindings 'enter:accept,space:accept,backward-eof:abort'   # Space as accept, abort when deleting empty space
+zstyle ':fzf-tab:*' print-query ctrl-c        # Use input as result when ctrl-c
+zstyle ':fzf-tab:*' accept enter         # Accept selected entry on enter
+zstyle ':fzf-tab:*' fzf-pad 4
+# zstyle ':fzf-tab:*' prefix ''                 # No dot prefix
+zstyle ':fzf-tab:*' single-group color header # Show header for single groups
+zstyle ':fzf-tab:complete:man:*' fzf-preview 'man ${${=group}[4]} $word | col -bx | bat -l man -p --color always'
+zstyle ':fzf-tab:complete:(cd|ls|lsd|exa):*' fzf-preview '[[ -d $realpath ]] && exa -1 --color-scale --color=always $realpath || exa -al -1 --color-scale --color=always $realpath'  
+zstyle ':fzf-tab:complete:((nv(r|im)?|micro|cp|rm|bat):argument-rest|kate:*)' fzf-preview 'bat --color=always -- $realpath 2>/dev/null || ls --color=always -- $realpath'
+zstyle ':fzf-tab:complete:(nvim|nvr|nv):argument-rest' fzf-flags --preview-window=right:65
+zstyle ':fzf-tab:complete:updatelocal:argument-rest' fzf-preview "git --git-dir=$UPDATELOCAL_GITDIR/\${word}/.git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset ||%b' ..FETCH_HEAD 2>/dev/null"
+zstyle ':fzf-tab:complete:updatelocal:argument-rest' fzf-flags --preview-window=down:5:wrap:nohidden
+zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
+  '[[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:3:wrap:nohidden
+

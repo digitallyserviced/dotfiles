@@ -1,0 +1,71 @@
+battery:
+  tmux:
+    charging_text: 
+    discharging_text: 
+    format: "%percentage%%"
+
+datetime:
+  i3:
+    prefix: 
+    format: 01/02/06 <b>15:04:05</b>
+  tmux:
+    format: 15:04:05
+
+loadavg:
+  tmux:
+    format: "%avg1min% (%running%)[%procs%]"
+    rounding: 2
+    
+ram:
+  i3:
+    format: "%percentage%"
+    unit: Go
+    rounding: 2
+  tmux:
+    format: "%used% ╱ %total%G"
+    unit: Go
+    rounding: 1
+    
+hackspeed:
+  tmux:
+    format: "%speed%"
+    unit: Go
+    rounding: 2
+ip:
+  tmux:
+    interface: ['wlan0']
+    no_ip: No address
+
+music:
+  tmux:
+    format: "%xesam:title% - %xesam:artist%"
+    no_player: none
+    trim_at: 15
+
+pulseaudio:
+  i3_input:
+    type: source
+    format: "%percentage%%"
+    muted_format: "🔇 %percentage%%"
+  i3_output:
+    type: sink
+    format: "%percentage%%"
+    muted_format: "🔇 %percentage%%"
+
+storage:
+  tmux:
+    format: "%pused%%"
+    mount_point: /
+    rounding: 1
+
+uptime:
+  tmux:
+    two_digit_hours: true
+    format: "%hours%h%minutes%"
+    no_hours_format: "%minutes% minutes"
+    no_minutes_format: "%seconds% seconds"
+
+custom:
+  my_custom_script:
+    prefix: ☁️
+    command: curl wttr.in/Paris?format=%t

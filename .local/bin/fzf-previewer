@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+echo $@
+bat --color=always -- $1 $2 $3 2>/dev/null
+
+if [ ! "$selected" = "" ]; then
+  $(dirname $0)/nvr "$HOME/$selected"
+fi

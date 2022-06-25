@@ -1,0 +1,7 @@
+#!/usr/bin/python
+# EASY-INSTALL-DEV-SCRIPT: 'powerline-status==2.8.2','powerline-config'
+__requires__ = 'powerline-status==2.8.2'
+__import__('pkg_resources').require('powerline-status==2.8.2')
+__file__ = '/home/chris/Documents/powerline/scripts/powerline-config'
+with open(__file__) as f:
+    exec(compile(f.read(), __file__, 'exec'))

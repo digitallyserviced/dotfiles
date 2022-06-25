@@ -1,0 +1,171 @@
+#!/bin/bash
+
+set -me
+
+SCRIPT_NAME="$(basename "${BASH_SOURCE:-$0}")"
+export TEXTIMG_FONT_FILE="$HOME/.fonts/jbmnfc.ttf"
+readonly SCRIPT_NAME
+readonly VERSION="$SCRIPT_NAME version 1.2.1
+Copyright (c) 2019 jiro4989
+Released under the MIT License.
+https://github.com/jiro4989/scripts"
+
+main() {
+  local args=()
+  local font_size=40 # font size when generating the base text
+  local bg_text="" # Characters used for background dots
+  local fg_text="00" # Characters used for foreground (font) dots
+  local dot_font_size=10 # dot font size
+  local save_to_shellgei_imagedir=false # Save the image in the image directory of the shell art bot
+  local raw=false # Output as text
+  local threshold="50%" #text threshold
+
+  while ((0 < $#)); do
+    local opt="$1"
+    shift
+    case "$opt" in
+      -h | --help)
+        usage
+        return
+        ;;
+      -v | --version)
+        echo "$VERSION"
+        return
+        ;;
+      -F | --fontsize)
+        font_size="$1"
+        if ! is_number "$font_size"; then
+          err "Invalid number: -F (--fontsize) ='$ font_size'"
+          return 1
+        fi
+        shift
+        ;;
+      -b | --background)
+        bg_text="$1"
+        shift
+        ;;
+      -g | --foreground)
+        fg_text="$1"
+        shift
+        ;;
+      -d | --dot-fontsize)
+        dot_font_size="$1"
+        if ! is_number "$dot_font_size"; then
+          err "Invalid number: -d (--dot-fontsize) ='$ dot_font_size'"
+          return 1
+        fi
+        shift
+        ;;
+      -s | --shellgei-imagedir)
+        save_to_shellgei_imagedir=true
+        ;;
+      -R | --raw)
+        raw=true
+        ;;
+      -t | --threshold)
+        threshold="$1"
+        shift
+        ;;
+      -*)
+        err "Illegal option: option ='$ opt'"
+        return 1
+        ;;
+      *)
+        args+=("$opt")
+        ;;
+    esac
+  done
+
+  if [[ "$raw" == true ]] && [[ "$save_to_shellgei_imagedir" == true ]]; then
+    err "-R (--raw) and -s (--shellgei-imagedir) cannot be specified at the same time."
+    err "-h for help."
+    return 1
+  fi
+
+  # Command setting to wait for standard input if there is no argument
+  local cmd_input=(echo -e "${args[*]}")
+  if [[ "${#args[@]}" -lt 1 ]]; then
+    cmd_input=(cat)
+  fi
+
+  # Add an option to the command when the flag to save in the shell art directory is true
+  local cmd_textimg=(textimg -f ~/.fonts/jbmnfc.ttf -F "$dot_font_size")
+  if [[ "$save_to_shellgei_imagedir" == true ]]; then
+    cmd_textimg+=(-s)
+  fi
+
+  # Output as text instead of image
+  if [[ "$raw" == true ]]; then
+    cmd_textimg=(cat)
+  fi
+
+  # Disable the option when #threshold is set to off
+  local cmd_convert=(convert - -threshold "$threshold" -compress none pbm:-)
+  if [[ "$threshold" == off ]]; then
+    cmd_convert=(convert - -compress none pbm:-)
+  fi
+
+  "${cmd_input[@]}" |
+    textimg -f ~/.fonts/jbmnfc.ttf -F "$font_size" |
+    "${cmd_convert[@]}" |
+    tail -n +3 |
+    tr -d " " |
+    replace_text "$bg_text" "$fg_text" |
+    "${cmd_textimg[@]}"
+}
+
+usage() {
+  cat << EOS
+$ SCRIPT_NAME outputs the text as a dot-like image.
+
+Dependencies:
+    * convert (ImageMagick)
+    * textimg (https://github.com/jiro4989/textimg)
+
+Usage:
+    $SCRIPT_NAME [options] [text...]
+
+Options:
+    -h, --help Print help and exit
+    -v, --version Output version information and exit
+    -F, --fontsize NUMBER The font size when generating the base text
+                                        specify
+    -b, --background TEXT Specify background characters
+    -g, --foreground TEXT Specify foreground character
+    -d, --dot-fontsize NUMBER Specify the font size of dots when outputting an image.
+    -s, --shellgei-imagedir Save images to /images/t.png
+    -R, --raw Output as text
+    -t, --threshold <NUMBER% | off> Text threshold.
+EOS
+}
+
+## replace_text replaces the standard input text and outputs it to standard output.
+## The characters to be replaced correspond to the following.
+##
+## * 1 - $1 (bg)
+## * 0 - $2 (fg)
+replace_text() {
+  local bg=$1
+  local fg=$2
+  awk \
+    -v bg="$bg" \
+    -v fg="$fg" \
+    '
+    {
+      gsub("1", bg)
+      gsub("0", fg)
+      print
+    }'
+}
+
+err() {
+  echo -e "[ ERR ] $*" >&2
+}
+
+is_number() {
+  local height=$1
+  [[ "$height" =~ ^[[:digit:]]+$ ]]
+}
+
+main ${1+"$@"}
+exit $?

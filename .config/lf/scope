@@ -1,0 +1,159 @@
+#!/usr/bin/env zsh
+
+setopt noclobber noglob nounset
+
+# IFS="${$(printf '%b_' '\n')%_}"
+
+# Arguments:
+local FILE_PATH="${1}"         # Full path of the highlighted file
+local WIDTH="${2}"
+local HEIGHT="${3}"
+local X_COORD="${4}"
+local Y_COORD="${5}"
+
+local FILE_ABSPATH="${FILE_PATH:A}"
+local FILE_EXTENSION="${FILE_PATH##*.}"
+local FILE_EXTENSION_LOWER="${(L)FILE_EXTENSION}"
+
+# Settings:
+local HIGHLIGHT_SIZE_MAX=262143  # 256KiB
+local HIGHLIGHT_TABWIDTH=8
+local MAXLN=200
+local MIMETYPE="$(file --dereference --brief --mime-type -- "${FILE_PATH}")"
+
+# Functions:
+try() { output=$(eval '"$@"'); }
+
+# writes the output of the previously used "try" command
+dump() { /bin/echo -E "$output"; }
+
+# a common post-processing function used after most commands
+trim() { head -n "$MAXLN"; }
+
+prev-image() {
+  if [[ -n $DISPLAY && -v FIFO_UEBERZUG ]]; then
+    #   "scaling_position_x": 0.5,
+    #   "scaling_position_y": 0.5,
+
+    # These load more images if the numbers are strings
+    (( $+commands[rjo] )) || { notify-send "Failure" "rjo isn't installed"; exit 1; }
+
+    command rjo \
+      "action=add" \
+      "identifier=PREVIEW" \
+      "x=\"$X_COORD\"" \
+      "y=\"$Y_COORD\"" \
+      "width=\"$(( WIDTH - 1 ))\"" \
+      "height=\"$(( HEIGHT - 1 ))\"" \
+      "scaler=contain" \
+      "path=$1" >"$FIFO_UEBERZUG"
+  else
+    # Handle non-ueberzug
+    case "${MIMETYPE}" in
+      (image/*)
+        chafa --fill=block --symbols=block --size "$(( WIDTH - 4 ))"x"${HEIGHT}" -- "$1"
+      ;;
+      (video/*)
+        mediainfo -- "$1"
+      ;;
+     (pdf/*)
+        pdftotext -l 10 -nopgbrk -q -- "$1" - && \
+          { dump | trim | fmt -s -w $WIDTH; exit 0; }
+      ;;
+    esac
+  fi
+}
+
+handle_mime() {
+  local mimetype="${1}"
+  case "${mimetype}" in
+    (text/html)
+      w3m -dump "${FILE_PATH}" ;;
+      # bat -Pf --theme kimbro --style auto -l html -- "${FILE_PATH}" ;;
+    (text/troff)
+      # color isn't shown
+      MANPAGER="sh -c 'sed -e s/.\\\\x08//g | bat --theme kimbro --color=always -l man -p'" man -- "${FILE_PATH}" ;;
+    (text/csv)
+      tidy-viewer -n 30 <$FILE_PATH ;;
+      # bat -Pf -l csv ${FILE_PATH} ;;
+    (text/* | */xml)
+      bat -Pf --tabs "${HIGHLIGHT_TABWIDTH}" --theme kimbro --style auto -- "${FILE_PATH}" ;;
+    (application/pgp-encrypted)
+      bat -Pf --theme KimbieDark --style auto "${FILE_PATH}" ;;
+    (application/zip)
+      atool --list -- "${FILE_PATH}" ;;
+    (image/*)
+      prev-image "$FILE_PATH"
+      # prev-image "$FILE_PATH" "$WIDTH" "$HEIGHT" "$X_COORD" "$Y_COORD"
+    ;;
+    (audio/*|application/octet-stream)
+      mediainfo -- "$FILE_PATH"
+    ;;
+    (video/*)
+      CACHE="${XDG_CACHE_HOME}/lf/thumb.$(\
+        stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$FILE_ABSPATH" | sha256sum | hck -f1)"
+      [[ ! -f "$CACHE" ]] && command ffmpegthumbnailer -i "$FILE_PATH" -o "$CACHE" -s 0
+      prev-image "$CACHE"
+    ;;
+    (*/pdf)
+      CACHE="${XDG_CACHE_HOME}/lf/thumb.$(\
+        stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$FILE_ABSPATH" | sha256sum | hck -f1)"
+      [[ ! -f "$CACHE.jpg" ]] && command pdftoppm -jpeg -f 1 -singlefile "$1" "$CACHE"
+      prev-image "$CACHE.jpg"
+    ;;
+    (application/vnd.openxmlformats-officedocument.wordprocessingml.document)
+      docx2txt "${FILE_PATH}" ;;
+  esac
+}
+
+
+handle_other() {
+  case "${FILE_PATH}" in
+    (*.tar)   tar tf "${FILE_PATH}";;
+    (*.rar)   unrar l "${FILE_PATH}";;
+    (*.7z) 7z l "${FILE_PATH}";;
+    (*.[1-8]) man "${FILE_PATH}" | col -b ;;
+    (*.o)     nm "${FILE_PATH}" | less ;;
+    (*.iso)   iso-info --no-header -l "${FILE_PATH}";;
+    (*.doc)   catdoc "${FILE_PATH}" ;;
+    (*.docx)  docx2txt "${FILE_PATH}" - ;;
+    (*.json)  jq --color-output . "${FILE_PATH}";;
+    (*.asc|*.log)   bat -Pf --theme KimbieDark --style auto "${FILE_PATH}";;
+    (*.ipynb) jupview -t KimbieDark "${FILE_PATH}" ;;
+    (*.torrent) transmission-show "${FILE_PATH}";;
+    (*.tgz|*.tar.gz)   tar tzf "${FILE_PATH}";;
+    (*.tar.bz2|*.tbz2) tar tjf "${FILE_PATH}";;
+    (*.tar.txz|*.txz)  xz --list "${FILE_PATH}";;
+    (*.jar|*.war|*.ear|*.oxt)        unzip -l "${FILE_PATH}";;
+    (*.odt|*.ods|*.odp|*.sxw)        odt2txt "${FILE_PATH}";;
+    (*.sha1|*.sha256|*.sha512|*.md5) rhash -c "${FILE_PATH}" ;;
+  esac
+}
+
+typeset -A CO
+CO=(
+  red    $'\e[38;5;1m'  bred   $'\e[01;31m' brred   $'\e[38;5;9m'
+  green  $'\e[38;5;2m'  bgreen $'\e[01;32m' brgreen $'\e[38;5;10m'
+  yell   $'\e[38;5;3m'  byell  $'\e[01;33m' bryell  $'\e[38;5;11m'
+  blue   $'\e[38;5;4m'  bblue  $'\e[01;34m' brblue  $'\e[38;5;12m'
+  magen  $'\e[38;5;5m'  bmagen $'\e[01;35m' brmagen $'\e[38;5;13m'
+  cyan   $'\e[38;5;6m'  bcyan  $'\e[01;36m' brcyan  $'\e[38;5;14m'
+  und    $'\e[4m'       bold   $'\e[1m'     bg      $'\e[3m'
+  tb     $' \t '        nl     $'\n'        res     $'\e[0m'
+)
+
+handle_fallback() {
+  local mime mime2
+  print -rl "$CO[nl]$CO[brblue]$CO[bold]==========$CO[res] File Type Classification $CO[brblue]$CO[bold]==========$CO[res]" && {
+    mime=$(file --dereference --brief -- "${FILE_PATH}")
+    mime2=$(mimetype -b -- "${FILE_PATH}")
+    stat -c "$CO[green]$CO[bold]${mime} (${mime2})$CO[res] $CO[nl]%F $CO[nl]$CO[bcyan]inode: %i$CO[res]" -- "${FILE_PATH}"
+  }
+    exit 1
+}
+
+handle_mime "${MIMETYPE}"
+handle_other
+[[ ! -v FIFO_UEBERZUG || $MIMETYPE != (image|video|pdf)/* ]] && handle_fallback
+
+exit 1

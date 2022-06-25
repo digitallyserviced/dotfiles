@@ -1,0 +1,463 @@
+
+2022/03/24 (02:06:52) | ===> btop++ v.1.2.5
+2022/03/24 (02:06:52) | ERROR: Stall in Runner thread, restarting!
+2022/03/27 (01:04:09) | ERROR: Stall in Runner thread, restarting!
+
+2022/04/11 (00:23:18) | ===> btop++ v.1.2.5
+2022/04/11 (00:23:18) | ERROR: Stall in Runner thread, restarting!
+
+2022/04/14 (22:14:36) | ===> btop++ v.1.2.5
+2022/04/14 (22:14:36) | ERROR: Stall in Runner thread, restarting!
+
+2022/04/28 (05:02:00) | ===> btop++ v.1.2.6
+2022/04/28 (05:02:00) | ERROR: Stall in Runner thread, restarting!
+2022/04/28 (05:02:10) | ERROR: Stall in Runner thread, restarting!
+
+2022/04/29 (12:33:44) | ===> btop++ v.1.2.6
+2022/04/29 (12:33:44) | ERROR: Stall in Runner thread, restarting!
+
+2022/04/29 (12:33:44) | ===> btop++ v.1.2.6
+2022/04/29 (12:33:44) | ERROR: Stall in Runner thread, restarting!
+2022/04/29 (12:34:57) | WARNING: Failed to join _runner thread on exit!
+2022/04/29 (15:29:23) | WARNING: Failed to join _runner thread on exit!
+
+2022/04/30 (18:59:06) | ===> btop++ v.1.2.6
+2022/04/30 (18:59:06) | ERROR: Stall in Runner thread, restarting!
+
+2022/05/02 (11:31:39) | ===> btop++ v.1.2.6
+2022/05/02 (11:31:39) | INFO: Logger set to INFO
+2022/05/02 (11:31:40) | INFO: Logger set to DEBUG
+2022/05/02 (11:31:46) | DEBUG: Loading theme file: /usr/local/share/btop/themes/dusklight.theme
+2022/05/02 (11:31:46) | DEBUG: Loading theme file: /usr/local/share/btop/themes/gruvbox_dark_v2.theme
+2022/05/02 (11:31:46) | DEBUG: Loading theme file: /usr/local/share/btop/themes/HotPurpleTrafficLight.theme
+2022/05/02 (11:31:47) | DEBUG: Loading theme file: /usr/local/share/btop/themes/dracula.theme
+2022/05/02 (11:31:47) | DEBUG: Loading theme file: /usr/local/share/btop/themes/flat-remix-light.theme
+2022/05/02 (11:31:48) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/05/02 (11:31:48) | DEBUG: Loading theme file: /usr/local/share/btop/themes/flat-remix-light.theme
+2022/05/02 (11:31:52) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/05/04 (03:27:01) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+
+2022/05/06 (01:38:45) | ===> btop++ v.1.2.6
+2022/05/06 (01:38:45) | ERROR: Stall in Runner thread, restarting!
+2022/05/06 (03:42:19) | WARNING: Failed to join _runner thread on exit!
+2022/05/06 (16:41:42) | DEBUG: Writing new config file
+2022/05/06 (16:41:42) | INFO: Quitting! Runtime: 4d 18:42:44
+
+2022/05/06 (19:55:21) | ===> btop++ v.1.2.6
+2022/05/06 (19:55:21) | INFO: Logger set to DEBUG
+2022/05/06 (19:55:21) | DEBUG: Using locale en_US.UTF-8
+2022/05/06 (19:55:21) | INFO: Running on /dev/pts/18
+2022/05/06 (19:55:21) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/05/06 (19:55:26) | INFO: Quitting! Runtime: 00:00:05
+
+2022/05/06 (20:02:29) | ===> btop++ v.1.2.6
+2022/05/06 (20:02:29) | INFO: Logger set to DEBUG
+2022/05/06 (20:02:29) | DEBUG: Using locale en_US.UTF-8
+2022/05/06 (20:02:29) | INFO: Running on /dev/pts/19
+2022/05/06 (20:02:29) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/05/06 (20:05:06) | DEBUG: Writing new config file
+2022/05/06 (20:05:06) | INFO: Quitting! Runtime: 00:02:37
+
+2022/05/07 (04:21:44) | ===> btop++ v.1.2.6
+2022/05/07 (04:21:44) | INFO: Logger set to DEBUG
+2022/05/07 (04:21:44) | DEBUG: Using locale en_US.UTF-8
+2022/05/07 (04:21:44) | INFO: Running on /dev/pts/18
+2022/05/07 (04:21:44) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/05/07 (04:21:58) | DEBUG: Writing new config file
+2022/05/07 (04:21:58) | INFO: Quitting! Runtime: 00:00:14
+
+2022/05/10 (03:18:46) | ===> btop++ v.1.2.6
+2022/05/10 (03:18:46) | INFO: Logger set to DEBUG
+2022/05/10 (03:18:46) | DEBUG: Using locale en_US.UTF-8
+2022/05/10 (03:18:46) | INFO: Running on /dev/pts/29
+2022/05/10 (03:18:46) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/05/10 (03:19:24) | DEBUG: Writing new config file
+2022/05/10 (03:19:24) | INFO: Quitting! Runtime: 00:00:38
+
+2022/05/10 (03:58:58) | ===> btop++ v.1.2.6
+2022/05/10 (03:58:58) | INFO: Logger set to DEBUG
+2022/05/10 (03:58:58) | DEBUG: Using locale en_US.UTF-8
+2022/05/10 (03:58:58) | INFO: Running on /dev/pts/29
+2022/05/10 (03:58:59) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/05/10 (03:59:50) | DEBUG: Writing new config file
+2022/05/10 (03:59:50) | INFO: Quitting! Runtime: 00:00:52
+
+2022/05/10 (04:34:43) | ===> btop++ v.1.2.6
+2022/05/10 (04:34:43) | ERROR: Stall in Runner thread, restarting!
+2022/05/10 (04:35:17) | ERROR: Stall in Runner thread, restarting!
+
+2022/05/10 (04:36:09) | ===> btop++ v.1.2.6
+2022/05/10 (04:36:09) | INFO: Logger set to DEBUG
+2022/05/10 (04:36:09) | DEBUG: Using locale en_US.UTF-8
+2022/05/10 (04:36:09) | INFO: Running on /dev/pts/0
+2022/05/10 (04:36:09) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/05/10 (04:36:17) | DEBUG: Writing new config file
+2022/05/10 (04:36:17) | INFO: Quitting! Runtime: 00:00:08
+
+2022/05/10 (04:39:25) | ===> btop++ v.1.2.6
+2022/05/10 (04:39:25) | INFO: Logger set to DEBUG
+2022/05/10 (04:39:25) | DEBUG: Using locale en_US.UTF-8
+2022/05/10 (04:39:25) | INFO: Running on /dev/pts/0
+2022/05/10 (04:39:25) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/05/10 (04:39:33) | DEBUG: Writing new config file
+2022/05/10 (04:39:33) | INFO: Quitting! Runtime: 00:00:08
+
+2022/05/10 (05:48:47) | ===> btop++ v.1.2.6
+2022/05/10 (05:48:47) | INFO: Logger set to DEBUG
+2022/05/10 (05:48:47) | DEBUG: Using locale en_US.UTF-8
+2022/05/10 (05:48:47) | INFO: Running on /dev/pts/22
+2022/05/10 (05:48:47) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+
+2022/05/10 (08:44:12) | ===> btop++ v.1.2.6
+2022/05/10 (08:44:12) | INFO: Logger set to DEBUG
+2022/05/10 (08:44:12) | DEBUG: Using locale en_US.UTF-8
+2022/05/10 (08:44:12) | INFO: Running on /dev/pts/10
+2022/05/10 (08:44:12) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+
+2022/05/10 (10:33:59) | ===> btop++ v.1.2.6
+2022/05/10 (10:33:59) | INFO: Logger set to DEBUG
+2022/05/10 (10:33:59) | DEBUG: Using locale en_US.UTF-8
+2022/05/10 (10:33:59) | INFO: Running on /dev/pts/8
+2022/05/10 (10:33:59) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/05/10 (10:34:44) | DEBUG: Writing new config file
+2022/05/10 (10:34:44) | INFO: Quitting! Runtime: 00:00:45
+2022/05/10 (14:26:48) | DEBUG: Writing new config file
+2022/05/10 (14:26:48) | INFO: Quitting! Runtime: 05:42:36
+
+2022/05/16 (16:23:36) | ===> btop++ v.1.2.6
+2022/05/16 (16:23:36) | INFO: Logger set to DEBUG
+2022/05/16 (16:23:36) | DEBUG: Using locale en_US.UTF-8
+2022/05/16 (16:23:36) | INFO: Running on /dev/pts/7
+2022/05/16 (16:23:36) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/05/17 (17:24:39) | DEBUG: Writing new config file
+2022/05/17 (17:24:39) | INFO: Quitting! Runtime: 1d 01:01:03
+
+2022/05/18 (00:37:13) | ===> btop++ v.1.2.6
+2022/05/18 (00:37:13) | INFO: Logger set to DEBUG
+2022/05/18 (00:37:13) | DEBUG: Using locale en_US.UTF-8
+2022/05/18 (00:37:13) | INFO: Running on /dev/pts/1
+2022/05/18 (00:37:13) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/05/18 (00:55:22) | INFO: Quitting! Runtime: 00:18:09
+
+2022/05/23 (14:18:42) | ===> btop++ v.1.2.6
+2022/05/23 (14:18:42) | INFO: Logger set to DEBUG
+2022/05/23 (14:18:42) | DEBUG: Using locale en_US.UTF-8
+2022/05/23 (14:18:42) | INFO: Running on /dev/pts/9
+2022/05/23 (14:18:42) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/05/23 (14:18:44) | INFO: Quitting! Runtime: 00:00:02
+
+2022/05/25 (02:50:58) | ===> btop++ v.1.2.6
+2022/05/25 (02:50:58) | INFO: Logger set to DEBUG
+2022/05/25 (02:50:58) | DEBUG: Using locale en_US.UTF-8
+2022/05/25 (02:50:58) | INFO: Running on /dev/pts/4
+2022/05/25 (02:50:58) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/05/25 (04:39:51) | DEBUG: Writing new config file
+2022/05/25 (04:39:51) | INFO: Quitting! Runtime: 01:48:53
+
+2022/05/27 (17:58:52) | ===> btop++ v.1.2.6
+2022/05/27 (17:58:52) | INFO: Logger set to DEBUG
+2022/05/27 (17:58:52) | DEBUG: Using locale en_US.UTF-8
+2022/05/27 (17:58:52) | INFO: Running on /dev/pts/32
+2022/05/27 (17:58:52) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+
+2022/05/27 (19:30:30) | ===> btop++ v.1.2.6
+2022/05/27 (19:30:30) | INFO: Logger set to DEBUG
+2022/05/27 (19:30:30) | DEBUG: Using locale en_US.UTF-8
+2022/05/27 (19:30:30) | INFO: Running on /dev/tty2
+2022/05/27 (19:30:30) | INFO: Real tty detected: setting 16 color mode and using tty friendly graph symbols
+2022/05/28 (00:14:50) | INFO: Quitting! Runtime: 06:15:58
+
+2022/05/28 (13:26:19) | ===> btop++ v.1.2.6
+2022/05/28 (13:26:19) | INFO: Logger set to DEBUG
+2022/05/28 (13:26:19) | DEBUG: Using locale en_US.UTF-8
+2022/05/28 (13:26:19) | INFO: Running on /dev/pts/25
+2022/05/28 (13:26:19) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/05/28 (13:26:42) | DEBUG: Writing new config file
+2022/05/28 (13:26:42) | INFO: Quitting! Runtime: 00:00:23
+
+2022/05/30 (10:20:10) | ===> btop++ v.1.2.6
+2022/05/30 (10:20:10) | INFO: Logger set to DEBUG
+2022/05/30 (10:20:10) | DEBUG: Using locale en_US.UTF-8
+2022/05/30 (10:20:10) | INFO: Running on /dev/pts/18
+2022/05/30 (10:20:10) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+
+2022/05/30 (18:45:45) | ===> btop++ v.1.2.6
+2022/05/30 (18:45:45) | INFO: Logger set to DEBUG
+2022/05/30 (18:45:45) | DEBUG: Using locale en_US.UTF-8
+2022/05/30 (18:45:45) | INFO: Running on /dev/pts/0
+2022/05/30 (18:45:46) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/06/01 (16:17:01) | DEBUG: Writing new config file
+2022/06/01 (16:17:01) | INFO: Quitting! Runtime: 1d 21:31:16
+2022/06/01 (21:26:53) | INFO: Quitting! Runtime: 2d 11:06:43
+
+2022/06/02 (22:17:09) | ===> btop++ v.1.2.6
+2022/06/02 (22:17:09) | INFO: Logger set to DEBUG
+2022/06/02 (22:17:09) | DEBUG: Using locale en_US.UTF-8
+2022/06/02 (22:17:09) | INFO: Running on /dev/pts/6
+2022/06/02 (22:17:09) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/06/02 (22:17:17) | INFO: Quitting! Runtime: 00:00:08
+2022/06/05 (02:37:08) | DEBUG: Writing new config file
+2022/06/05 (02:37:08) | INFO: Quitting! Runtime: 8d 07:06:38
+
+2022/06/05 (02:37:12) | ===> btop++ v.1.2.6
+2022/06/05 (02:37:12) | INFO: Logger set to DEBUG
+2022/06/05 (02:37:12) | DEBUG: Using locale en_US.UTF-8
+2022/06/05 (02:37:12) | INFO: Running on /dev/tty2
+2022/06/05 (02:37:12) | INFO: Real tty detected: setting 16 color mode and using tty friendly graph symbols
+2022/06/05 (02:38:04) | INFO: Quitting! Runtime: 00:00:52
+
+2022/06/06 (13:46:19) | ===> btop++ v.1.2.6
+2022/06/06 (13:46:19) | INFO: Logger set to DEBUG
+2022/06/06 (13:46:19) | DEBUG: Using locale en_US.UTF-8
+2022/06/06 (13:46:19) | INFO: Running on /dev/pts/0
+2022/06/06 (13:46:19) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/06/06 (13:46:38) | DEBUG: Writing new config file
+2022/06/06 (13:46:38) | INFO: Quitting! Runtime: 00:00:19
+
+2022/06/06 (20:45:18) | ===> btop++ v.1.2.6
+2022/06/06 (20:45:18) | INFO: Logger set to DEBUG
+2022/06/06 (20:45:18) | DEBUG: Using locale en_US.UTF-8
+2022/06/06 (20:45:18) | INFO: Running on /dev/pts/33
+2022/06/06 (20:45:18) | DEBUG: Loading theme file: /usr/local/share/btop/themes/onedark.theme
+2022/06/06 (20:45:25) | DEBUG: Loading theme file: /usr/local/share/btop/themes/ayu.theme
+2022/06/06 (20:45:25) | DEBUG: Loading theme file: /usr/local/share/btop/themes/adapta.theme
+2022/06/06 (20:45:26) | DEBUG: Loading theme file: /usr/local/share/btop/themes/gruvbox_material_dark.theme
+2022/06/06 (20:45:27) | DEBUG: Loading theme file: /usr/local/share/btop/themes/night-owl.theme
+2022/06/06 (20:45:27) | DEBUG: Loading theme file: /usr/local/share/btop/themes/nord.theme
+2022/06/06 (20:45:28) | DEBUG: Loading theme file: /usr/local/share/btop/themes/solarized_dark.theme
+2022/06/06 (20:45:28) | DEBUG: Loading theme file: /usr/local/share/btop/themes/gruvbox_dark.theme
+2022/06/06 (20:45:29) | DEBUG: Loading theme file: /usr/local/share/btop/themes/matcha-dark-sea.theme
+2022/06/06 (20:45:29) | DEBUG: Loading theme file: /usr/local/share/btop/themes/kyli0x.theme
+2022/06/06 (20:45:30) | DEBUG: Loading theme file: /usr/local/share/btop/themes/flat-remix.theme
+2022/06/06 (20:45:30) | DEBUG: Loading theme file: /usr/local/share/btop/themes/greyscale.theme
+2022/06/06 (20:45:31) | DEBUG: Loading theme file: /usr/local/share/btop/themes/whiteout.theme
+2022/06/06 (20:45:31) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/mi-owl.theme
+2022/06/06 (20:45:32) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/06 (20:52:47) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/mi-owl.theme
+2022/06/06 (20:52:47) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/06 (20:52:52) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/06 (20:52:56) | DEBUG: Writing new config file
+2022/06/06 (20:52:56) | INFO: Quitting! Runtime: 00:07:38
+
+2022/06/06 (20:52:58) | ===> btop++ v.1.2.6
+2022/06/06 (20:52:58) | INFO: Logger set to DEBUG
+2022/06/06 (20:52:58) | DEBUG: Using locale en_US.UTF-8
+2022/06/06 (20:52:58) | INFO: Running on /dev/pts/33
+2022/06/06 (20:52:58) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/06 (21:04:44) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/mi-owl.theme
+2022/06/06 (21:04:45) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+
+2022/06/07 (16:18:28) | ===> btop++ v.1.2.7
+2022/06/07 (16:18:28) | INFO: Logger set to DEBUG
+2022/06/07 (16:18:28) | DEBUG: Using locale en_US.UTF-8
+2022/06/07 (16:18:28) | INFO: Running on /dev/pts/1
+2022/06/07 (16:18:28) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/07 (16:20:04) | DEBUG: Writing new config file
+2022/06/07 (16:20:04) | INFO: Quitting! Runtime: 00:01:36
+2022/06/09 (07:24:47) | DEBUG: Writing new config file
+2022/06/09 (07:24:47) | INFO: Quitting! Runtime: 2d 10:31:49
+
+2022/06/09 (07:25:55) | ===> btop++ v.1.2.7
+2022/06/09 (07:25:55) | INFO: Logger set to DEBUG
+2022/06/09 (07:25:55) | DEBUG: Using locale en_US.UTF-8
+2022/06/09 (07:25:55) | INFO: Running on /dev/pts/33
+2022/06/09 (07:25:55) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/12 (13:08:02) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (15:00:08) | WARNING: Failed to join _runner thread on exit!
+2022/06/13 (15:00:08) | DEBUG: Writing new config file
+2022/06/13 (15:00:08) | INFO: Quitting! Runtime: 4d 07:34:13
+
+2022/06/13 (15:00:35) | ===> btop++ v.1.2.7
+2022/06/13 (15:00:35) | INFO: Logger set to DEBUG
+2022/06/13 (15:00:35) | DEBUG: Using locale en_US.UTF-8
+2022/06/13 (15:00:35) | INFO: Running on /dev/pts/18
+2022/06/13 (15:00:35) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/13 (21:16:22) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:16:33) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:16:40) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:16:46) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:16:57) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:17:05) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:17:13) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:24:23) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:25:04) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:25:13) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:25:19) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:25:25) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:25:30) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:25:38) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:25:47) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:25:57) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:26:06) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:26:23) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:26:30) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:26:35) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:27:08) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:27:17) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:27:25) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:27:35) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:27:40) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:27:56) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:28:05) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:28:11) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:28:16) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:28:22) | ERROR: Stall in Runner thread, restarting!
+2022/06/13 (21:28:27) | ERROR: Stall in Runner thread, restarting!
+
+2022/06/14 (03:24:29) | ===> btop++ v.1.2.7
+2022/06/14 (03:24:29) | INFO: Logger set to DEBUG
+2022/06/14 (03:24:29) | DEBUG: Using locale en_US.UTF-8
+2022/06/14 (03:24:29) | INFO: Running on /dev/pts/35
+2022/06/14 (03:24:29) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/14 (03:24:42) | INFO: Quitting! Runtime: 00:00:13
+
+2022/06/14 (17:51:23) | ===> btop++ v.1.2.7
+2022/06/14 (17:51:23) | INFO: Logger set to DEBUG
+2022/06/14 (17:51:23) | DEBUG: Using locale en_US.UTF-8
+2022/06/14 (17:51:23) | INFO: Running on /dev/pts/35
+2022/06/14 (17:51:23) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/14 (17:51:27) | INFO: Quitting! Runtime: 00:00:04
+
+2022/06/14 (19:20:34) | ===> btop++ v.1.2.7
+2022/06/14 (19:20:34) | INFO: Logger set to DEBUG
+2022/06/14 (19:20:34) | DEBUG: Using locale en_US.UTF-8
+2022/06/14 (19:20:34) | INFO: Running on /dev/pts/7
+2022/06/14 (19:20:34) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/15 (00:47:16) | ERROR: Stall in Runner thread, restarting!
+
+2022/06/15 (01:14:50) | ===> btop++ v.1.2.7
+2022/06/15 (01:14:50) | INFO: Logger set to DEBUG
+2022/06/15 (01:14:50) | DEBUG: Using locale en_US.UTF-8
+2022/06/15 (01:14:50) | INFO: Running on /dev/tty2
+2022/06/15 (01:14:50) | INFO: Real tty detected: setting 16 color mode and using tty friendly graph symbols
+2022/06/15 (01:15:48) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+
+2022/06/15 (01:19:12) | ===> btop++ v.1.2.7
+2022/06/15 (01:19:12) | INFO: Logger set to DEBUG
+2022/06/15 (01:19:12) | DEBUG: Using locale en_US.UTF-8
+2022/06/15 (01:19:12) | INFO: Running on /dev/pts/2
+2022/06/15 (01:19:12) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/15 (01:57:54) | DEBUG: Writing new config file
+2022/06/15 (01:57:54) | INFO: Quitting! Runtime: 00:38:42
+
+2022/06/15 (02:40:09) | ===> btop++ v.1.2.7
+2022/06/15 (02:40:09) | INFO: Logger set to DEBUG
+2022/06/15 (02:40:09) | DEBUG: Using locale en_US.UTF-8
+2022/06/15 (02:40:09) | INFO: Running on /dev/pts/4
+2022/06/15 (02:40:09) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/15 (02:40:16) | INFO: Quitting! Runtime: 00:00:07
+
+2022/06/15 (14:40:03) | ===> btop++ v.1.2.7
+2022/06/15 (14:40:03) | INFO: Logger set to DEBUG
+2022/06/15 (14:40:03) | DEBUG: Using locale en_US.UTF-8
+2022/06/15 (14:40:03) | INFO: Running on /dev/pts/5
+2022/06/15 (14:40:03) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+
+2022/06/15 (16:23:40) | ===> btop++ v.1.2.7
+2022/06/15 (16:23:40) | INFO: Logger set to DEBUG
+2022/06/15 (16:23:40) | DEBUG: Using locale en_US.UTF-8
+2022/06/15 (16:23:40) | INFO: Running on /dev/pts/9
+2022/06/15 (16:23:40) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/15 (16:24:43) | INFO: Quitting! Runtime: 00:01:03
+
+2022/06/15 (16:24:55) | ===> btop++ v.1.2.7
+2022/06/15 (16:24:55) | INFO: Logger set to DEBUG
+2022/06/15 (16:24:55) | DEBUG: Using locale en_US.UTF-8
+2022/06/15 (16:24:55) | INFO: Running on /dev/pts/16
+2022/06/15 (16:24:55) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/15 (17:32:49) | ERROR: Stall in Runner thread, restarting!
+2022/06/15 (20:45:02) | DEBUG: Writing new config file
+2022/06/15 (20:45:02) | INFO: Quitting! Runtime: 04:20:07
+2022/06/16 (02:42:30) | ERROR: Stall in Runner thread, restarting!
+2022/06/16 (03:23:13) | ERROR: Stall in Runner thread, restarting!
+2022/06/16 (03:23:31) | ERROR: Stall in Runner thread, restarting!
+2022/06/16 (03:25:29) | ERROR: Stall in Runner thread, restarting!
+2022/06/16 (03:26:51) | ERROR: Stall in Runner thread, restarting!
+2022/06/16 (03:28:10) | ERROR: Stall in Runner thread, restarting!
+2022/06/16 (03:28:58) | ERROR: Stall in Runner thread, restarting!
+2022/06/16 (04:35:16) | WARNING: Failed to join _runner thread on exit!
+2022/06/16 (04:35:16) | DEBUG: Writing new config file
+2022/06/16 (04:35:16) | INFO: Quitting! Runtime: 13:55:13
+
+2022/06/16 (04:35:19) | ===> btop++ v.1.2.7
+2022/06/16 (04:35:19) | INFO: Logger set to DEBUG
+2022/06/16 (04:35:19) | DEBUG: Using locale en_US.UTF-8
+2022/06/16 (04:35:19) | INFO: Running on /dev/pts/5
+2022/06/16 (04:35:19) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/16 (17:25:30) | ERROR: Stall in Runner thread, restarting!
+2022/06/16 (17:25:37) | ERROR: Stall in Runner thread, restarting!
+2022/06/16 (17:35:13) | ERROR: Stall in Runner thread, restarting!
+2022/06/16 (17:37:31) | ERROR: Stall in Runner thread, restarting!
+
+2022/06/17 (04:05:30) | ===> btop++ v.1.2.7
+2022/06/17 (04:05:30) | INFO: Logger set to DEBUG
+2022/06/17 (04:05:30) | DEBUG: Using locale en_US.UTF-8
+2022/06/17 (04:05:30) | INFO: Running on /dev/pts/13
+2022/06/17 (04:05:30) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/17 (22:35:00) | INFO: Quitting! Runtime: 18:29:30
+
+2022/06/18 (00:09:27) | ===> btop++ v.1.2.7
+2022/06/18 (00:09:28) | INFO: Logger set to DEBUG
+2022/06/18 (00:09:28) | DEBUG: Using locale en_US.UTF-8
+2022/06/18 (00:09:28) | INFO: Running on /dev/pts/16
+2022/06/18 (00:09:28) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/18 (00:20:54) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/mi-owl.theme
+2022/06/18 (00:20:56) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/18 (00:20:57) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/mi-owl.theme
+2022/06/18 (00:20:58) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/19 (11:35:52) | ERROR: Stall in Runner thread, restarting!
+2022/06/19 (11:37:14) | WARNING: Failed to join _runner thread on exit!
+2022/06/19 (11:37:14) | DEBUG: Writing new config file
+2022/06/19 (11:37:14) | INFO: Quitting! Runtime: 1d 11:27:47
+
+2022/06/19 (11:37:18) | ===> btop++ v.1.2.7
+2022/06/19 (11:37:18) | INFO: Logger set to DEBUG
+2022/06/19 (11:37:18) | DEBUG: Using locale en_US.UTF-8
+2022/06/19 (11:37:18) | INFO: Running on /dev/pts/16
+2022/06/19 (11:37:18) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/19 (11:37:50) | DEBUG: Writing new config file
+2022/06/19 (11:37:50) | INFO: Quitting! Runtime: 00:00:32
+
+2022/06/19 (11:37:52) | ===> btop++ v.1.2.7
+2022/06/19 (11:37:52) | INFO: Logger set to DEBUG
+2022/06/19 (11:37:52) | DEBUG: Using locale en_US.UTF-8
+2022/06/19 (11:37:52) | INFO: Running on /dev/pts/16
+2022/06/19 (11:37:52) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/19 (11:39:59) | INFO: Quitting! Runtime: 00:02:07
+
+2022/06/19 (11:40:53) | ===> btop++ v.1.2.7
+2022/06/19 (11:40:53) | INFO: Logger set to DEBUG
+2022/06/19 (11:40:53) | DEBUG: Using locale en_US.UTF-8
+2022/06/19 (11:40:53) | INFO: Running on /dev/pts/13
+2022/06/19 (11:40:53) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/19 (18:34:14) | ERROR: Stall in Runner thread, restarting!
+2022/06/19 (18:34:41) | ERROR: Stall in Runner thread, restarting!
+2022/06/19 (18:35:44) | ERROR: Stall in Runner thread, restarting!
+2022/06/19 (18:38:26) | WARNING: Failed to join _runner thread on exit!
+2022/06/19 (18:38:26) | DEBUG: Writing new config file
+2022/06/19 (18:38:26) | INFO: Quitting! Runtime: 06:57:33
+
+2022/06/19 (18:42:03) | ===> btop++ v.1.2.7
+2022/06/19 (18:42:03) | INFO: Logger set to DEBUG
+2022/06/19 (18:42:03) | DEBUG: Using locale en_US.UTF-8
+2022/06/19 (18:42:03) | INFO: Running on /dev/pts/6
+2022/06/19 (18:42:03) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+
+2022/06/21 (12:06:42) | ===> btop++ v.1.2.7
+2022/06/21 (12:06:42) | INFO: Logger set to DEBUG
+2022/06/21 (12:06:42) | DEBUG: Using locale en_US.UTF-8
+2022/06/21 (12:06:42) | INFO: Running on /dev/pts/2
+2022/06/21 (12:06:42) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/21 (12:06:56) | DEBUG: Writing new config file
+2022/06/21 (12:06:56) | INFO: Quitting! Runtime: 00:00:14
+2022/06/21 (23:56:44) | ERROR: Stall in Runner thread, restarting!
+2022/06/21 (23:57:00) | ERROR: Stall in Runner thread, restarting!
+
+2022/06/23 (09:58:45) | ===> btop++ v.1.2.7
+2022/06/23 (09:58:45) | INFO: Logger set to DEBUG
+2022/06/23 (09:58:45) | DEBUG: Using locale en_US.UTF-8
+2022/06/23 (09:58:45) | INFO: Running on /dev/pts/27
+2022/06/23 (09:58:45) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/23 (20:09:01) | ERROR: Stall in Runner thread, restarting!
+2022/06/23 (20:09:01) | ERROR: Stall in Runner thread, restarting!
+2022/06/24 (19:56:30) | ERROR: Stall in Runner thread, restarting!

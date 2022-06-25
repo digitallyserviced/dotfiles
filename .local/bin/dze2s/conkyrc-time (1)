@@ -1,0 +1,8 @@
+out_to_x  no
+out_to_console yes
+use_spacer none
+background no
+double_buffer yes
+
+TEXT
+^bg(\#4e4e4e)  ^i(/home/ubuntu/.icons/xbm/net_up_03.xbm) ^bg()^bg(\#4e4e4e)^fg(\#232323)^fn(DejaVu Sans Mono for Powerline:antialias=yes:pixelsize=9) ^fn()^bg()^fg()^fn(cure:pixelsize=9)^bg(\#232323)  ${upspeed ppp0} ^fn()^bg()^bg(\#4e4e4e)  ^i(/home/ubuntu/.icons/xbm/net_down_03.xbm) ^bg()^bg(\#4e4e4e)^fg(\#232323)^fn(DejaVu Sans Mono for Powerline:antialias=yes:pixelsize=9) ^fn()^bg()^fg()^bg(\#232323)^fn(cure:pixelsize=9)  ${downspeed ppp0} ^bg()^fn()^ca(1,dzen-mpd)^bg(\#4e4e4e)  ^i(/home/ubuntu/.icons/xbm/note.xbm)  ^bg() ^ca() ^i(/home/ubuntu/.icons/xbm/spkr_01.xbm)  ${exec barvolume}   ^bg(\#4e4e4e)  ^i(/home/ubuntu/.icons/xbm/bat_full_02.xbm) ^bg()^bg(\#4e4e4e)^fg(\#5F101F)^fn(DejaVu Sans Mono for Powerline:antialias=yes:pixelsize=9)^fn()^bg()^fg()^bg(\#5F101F)^fg(\#b5b5b5)^fn(cure:pixelsize=9) Pow: ${exec mpdstatus baterai} ^fg()^bg()^bg(\#232323) ^ca(1,info-box)^ca(3,dzen-mpd)${exec date +"%a, %b %d %H:%M"}^fn()  ^ca()^ca()

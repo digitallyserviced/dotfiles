@@ -5,6 +5,7 @@ return function (M)
   local handlers = {
     "window-config-reloaded",
     "update-right-status",
+    "open-uri",
     "format-tab-title",
     "format-window-title"
   }

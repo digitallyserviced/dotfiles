@@ -1,0 +1,526 @@
+#!/bin/bash
+# ---
+# pimg : print image file in terminal
+# copyright by @cocoa_box ; created 2013-06-27
+#
+# examples:
+#
+# ./pimg "http://lohas.nicoseiga.jp/thumb/1176871i"                # <-- prints image to fit current terminal window
+# ./pimg -i "http://lohas.nicoseiga.jp/thumb/1176871i" -h ? -w ?   # <-- prints image in original dimensions
+# ./pimg "~/my_picture.jpg"
+#
+# additional options:
+# -d anime          --> no dithering (anime image with sharp edges)
+# -d photo1 or -d photo2    --> photo dithering; see: http://www.imagemagick.org/Usage/quantize/#colors
+#
+# NOTE: needs 256-color terminal, e.g. $TERM="xterm-256color") and ImageMagick (can download via `yum install imagemagick`)
+#
+# version history
+# 20132627 - initial version
+# 20130628 - performance tune up and also dithering, unicode options, usage screen and pipe input
+# 20130701 - creates and cachesc color-code palette (source-able shell script) to tmp directory
+
+# color palette (color 16..255)
+# http://d.hatena.ne.jp/kakurasan/20080703/p1
+# -----
+PALETTE="
+        000000 00005F 000087 0000AF 0000D7 0000FF
+        005F00 005F5F 005F87 005FAF 005FD7 005FFF
+        008700 00875F 008787 0087AF 0087D7 0087FF
+        00AF00 00AF5F 00AF87 00AFAF 00AFD7 00AFFF
+        00D700 00D75F 00D787 00D7AF 00D7D7 00D7FF
+        00FF00 00FF5F 00FF87 00FFAF 00FFD7 00FFFF
+        5F0000 5F005F 5F0087 5F00AF 5F00D7 5F00FF
+        5F5F00 5F5F5F 5F5F87 5F5FAF 5F5FD7 5F5FFF
+        5F8700 5F875F 5F8787 5F87AF 5F87D7 5F87FF
+        5FAF00 5FAF5F 5FAF87 5FAFAF 5FAFD7 5FAFFF
+        5FD700 5FD75F 5FD787 5FD7AF 5FD7D7 5FD7FF
+        5FFF00 5FFF5F 5FFF87 5FFFAF 5FFFD7 5FFFFF
+        870000 87005F 870087 8700AF 8700D7 8700FF
+        875F00 875F5F 875F87 875FAF 875FD7 875FFF
+        878700 87875F 878787 8787AF 8787D7 8787FF
+        87AF00 87AF5F 87AF87 87AFAF 87AFD7 87AFFF
+        87D700 87D75F 87D787 87D7AF 87D7D7 87D7FF
+        87FF00 87FF5F 87FF87 87FFAF 87FFD7 87FFFF
+        AF0000 AF005F AF0087 AF00AF AF00D7 AF00FF
+        AF5F00 AF5F5F AF5F87 AF5FAF AF5FD7 AF5FFF
+        AF8700 AF875F AF8787 AF87AF AF87D7 AF87FF
+        AFAF00 AFAF5F AFAF87 AFAFAF AFAFD7 AFAFFF
+        AFD700 AFD75F AFD787 AFD7AF AFD7D7 AFD7FF
+        AFFF00 AFFF5F AFFF87 AFFFAF AFFFD7 AFFFFF
+        D70000 D7005F D70087 D700AF D700D7 D700FF
+        D75F00 D75F5F D75F87 D75FAF D75FD7 D75FFF
+        D78700 D7875F D78787 D787AF D787D7 D787FF
+        D7AF00 D7AF5F D7AF87 D7AFAF D7AFD7 D7AFFF
+        D7D700 D7D75F D7D787 D7D7AF D7D7D7 D7D7FF
+        D7FF00 D7FF5F D7FF87 D7FFAF D7FFD7 D7FFFF
+        FF0000 FF005F FF0087 FF00AF FF00D7 FF00FF
+        FF5F00 FF5F5F FF5F87 FF5FAF FF5FD7 FF5FFF
+        FF8700 FF875F FF8787 FF87AF FF87D7 FF87FF
+        FFAF00 FFAF5F FFAF87 FFAFAF FFAFD7 FFAFFF
+        FFD700 FFD75F FFD787 FFD7AF FFD7D7 FFD7FF
+        FFFF00 FFFF5F FFFF87 FFFFAF FFFFD7 FFFFFF
+        080808 121212 1C1C1C 262626 303030 3A3A3A
+        444444 4E4E4E 585858 626262 6C6C6C 767676
+        808080 8A8A8A 949494 9E9E9E A8A8A8 B2B2B2
+        BCBCBC C6C6C6 D0D0D0 DADADA E4E4E4 EEEEEE
+"
+
+
+get_temp_filename () {
+    # $1 = extension , e.g. "jpg"
+    # output to stdout
+    TEMP_FILENAME="/tmp/display_image__$RANDOM.$1"
+    if [ -f $TEMP_FILENAME ]; then
+        get_temp_filename "$1"
+        return 0
+    fi
+    TEMP_REMOVE_CMD="${TEMP_REMOVE_CMD} rm $TEMP_FILENAME;"
+    echo "$TEMP_FILENAME"
+}
+
+remove_temp_files() {
+    if [ ! -z "$TEMP_REMOVE_CMD" ]; then
+        $TEMP_REMOVE_CMD
+    fi
+}
+TEMP_REMOVE_CMD=""
+
+create_palette () {
+    # create a new image for palette (6 x 40 = 240 colors)
+    # filename output to $1
+    X=0
+    TXT=`get_temp_filename txt`
+    echo "# ImageMagick pixel enumeration: 240,1,255,rgb" > "$TXT"
+    while read line; do
+        IFS=' '; for c in $line; do
+            RGB=`printf "%3d,%3d,%3d" 0x${c:0:2} 0x${c:2:2} 0x${c:4:2}`
+            RGB2=`printf "%d,%d,%d" 0x${c:0:2} 0x${c:2:2} 0x${c:4:2}`
+            echo "${X},0: (${RGB})  #${c}  rgb(${RGB2})" >> "$TXT"
+            let X="$X + 1"
+        done
+    done < <(echo $PALETTE)
+    convert "$TXT" "$1"
+}
+
+LAST_COLOR=""
+
+print_lines() {
+    # prints two lines of buffers
+    #echo "`tput sgr0`1=\"$1\" and 2=\"$2\""
+    if [ -z "$1" -a -z "$2" ]; then echo "nothing to write"; return; fi
+    eval arr_prev="($1)"
+    eval arr="($2)"
+
+    for (( I = 0; I < ${#arr_prev[@]}; ++I )); do
+        COLOR=${arr_prev[$I]};
+        COLOR2=${arr[$I]};
+
+        if [ -z "$COLOR2" ]; then COLOR2="000000"; fi
+
+        #echo "`tput sgr0`color1,2=$COLOR, $COLOR2"
+
+        col_varname="COLORS_${COLOR}_${COLOR2}"
+        needs_decode_varname="COLORS_${COLOR}_${COLOR2}_NEED_DECODE"
+        NEEDS_DECODE=${!needs_decode_varname}
+        if [ ! -z "$NEEDS_DECODE" ]; then
+            read IDX IDX2 KIND <<< ${!col_varname}
+            case "$KIND" in
+                B) eval "$col_varname=\"`tput setab $IDX2``tput setaf $IDX`\xE2\x96\x80\"" ;;
+                A) eval "$col_varname=\"`tput setab $IDX` \"" ;;
+                *) eval "$col_varname='$col_varname'" ;;
+            esac
+            eval "unset $needs_decode_varname"
+        fi
+        echo -ne "${!col_varname}"
+    done
+    echo $NOCOLOR
+}
+
+ve () {
+    # verbose output to stderr
+    if [ $VERBOSE -eq 1 ]; then
+        if [ "$1" == "-n" -a ! -z "$2" ]; then
+            echo -n "$1" >&2
+        else
+            echo "$1" >&2
+        fi
+    fi
+}
+VERBOSE=0
+
+ctrl_c() {
+    remove_temp_files
+    echo -e "`tput sgr0`\nbreak"
+    exit $?
+}
+trap ctrl_c SIGINT
+
+# ---
+# starts here
+# ---
+SRC="$1"
+WANTED_HEIGHT=""
+WANTED_WIDTH=""
+WANT_DITHER=0
+UNICODE=0
+UNSHARP=0
+
+# detect unicode
+if [ "`sed -ne 's/.*\([Uu][Tt][Ff]\-8\)/\1/p' <<< \"$LANG\"`" == "UTF-8" ]; then
+        UNICODE=1
+fi
+
+while getopts "d:i:h:w:vups" opt; do
+  case $opt in
+    u) UNICODE=1  ;;
+    p) UNICODE=0  ;;
+    s) UNSHARP=1  ;;
+    d) WANT_DITHER="$OPTARG" ;;
+    i) SRC="$OPTARG" ;;
+    h) let WANTED_HEIGHT="$OPTARG" ;;
+    w) let WANTED_WIDTH="$OPTARG" ;;
+    v) VERBOSE=1 ;;
+  esac
+done
+
+COLS=`tput colors`
+if [ "$COLS" -lt 256 ]; then
+    if [ "$COLS" -eq 1 ]; then
+        COLS="is MONOCHROMATIC"
+    else
+        COLS="gives $COLS colors"
+    fi
+    echo "WARNING: needs 256 colors (your terminal $COLS). if you have a colorful terminal, try: export TERM='xterm-256color'" >&2
+fi
+
+# ---
+# test for convert command presence
+# ---
+convert >/dev/null  2>/dev/null
+if [ "$?" -eq 127 ] ; then
+    echo "ERROR: missing convert command; install ImageMagick" >&2
+    remove_temp_files
+    exit 10
+fi
+
+# ---
+# download if necessary
+# ---
+SRC_SCHEMA=`echo "$SRC" | sed -ne 's/^\(.*\):\/\/.*$/\1/p'`
+if [ ! -z "$SRC_SCHEMA" ]; then
+    URL="$SRC"
+    ve "will fetch from: $URL"
+    SRC_EXT=`echo "$URL" | sed -ne 's/.*\.\([A-Za0z0-9]*\)$/\1/p'`
+    DOWNLOAD_FN=$(curl -sI "$URL" | grep -o -E 'filename=.*$' | sed -e 's/filename=//')
+    ve "remote filename: $DOWNLOAD_FN"
+    if [ -z "$SRC_EXT" ]; then
+        FN=`echo "$DOWNLOAD_FN" | tr -d \"`
+        SRC_EXT=`echo "$FN" | sed -ne 's/.*\.\(.*\)$/\1/p'`
+    fi
+    SRC=`get_temp_filename $SRC_EXT`
+    curl -sL "$URL" > "$SRC"
+    if [ ! -s "$SRC" ]; then
+        echo "unable to fetch: $1" >&2
+        SRC=""
+    fi
+fi
+
+SHOW_USAGE=0
+if [ -z "$SRC" -o ! -f "$SRC" ]; then
+    SHOW_USAGE=1
+    if [ "$SRC" == "-" ]; then SHOW_USAGE=0; fi;
+fi
+
+if [ $SHOW_USAGE -eq 1 ]; then
+    echo -e "usage:\n$0 <filename or URL or ->"
+    echo -e "$0 -i <filename or URL or -> [-u|-p] [-w WANTED_WIDTH] [-h WANTED_HEIGHT] [-v] [-d <anime,photo,0,1,2>] [-s]"
+    echo ""
+    echo "-u .. unicode; gives better vertical resolution (default=terminal settings)"
+    echo "-p .. plain/no unicode, faster"
+    echo "-d .. ImageMagick dithering(0,anime=none;  1,photo1=Riemersma;  2,photo2,photo=FloydSteinberg)"
+    echo "-v .. verbose to stderr"
+    echo "-s .. sharpen image"
+    echo ""
+    echo -e "To read from stdin, use filename '-', e.g. cat spam.png | `basename $0` -u -i -"
+    echo -e "To improve speed, copy '/tmp/`basename $0`.palette' to your working directory or HOME directory"
+    echo ""
+
+    remove_temp_files
+    exit 1
+fi
+
+WORK=`get_temp_filename png`
+if [ $UNICODE -ne 1 ] ; then
+    if [ "$SRC" == "-" ]; then
+        FROM_STDIN=`get_temp_filename`
+        cat <&0 >"$FROM_STDIN"
+        SRC="$FROM_STDIN"
+    fi
+    # ---
+    # since terminal chars are rectangular, reduce original image height by half
+    # ---
+    IMG_HEIGHT_ORIG=`identify -format '%h' "$SRC"`
+    IMG_WIDTH_ORIG=`identify -format '%w' "$SRC"`
+    let NEW_IMG_HEIGHT="$IMG_HEIGHT_ORIG / 2"
+    ve "resizing image: $SRC"
+    convert "$SRC" -resize ${IMG_WIDTH_ORIG}x${NEW_IMG_HEIGHT}\! $WORK
+    if [ ! -f "$WORK" ]; then
+        remove_temp_files
+        echo "unable to convert '$1' to PNG" >&2
+        exit 1
+    fi
+else
+    if [ "$SRC" == "-" ]; then
+        cat <&0 >"$WORK"
+    else
+        cp "$SRC" "$WORK"
+    fi
+fi
+# ---
+# rescale image to fit screen
+# ---
+TERM_WIDTH=`tput cols`
+TERM_HEIGHT=`tput lines`
+IMG_HEIGHT=`identify -format '%h' "$WORK"`
+IMG_WIDTH=`identify -format '%w' "$WORK"`
+FINAL_HEIGHT=""
+FINAL_WIDTH=""
+
+if [ "$WANTED_HEIGHT" == "?" ]; then let WANTED_HEIGHT="$IMG_HEIGHT_ORIG"; fi
+if [ "$WANTED_WIDTH" == "?" ]; then WANTED_WIDTH="$IMG_WIDTH_ORIG"; fi
+
+if [ ! -z "$WANTED_HEIGHT" ]; then TERM_HEIGHT="$WANTED_HEIGHT"; fi
+if [ ! -z "$WANTED_WIDTH" ]; then TERM_WIDTH="$WANTED_WIDTH"; fi
+
+ve "resizing image to fit terminal : $TERM_WIDTH x $TERM_HEIGHT"
+
+let FACTOR1="1000 * $TERM_WIDTH / $IMG_WIDTH"
+let FACTOR2="1000 * $TERM_HEIGHT / $IMG_HEIGHT"
+if [ $FACTOR1 -lt $FACTOR2 ] ; then
+    # use factor 1
+    let FINAL_HEIGHT="$IMG_HEIGHT * $FACTOR1 / 1000"
+    let FINAL_WIDTH="$IMG_WIDTH* $FACTOR1 / 1000"
+else
+    # use factor 2
+    let FINAL_HEIGHT="$IMG_HEIGHT * $FACTOR2 / 1000"
+    let FINAL_WIDTH="$IMG_WIDTH* $FACTOR2 / 1000"
+fi
+
+if [ $UNICODE -eq 1 ]; then
+    # since every terminal-row will now represent TWO pixel-rows, we need to double image size
+    let FINAL_HEIGHT="$FINAL_HEIGHT * 2"
+    let FINAL_WIDTH="$FINAL_WIDTH * 2"
+fi
+
+ve "... final image size: $FINAL_WIDTH x $FINAL_HEIGHT"
+
+WORK2=`get_temp_filename png`
+UNSHARP_OPT=""
+if [ $UNSHARP -eq 1 ]; then
+    UNSHARP_OPT="-unsharp 0x1"
+fi
+
+convert "$WORK" -resize ${FINAL_WIDTH}x${FINAL_HEIGHT}\! $UNSHARP_OPT "$WORK2"
+
+if [ ! -f "$WORK2" ]; then
+    remove_temp_files
+    echo "unable to resize image" >&2
+    exit 1
+fi
+
+# ---
+# quantize image
+# ---
+WORK3=`get_temp_filename png`
+DITHER_OPT=""
+case $WANT_DITHER in
+    0|anime) DITHER_OPT='+dither' ;;
+    1|photo1) DITHER_OPT='-dither Riemersma' ;;
+    2|photo2|photo) DITHER_OPT='-dither FloydSteinberg' ;;
+    # experimental (:see http://www.imagemagick.org/Usage/quantize/ )
+    o4) DITHER_OPT="-ordered-dither o4x4,6" ;;
+    h4) DITHER_OPT="-ordered-dither h4x4,6" ;;
+    *) DITHER_OPT="$WANT_DITHER"
+esac
+
+
+SH_PALETTE_FN=""
+declare -a SH_PALETTE_FN_TRIES=( "$PWD/`basename $0`.palette" "$HOME/`basename $0`.palette" "/tmp/`basename $0`.palette" )
+USE_EXISTING_PALETTE=0
+
+for i in "${SH_PALETTE_FN_TRIES[@]}"; do
+    if [ -f "$i" ]; then
+        SH_PALETTE_FN="$i"
+        # examine palette to see if it is valid (-v = negative match; return lines that doesnt match)
+        grep -ve  'COLORS_[0-9,A-F,_]*\(NEED_DECODE\)\?=.*' "$SH_PALETTE_FN"
+        if [ $? -eq 1 ]; then
+            ve "importing colors: $SH_PALETTE_FN"
+            # ^ i.e. no lines returned => all lines OK
+            USE_EXISTING_PALETTE=1
+            source "$SH_PALETTE_FN"
+            if [ $? -ne 0 -o -z "$COLORS_EEEEEE_EEEEEE" -o -z "$COLORS_EEEEEE" ] ; then
+                USE_EXISTING_PALETTE=0
+                echo "unable to import colors: $SH_PALETTE_FN" >&2
+            else
+                break
+            fi
+        fi
+    fi
+done
+
+# ---
+# prepare color array
+# ---
+if [ $USE_EXISTING_PALETTE -eq 0 ]; then
+    ve "preparing color palette..."
+    SH_PALETTE_FN="/tmp/`basename $0`.palette"
+    echo -n "" > "$SH_PALETTE_FN"
+
+    # start at color 16
+    IDX=16
+
+    while read line_top; do
+        IFS=' '; for c_top in $line_top; do
+            # non-unicode output (simple colors)
+            ESC_CODE=`tput setab $IDX`
+            eval "COLORS_${c_top}=\"$ESC_CODE\""
+
+            echo "COLORS_${c_top}=\"$ESC_CODE\"" >>"$SH_PALETTE_FN"     # palette save
+
+            # unicode output (needs FG and BG)
+            IDX2=16
+            while read line_bottom; do
+                IFS=' '; for c_bottom in $line_bottom; do
+                    if [ $IDX -eq $IDX2 ]; then
+                        declare COLORS_${c_top}_${c_bottom}="$IDX $IDX2 A"
+                        declare COLORS_${c_top}_${c_bottom}_NEED_DECODE=1
+
+                        echo "COLORS_${c_top}_${c_bottom}=\"$IDX $IDX2 A\"" >> "$SH_PALETTE_FN"     # palette save
+                        echo "COLORS_${c_top}_${c_bottom}_NEED_DECODE=1"    >> "$SH_PALETTE_FN"     # palette save
+                    else
+                        declare COLORS_${c_top}_${c_bottom}="$IDX $IDX2 B"
+                        declare COLORS_${c_top}_${c_bottom}_NEED_DECODE=1
+
+                        echo "COLORS_${c_top}_${c_bottom}=\"$IDX $IDX2 B\"" >> "$SH_PALETTE_FN"     # palette save
+                        echo "COLORS_${c_top}_${c_bottom}_NEED_DECODE=1"    >> "$SH_PALETTE_FN"     # palette save
+                    fi
+                    let IDX2="$IDX2 + 1"
+                done
+            done < <(echo $PALETTE)
+            let IDX="$IDX + 1"
+        done
+    done < <(echo $PALETTE)
+    ve "done"
+fi
+
+
+PALETTE_FN=`get_temp_filename png`
+ve "quantizing image... $DITHER_OPT"
+create_palette "$PALETTE_FN"
+convert "$WORK2" $DITHER_OPT -remap "$PALETTE_FN" "$WORK3"
+
+if [ ! -f "$WORK3" ]; then
+    remove_temp_files
+    echo "unable to quantize image" >&2
+    exit 1
+fi
+
+# ---
+# display image
+# ---
+PREV_Y=0
+OUT=""
+NOATTR=`tput sgr0`
+LAST_COLOR=""
+ve "printing image..."
+if [ $UNICODE -eq 1 ]; then
+#Y0=0
+#arr={}
+#arr_prev={}
+#for each pix(X, Y, C):
+#   if Y != Y0
+#       # ---line changed
+#       if arr_prev empty:
+#           # --- shift buffer
+#           arr_prev=arr
+#           arr={}
+#           arr.append C
+#       else:
+#           # --- arr_prev not empty
+#           print arr, arr_prev
+#
+#           # --- reset buffers
+#           arr_prev={}
+#           arr={}
+#           arr.append C
+#   else:
+#       # --- not line change append to buffer
+#       arr.append C
+#   Y0 = Y
+    Y0=0
+    arr=()
+    arr_prev=()
+    NOCOLOR=`tput sgr0`
+    while read X Y R G B C junk; do
+        if [ $Y -ne $Y0 ]; then
+            # echo -n "LC;"
+            # --- line changed
+            if [ -z $arr_prev ]; then
+                # --- previous buffer empty: shift buffer
+                # echo -n "SB;"
+                arr_prev=("${arr[@]}")
+                arr=("\"$C\"")
+            else
+                # echo -n "PB;"
+                # --- print buffer
+                print_lines "${arr_prev[*]}" "${arr[*]}"
+
+                # --- reset buffers
+                # echo -n "RB;"
+                arr_prev=()
+                arr=("\"$C\"")
+            fi
+        else
+            # --- not line change; append buffer
+            arr=("${arr[@]}" "\"$C\"")
+        fi
+        Y0=$Y
+    done < <(convert "$WORK3" "txt:-"| tail -n +2 | tr -cs '0-9A-F\n' ' ')
+
+    #echo "last line"
+    if [ -z "${arr_prev[*]}" -a ! -z "${arr[*]}" ]; then
+        print_lines "${arr[*]}" ""
+    else
+        print_lines "${arr_prev[*]}" "${arr[*]}"
+    fi
+
+
+
+else
+    # non unicode print
+    while read X Y R G B C junk; do
+    if [ ! -z "$C" ]; then
+        if [ $Y -ne $PREV_Y ]; then
+            echo $NOATTR
+            LAST_COLOR=""
+            fi
+        eval "THIS_COLOR=\"\$COLORS_$C\""
+        if [ -z "$THIS_COLOR" ]; then
+            echo -n "`tput setab 0`X"
+        else
+            if [ "$THIS_COLOR" == "$LAST_COLOR" ]; then
+                echo -n " "
+            else
+                echo -n "$THIS_COLOR "
+                LAST_COLOR="$THIS_COLOR"
+            fi
+        fi
+        let PREV_Y="$Y"
+    fi
+    done < <(convert "$WORK3" "txt:-"| tail -n +2 | tr -cs '0-9A-F\n' ' ')
+    echo $NOATTR
+fi
+
+remove_temp_files
+ve "done"

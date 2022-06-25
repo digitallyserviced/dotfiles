@@ -1,0 +1,172 @@
+#!/bin/bash
+# emulate -L zsh
+xrdb ~/.Xresources
+## Environtment
+export PATH="${PATH}:$HOME/.config/bspwm/bin"
+function getcolors() {
+	FOREGROUND=$(xrdb -query | grep 'foreground:' | awk '{print $NF}')
+	BACKGROUND=$(xrdb -query | grep 'background:' | awk '{print $NF}')
+	RED=$(xrdb -query | grep 'color1:' | awk '{print $NF}')
+	GREEN=$(xrdb -query | grep 'color2:' | awk '{print $NF}')
+	BLUE=$(xrdb -query | grep 'color4:' | awk '{print $NF}')
+	MAGENTA=$(xrdb -query | grep 'color5:' | awk '{print $NF}')
+}
+
+	# BLACK=$(xrdb -query | grep 'color0:' | awk '{print $NF}')
+	# YELLOW=$(xrdb -query | grep 'color3:' | awk '{print $NF}')
+	# CYAN=$(xrdb -query | grep 'color6:' | awk '{print $NF}')
+	# WHITE=$(xrdb -query | grep 'color7:' | awk '{print $NF}')
+getcolors
+chars=('🬲🬨' '🬗🬤' '🬴🬸' '🬻🬺' '🬤🬗' '🬫🬛' '🬛🬫' '🬴🬗🬤🬸') #  '🬲🬺' '🬺🬷🬸' '🬴' '🬛' '🬫' '🬺' '🬻' '🬴🬗🬤🬸' '🬴' '🬸' '🬷')
+## Configurations --------------------------------------------#
+workspaces() {
+	name=1
+	for monitor in $(bspc query -M); do
+		#bspc monitor ${monitor} -n "$name" -d 'I' 'II' 'III' 'IV' 'V' 'VI' 'VII' 'VIII'
+		# bspc monitor ${monitor} -n "$name" -d '' '' '' '' '' '' '' ''
+		bspc monitor ${monitor} -n "$name" -d ${chars[@]}
+		# bspc monitor ${monitor} -n "$name" -d ${chars(@)}
+		# for i in $(bspc query -D); do
+		# 	for pos in top right bottom left; do
+		# 		# padding=${:-8}
+		# 		[[ "${pos}" -eq "top" ]] && padding=70 || padding=8
+		# 		bspc config -d ${i} ${pos}_padding ${padding}
+		# 	done
+		# done
+	done
+}
+workspaces
+
+bspc config border_width 0
+bspc config window_gap 2
+bspc config split_ratio 0.30
+
+bspc config honor_size_hints true
+bspc config focused_border_color "$BLUE"
+bspc config normal_border_color "$BACKGROUND"
+bspc config active_border_color "$MAGENTA"
+bspc config presel_feedback_color "$GREEN"
+
+# bspc config borderless_monocle true
+bspc config gapless_monocle true
+bspc config paddingless_monocle true
+bspc config single_monocle false
+bspc config focus_follows_pointer false
+bspc config pointer_follows_focus true
+
+# bspc config focus_follows_pointer true
+
+## Window rules ----------------------------------------------#
+
+# remove all rules first
+bspc rule -r *:*
+
+# 1 > terminal
+bspc rule -a wezterm desktop='^1' follow=on focus=on
+bspc rule -a wezbar desktop='^1' rectangle=1920x40+0+0 state=floating border_width=0
+bspc rule -a wezdebug desktop='^7' rectangle=800x600+500+300 state=floating border_width=0
+# bspc rule -a wezmodal state=floating manage=off
+bspc rule -a wezmodal desktop='^1' rectangle=800x600+500+300 state=floating
+bspc rule -a Xfce4-terminal desktop='^1' follow=on focus=on
+
+# 2 > web
+bspc rule -a firefox desktop='^2' follow=on focus=on
+bspc rule -a chromium desktop='^2' follow=on focus=on
+
+# 3 > files
+declare -a files=(Nautilus Thunar qBittorrent)
+for i in ${files[@]}; do
+	bspc rule -a $i desktop='^3' follow=on focus=on
+done
+
+# 4 > code
+declare -a code=(Geany code code-oss)
+for i in ${code[@]}; do
+	bspc rule -a $i desktop='^4' follow=on focus=on
+done
+
+# 5 > office and docs
+declare -a office=(Gucharmap Atril Evince
+	libreoffice-writer libreoffice-calc libreoffice-impress
+	libreoffice-startcenter libreoffice Soffice *:libreofficedev *:soffice)
+for i in ${office[@]}; do
+	bspc rule -a $i desktop='^5' follow=on focus=on
+done
+
+# 6 > Communication
+declare -a comm=(Thunderbird TelegramDesktop Hexchat)
+for i in ${comm[@]}; do
+	bspc rule -a $i desktop='^6' follow=on focus=on
+done
+
+# 7 > media
+declare -a media=(Audacity Music MPlayer Lxmusic Inkscape Gimp-2.10 obs)
+for i in ${media[@]}; do
+	bspc rule -a $i desktop='^7' state=floating follow=on focus=on
+done
+
+# 8 > settings
+bspc rule -a 'VirtualBox Manager' desktop='^8' follow=on focus=on
+bspc rule -a GParted desktop='^8' follow=on focus=on
+declare -a settings=(Lxappearance Lxtask Lxrandr Arandr
+	System-config-printer.py Pavucontrol Exo-helper-1
+	Xfce4-power-manager-settings)
+for i in ${settings[@]}; do
+	bspc rule -a $i desktop='^8' state=floating follow=on focus=on
+done
+
+# special rules
+declare -a floating=(wezterm alacritty-float Nautilus Onboard Yad 'Firefox:Places'
+	Viewnior feh Nm-connection-editor)
+for i in ${floating[@]}; do
+	bspc rule -a $i state=floating follow=on focus=on
+done
+
+bspc rule -a wez state=floating manage=off
+bspc rule -a Conky state=floating manage=off
+bspc rule -a stalonetray state=floating manage=off
+
+## Autostart -------------------------------------------------#
+
+# Kill if already running
+killall -9 xsettingsd sxhkd dunst ksuperkey xfce4-power-manager
+
+# Lauch notification daemon
+dunst \
+	-geom "280x50-10+42" -frame_width "1" -font "Iosevka Term 10" \
+	-lb "$BACKGROUND" -lf "$FOREGROUND" -lfr "$BLUE" \
+	-nb "$BACKGROUND" -nf "$FOREGROUND" -nfr "$BLUE" \
+	-cb "$BACKGROUND" -cf "$RED" -cfr "$RED" &
+
+# Lauch xsettingsd daemon
+xsettingsd &
+
+# polkit agent
+if [[ ! $(pidof xfce-polkit) ]]; then
+	/usr/lib/xfce-polkit/xfce-polkit &
+fi
+
+# Lauch keybindings daemon
+sxhkd &
+
+# Enable Super Keys For Menu
+ksuperkey -e 'Super_L=Alt_L|F1' &
+ksuperkey -e 'Super_R=Alt_L|F1' &
+
+# Enable power management
+xfce4-power-manager &
+
+# Fix cursor
+xsetroot -cursor_name left_ptr
+setxkbmap -option caps:none
+# Restore wallpaper
+bash $HOME/.fehbg
+
+# Start mpd
+exec mpd &
+
+# Start bspwm scripts
+bspcolors
+# bspbar
+bspcomp
+bspfloat &

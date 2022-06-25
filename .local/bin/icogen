@@ -1,0 +1,151 @@
+#!/bin/zsh
+emulate -L zsh
+local -F 4 start="`date +%s.%N`"
+  local -a ticons=()
+  local -A icos=()
+  local -A shits=() 
+  local -A icons=()
+
+get_all(){
+  source ~/Downloads/nerd-fonts/bin/scripts/lib/i_all.sh
+  noglob typeset -m i_* | while read lin; do 
+    icos+=(${(Rzs:=:)lin#i_*}); 
+  done 
+  # print -raC1 -- ${(qqk)icos}; 
+  for line in ${(k)icos}; do 
+    [[ "${#${icos[${line}]}}" -gt 1 ]] && continue
+    # echo ${line} ${#${icos[${line}]}}; 
+    local name="${(Rz)${(Rz)line#*_}#md*}"
+    shits[${name}]+="${icos[${line}]}"; 
+  done; 
+  print -raC2 -- ${(qqkv)shits}
+}
+
+generate_icon_cache()
+{
+  unsetopt xtrace
+  typeset -A ico_index=()
+  typeset -A ico_word=()
+  
+  for k in ${(okz)icons}; do 
+    local tag=${k}
+    local -a words=(${(s._.)tag})
+    # words=(${words%%${(v)bads}})
+    for i in ${(oz)words[@]}; do 
+      # [[ ${#i} -lt 3 ]] && continue
+      local prefix=${i:0:2}
+      ico_word[$prefix]="${(z)ico_word[$prefix]/${i}/} $i"
+      if [[ ! -n "${tags[$i]}" ]] {
+        tags[$i]=1 
+      } 
+      if [[ -n "${tags[$i]}" ]] { 
+        local count=${tags[$i]}
+        let count++
+        tags[$i]=$count
+        if [[ ${count} -gt 40 ]] {
+          bads[$i]=$count
+          # continue
+        } 
+      }
+      # [[ -n "${index[$i]}" ]] && index[$i]+=" "
+
+      index[$i]="${k} ${index[$i]}"
+    done
+  done
+
+  typeset -A ico_word_hash=()
+  typeset -A ico_flat=()
+  typeset -i 36 wordnum=1
+  # ico_word_hash[${i}]=${wordnum}
+
+  for k in ${(ik)index[@]}
+  do
+    ico_word_hash[${k}]=${wordnum}
+    let wordnum++
+  done
+  
+  for k in ${(ik)ico_word_hash}; do
+    for w in ${(z)${index[${k}]}}; do 
+      local -a fw=()
+      for s in ${(s:_:)w[@]}; do 
+        [[ -n ${ico_word_hash[${s}]} ]] && {
+          wnum=${ico_word_hash[${s}]}
+          fw+=("${wnum}")
+        }
+      done
+      local hash="${ico_word_hash[${k}]}"
+      ico_flat[${hash}]="${(j:_:)fw} $ico_flat[${ico_word_hash[${k}]}]"
+    done
+  done
+
+  # echo ${(qqkv)bads}
+  # echo ${(qqkv)index}
+  # echo ${(kv)ico_word[@]}
+  local -F 4 start=`date +%s.%N`
+  local -a ico_prefix=(${(okz)ico_word[@]})
+  local -A counts=()
+  for i in ${ico_prefix[@]}; do
+      # echo $i;
+      for k in ${(vz)ico_word[$i]}; do
+          # echo $k
+          # let $counts[$k]++
+      done
+  done
+  local -F 4 endd=`date +%s.%N`
+  local -F 4 elaps='endd-start'
+  print -raC 2 -- ${(kv)index[@]} | while read tag icons; do 
+    print -n -v entry -f " '%s'  '%b' " ${tag} ${icons}
+    ico_index+=([$tag]=${icons})
+  done
+  icofuns=$HOME/.config/zsh/functions
+  {
+    noglob typeset -p 1 -m ico_*
+  } > ${icofuns}/ico_funcs
+  # {
+  #     print "ico_flat=("
+  #     print -raC2 -- ${(qqkv)ico_flat}
+  #     print ")"
+  # } > ${icofuns}/icons_get_ico_flat
+  # {
+  #     print "ico_prefix=("
+  #     print -raC 2 -- ${(v)ico_prefix[@]}
+  #     print ")"
+  # } > ${icofuns}/icons_get_ico_prefix
+  # # echo ${(qqkv)ico_word[@]}
+  # {
+  #     print "ico_word=("
+  #     print -raC 2 -- ${(qqkvz)ico_word[@]}
+  #     print ")"
+  # } > ${icofuns}/icons_get_ico_word
+  # {
+  #     print "ico_index=("
+  #     print -raC 2 -- ${(qqkv)ico_index} 
+  #     print ")"
+  # } > ${icofuns}/ico_index
+}
+
+
+{
+  local -a ticons=()
+  local -A icos=()
+  local -A shits=() 
+  local -A icons=()
+  local -a attrcmd=()
+  local -A tags=()
+  local -A bads=()
+  local -A index=()
+  {
+      print "icons=("
+      get_all
+      icons=(${(kv)shits})
+      print ")"
+  } > $HOME/.config/zsh/icons2.zsh
+  generate_icon_cache
+}
+
+  # {
+  #     print "icons=("
+  #     get_all
+  #     icons=(${(kv)shits})
+  #     print ")"
+  # } > $HOME/.config/zsh/icons2.zsh

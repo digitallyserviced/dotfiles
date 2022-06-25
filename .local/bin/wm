@@ -1,0 +1,307 @@
+#!/bin/zsh
+
+emulate -L zsh
+
+(){
+
+  typeset -ga xdotool=(xdotool)
+  typeset -ga allsearch=(search --desktop --any --class '.*')
+  typeset -ga alldesktopwins=(${xdotool[@]} ${allsearch[@]})
+  typeset -ga desktopwins=(${xdotool[@]} ${allsearch[1,1]} --desktop '#NUM' ${allsearch:2})
+  typeset -ga num_desktops=(${xdotool[@]} get_num_desktops)
+  typeset -ga wininfo=(getwindowgeometry --shell %@)
+  typeset -ga desktopname=(bspc query --names -D -d %@)
+  typeset -ga winpid=(getwindowpid %@)
+  typeset -ga alldesktopwinsinfo=(${alldesktopwins[@]} ${wininfo[@]} ${winpid[@]})
+  typeset -ga currentwin=(${xdotool[@]} getwindowfocus -f)
+  typeset -ga currentwininfo=(${currentwin[@]} ${wininfo[@]})
+
+  typeset -A desktops=()
+  typeset -a keys=(PID MEM CPU EXE)
+  integer FDI FDO
+  typeset -a reply=() reply3=() 
+  typeset -A reply2=() 
+  local REPLY=""
+  typeset -a fgcolors=(234 234 15)
+  typeset -a colors=(8 3 5 14 13 11)
+  typeset -A cpairs=(${colors:^^fgcolors})
+  local cc=2
+  local ico0='⭘' ico1='⬤'
+  # local ico0='⬡' ico1='⬢'
+      # ⬡ ⬢ ⬡ ⬢ ⭘ ⬤
+      # ◉○◉◐◎●◌◈◊◇◆▪▫▬▭▮▯▰▱▲△▴▵▶▷▸▹►▻▼▽▾▿◀◁◂◃◄◅◆◇🞄🞅🞆🞇🞈🞉🞊🞋🞌🞍🞎🞏🞐🞑🞒🞓🞔🞕🞖🞗🞘🞙🞚🞛🞜
+      # ⬤⭕⭘⬠⬡⯁✔⯂
+  typeset -A segment_formats=(
+    '#EXE' 'print -v REPLY -n -f "%s" "#EXE"'
+    '#PID' 'print -v REPLY -n -f "%i" "#PID"'
+    '#MEM' 'print -v REPLY -n -f "%0.2f" "#MEM"'
+    '#CPU' 'print -v REPLY -n -f "%0.2f" "#CPU"'
+    '#ICO' 'print -v REPLY -f "%s" "${ico#FOCUSED}"' 
+    '#DESKTOP' 'print -v REPLY -n -f "%s" ${desktops["d#DESKTOP"]}'
+    '#FOCUSED' 'print -v REPLY -f "%d" "#FOCUSED"' 
+    '#STATE' 'print -v REPLY -f "%d" "#STATE"'
+    '#APPICO' 'print -v REPLY -f "%s" "$(icofn #EXE)"'
+  )
+  typeset -a segments=(EXE CPU ICO PID MEM FOCUSED DESKTOP)
+
+  main()
+  {
+    _wm_apps
+  }
+  
+  getallwinsinfo(){
+    local -a wininfos=()
+    local top=$1
+    if [[ -n "${1}" ]]; then
+      wininfos=($(${alldesktopwinsinfo[@]//%%@/${top}} 2>/dev/null)) 
+    else
+      wininfos=($(${alldesktopwinsinfo[@]} 2>/dev/null)) 
+    fi 
+    reply=(${wininfos//\=/ })
+    # _log wininfos ${reply}
+    reply=($(echo ${reply}))
+    typeset -a count=(${(M)reply:#WINDOW})
+    REPLY=${#count}
+  }
+  
+  getdesktops(){
+    local desktops=$(${num_desktops[@]} 2> /dev/null)
+    # _log num ${desktops}
+    REPLY=${desktops}
+  }
+  getwinsfordesktop(){
+    local NUM=$1
+    ((BNUM=NUM+1))
+    local -a cmd=(${desktopname[@]//%%@/^${BNUM}})
+    local desktop=$(${(z)cmd})
+    desktops[d${NUM}]="${desktop}"
+    cmd=(${desktopwins[@]//\#NUM/$NUM})
+    local -a desktopwins=($(${(z)cmd}))
+    desk=(${(z)desktopwins[@]})
+    REPLY=${desktopwins}
+  }
+  
+  windowinfo(){
+    local top=${1}
+    pids=(${winsinfo[-${wincount},-1]})
+    
+    winsinfo=(${winsinfo[1,-${wincount}-1]})
+    # _log ${winsinfo}
+    while [[ "$wincount" -gt 0 ]]; do
+      typeset -A win=(${winsinfo[1,12]})
+      win[FOCUSED]=0
+      
+      [[ "${win[WINDOW]}" -ne "${focused}" ]] || win[FOCUSED]=1 
+      win[PID]=${pids[-${wincount}]}
+      win[DESKTOP]=${top}
+      # local -A ico=($(wmico "${win[EXE]}"))
+      # _log ${(kv)ico}
+      typeset -a psinfo=($(ps --no-headers -o pid,pmem,pcpu,comm -p${win[PID]}))
+      winsinfo=(${winsinfo:12})
+      if [[ ${#psinfo} == 4 ]] {
+        win+=(${keys:^psinfo})
+      } else {
+        win+=(${{keys:1:1}:^(${PID})})
+      }
+      # _log ${(kvqq)win}
+      wins[${win[WINDOW]}]="${(kv)win}"
+      (( wincount=wincount-1 ))
+    done
+  }
+  # functions -T windowinfo
+  getallwinsfordesktops(){
+    local num=$(getdesktops && echo ${REPLY})
+    local top=0
+    local -A all=()
+    local -a desk=()
+      local -a desktopspwins=()
+    while [[ ${top} -lt ${num} ]]; do
+      getwinsfordesktop ${top}
+      for k in ${(v)desk[@]}; do 
+        getallwinsinfo ${k} && winsinfo=(${reply[@]}) wincount=$REPLY # || exit 1
+        windowinfo ${top}
+      done
+      all[d"${top}"]="${REPLY}"
+      (( top=top+1 ))
+    done
+    # _log ${(kvqq)all}
+    reply=(${(kv)all})
+  }
+
+  getfocusedwindow(){
+    local curretwinid=$(${currentwin[@]})
+    REPLY=${curretwinid}
+  }
+  
+  _get_format(){
+    local var=$1 is=$2 fmt="${app_format_var}"
+    if [[ "$is" = 1 ]] { 
+      fmt="${current_app_format_var}"
+    }
+    print -v $var "${fmt}" 
+  }
+
+  _log(){
+    echo "${(kv)functrace[@]} $@"
+    # [[ -n "${functrace[@]}"]] && echo "${(j.    .)functrace[@]}"
+    # [[ -n "$@" ]] && echo "$@"
+    # [[ -n "${(P)${(z)@}}"]] && echo "${(P)${(z)@}}"
+  } >&2
+  
+  _format_token(){
+    local fmtstr=${fmtr}
+    {
+      while [[ $fmtstr =~ '(\#[A-Z]+)' ]]; do 
+        [[ ${#match} -gt 0 ]] || break
+        local tok=${match} key=${match//\#/}
+        fmtstr="${fmtstr/$tok/${winfo[$key]}}"
+        # _log fmtstr ${fmtstr}
+        match=()
+      done
+    }
+    fmtr=${fmtstr}
+  }
+  
+  _make_tokens(){
+    # _log $@
+    {
+      # _log ${(kv)winfo[@]}
+      local tokens=${(P)1}
+      for k v in ${(kv)segment_formats[@]}; do
+        local name="${k/#/}" fmtr="${v}"
+        _format_token # && ${${tokens}[$k]}=$REPLY
+        # _log "${(@P)${(z)fmtr}}"
+        ${(zQ)fmtr} # && echo ${(e)REPLY}
+        str=${(e)REPLY}
+        # _log ${(e)REPLY}
+        app_tokens[$k]="${(q)str}"
+      done
+    }
+  }
+  
+  _polate(){
+    local var=$1 tok=$2
+    local string="${(P)var}"
+    # _log tokens ${(kv)${(P)tok}}
+    typeset -A tokens=(${(kv)${(P)tok}})
+    while [[ ${string} =~ '\#([A-Z]+)' ]]; do
+      local key=${match} token="#${match}"
+      # _log data ${(kvqq)tokens}
+      local DATA="${tokens[$token]}"
+      string=${string/$token/$DATA}
+    # [[ $key = "ICO" || $key = "FOCUSED" ]] && _log ICODDDD ${key} ${token} ${DATA} ${string}
+      match=()
+    done
+    print -v $var "${string}"
+  }
+  
+  _app_segment(){
+    local win=$1
+    typeset -A winfo=($(echo ${wins[${win}]}))
+    local fmt_string=""
+    local -A app_tokens=()
+    _make_tokens app_tokens winfo
+    # _log ${(kv)app_tokens}
+    _get_format fmt_string ${winfo[FOCUSED]}
+    {
+      # _log ${fmt_string}
+      if [[ $fmt_string =~ '([^=]\#[A-Z]+)+' ]] {
+        _polate fmt_string app_tokens
+      # _log ${fmt_string}
+      }
+    }
+    reply=(${fmt_string})
+  }
+  
+  _fmt_tmux_string(){
+    local -A windata=(${reply[@]})
+    
+    reply=()
+    for k v in ${(Qkv)windata[@]};
+    do
+      fmt_string=${fmt_string/$k/$v}
+    done
+    reply+=$fmt_string
+  }
+
+
+      # do
+      #   typeset -A winfo=($(echo ${wins[${k}]}))
+      #   local -a segm=($(_app_segment $k && echo ${reply[@]})) 
+      #   [[ "${winfo[FOCUSED]}" -gt 0 ]] && {
+      #     tmux setw -g @current_wm_app "$(echo ${segm[@]})" 
+      #   } || {
+      #     desktops[${winfo[DESKTOP]}]="${desktops[${winfo[DESKTOP]}]} ${k}"
+      #     all+=(${segm[@]}) 
+      #   }
+      #   segments[${k}]=${segm[@]}
+      # done
+      # local -a s=("TT")
+      
+      # reply=(${all[@]})
+  _printer(){
+      typeset -a all=()
+      typeset -A wsegments=()
+      typeset -A dwins=()
+      local focuseder=""
+      for k in ${(k)wins};
+      do
+        typeset -A winfo=($(echo ${wins[${k}]}))
+        local -a segm=($(_app_segment $k && echo ${reply[@]})) 
+        [[ "${winfo[FOCUSED]}" -gt 0 ]] && {
+          # dwins[d${winfo[DESKTOP]}]="${k} ${dwins[d${winfo[DESKTOP]}]}"
+          tmux setw -g @current_wm_app "$(echo ${segm[@]})"
+          focuseder="$(echo ${segm[@]})"
+        } || { 
+          dwins[d${winfo[DESKTOP]}]="${dwins[d${winfo[DESKTOP]}]} ${k}"
+          all+=(${segm[@]}) 
+        }
+        wsegments[${k}]="${segm[@]}"
+      done
+      local -a wm_apps=()
+      for d in ${(ok)dwins}; do 
+        echo ${d} ${desktops[${d}]} ${dwins[${d}]}
+        for w in ${(z)dwins[${d}]}; do 
+          wm_apps+=(${wsegments[${w}]})
+        done
+      done
+      local -a s=("TT")
+print -raC2 -- ${(j. .)wm_apps[@]}
+      [[ -n "${VERBOSE}" ]] && print -raC2 -- ${(j. .)wm_apps[@]}
+      reply=(${all[@]})
+      tmux setw -g @wm_apps "${(j. .)wm_apps[@]}" # "$(echo ${(j. .)reply[@]})"
+  } 
+
+  _wm_apps(){
+    # local app_format_var="" current_app_format_var=""
+    local -a psinfo=() winfo=() info=() win=() winsinfo=() pids=() 
+    local -i wincount=0 focused=0
+    local -A wins=()
+    getfocusedwindow && focused=$REPLY
+    getallwinsfordesktops
+    
+    # getallwinsinfo && winsinfo=(${reply[@]}) wincount=$REPLY # || exit 1
+    
+    # _log ${(kv)desktops} 
+    echo "" > >(_printer)
+    
+  }
+  [[ -o interactive ]] || {
+    # echo 'int'
+      local -a app_format_var=($(tmux showw -gv "${1:-@app-status-format}"))
+      # echo ${app_format_var}
+      local -a current_app_format_var=($(tmux showw -gv "${2:-@app-status-current-format}"))
+    
+    # echo ${current_app_format_var}
+    
+    while sleep 0.2; do main $@; done
+
+    # echo ${(kv)parameters}
+  } && {	# so ARGC remains read-only for "source"
+    # echo 'fuck'
+    [[ -n "${app_format_var}" && -n "${current_app_format_var}" ]] || return 1
+    return 0
+  }
+  #⬤⭕⭘⬤⬠⬡⯁⯂           
+  # 8🭨🭪🭬🭮🮤🮥🬸🬴🬛🬫🬺🬻🬗🬤🬴🬸🬲🬷🬨🬕         
+}

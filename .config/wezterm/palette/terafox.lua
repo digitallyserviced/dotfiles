@@ -1,5 +1,6 @@
 local C = require("lib.color")
 local Shade = require("lib.shade")
+-- local dbg = require('dbg')
 
 -- Reference:
 -- - https://www.reddit.com/r/Art/comments/drlbdi/cozy_autumn_rain_jeff_östberg_x_genevieve_lacroix/?utm_source=share&utm_medium=web2x&context=3
@@ -41,23 +42,28 @@ local palette = {
 }
 
 local function generate_spec(pal)
-  -- stylua: ignore start
-  local spec = {
-    bg0  = pal.bg0,  -- Dark bg (status line and float)
-    bg1  = pal.bg1,  -- Default bg
-    bg2  = pal.bg2,  -- Lighter bg (colorcolm folds)
-    bg3  = pal.bg3,  -- Lighter bg (cursor line)
-    bg4  = pal.bg4,  -- Conceal, border fg
-
-    fg0  = pal.fg0,  -- Lighter fg
-    fg1  = pal.fg1,  -- Default fg
-    fg2  = pal.fg2,  -- Darker fg (status line)
-    fg3  = pal.fg3,  -- Darker fg (line numbers, fold colums)
-
-    sel0 = pal.sel0, -- Popup bg, visual selection bg
-    sel1 = pal.sel1, -- Popup sel bg, search bg
-  }
-
+  -- -- stylua: ignore start
+  -- local spec = {
+  --   bg0  = pal.bg0,  -- Dark bg (status line and float)
+  --   bg1  = pal.bg1,  -- Default bg
+  --   bg2  = pal.bg2,  -- Lighter bg (colorcolm folds)
+  --   bg3  = pal.bg3,  -- Lighter bg (cursor line)
+  --   bg4  = pal.bg4,  -- Conceal, border fg
+  --
+  --   fg0  = pal.fg0,  -- Lighter fg
+  --   fg1  = pal.fg1,  -- Default fg
+  --   fg2  = pal.fg2,  -- Darker fg (status line)
+  --   fg3  = pal.fg3,  -- Darker fg (line numbers, fold colums)
+  --
+  --   sel0 = pal.sel0, -- Popup bg, visual selection bg
+  --   sel1 = pal.sel1, -- Popup sel bg, search bg
+  -- }
+  -- 
+  -- for i, color in ipairs(pal) do
+  --   dbg()
+  --   spec[i]=color
+  -- end
+  local spec=pal
   spec.syntax = {
     bracket     = spec.fg2,           -- Brackets and Punctuation
     builtin0    = pal.red.base,       -- Builtin variable

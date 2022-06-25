@@ -1,0 +1,3 @@
+--type-add='src:include:cpp,py,md,c,rust,css,typescript,javascript,zsh,lua,vim,php,perl,ruby,java,kotlin,haskell,go,dart,cython,h'
+-p
+--smart-case

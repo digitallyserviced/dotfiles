@@ -1,0 +1,13 @@
+#!/bin/zsh
+emulate zsh
+GRCALIASES="$HOME/.config/zsh/grc-rs-aliases.zsh"
+local -a nogrc=('jobs' 'log' 'stat' 'limit' 'ls' 'history' 'ulimit')
+
+[[ ! -f "${GRCALIASES}" ]]  && {
+  for cmd in {/usr/share/grc/conf.*,$HOME/.config/grc-rs/conf.*}; do
+   cmd="${cmd##*conf.}"
+   [[ ${commands[$cmd]} ]] && echo alias "${cmd}"=\"$( which grc-rs ) --colour=on ${cmd}\"
+ done 
+} | grep -vE "${(j.|.)nogrc[@]}" | tee "${GRCALIASES}" > /dev/null 2>&1;
+
+cat ${GRCALIASES}

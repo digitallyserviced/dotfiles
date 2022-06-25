@@ -116,7 +116,7 @@ function Color.from_hex(c)
     local s = c:lower():match("#?([a-f0-9]+)")
     n = tonumber(s, 16)
     if #s <= 6 then
-      print(string.format("%s, %s", s, bitopt.lshift(n, 8) + 0xff))
+      -- print(string.format("%s, %s", s, bitopt.lshift(n, 8) + 0xff))
       n = bitopt.lshift(n, 8) + 0xff
     end
   end
@@ -236,7 +236,7 @@ end
 function Color:to_css(with_alpha)
   local num = string.format("%.0f", self:to_hex(with_alpha))
   local n = tonumber(num, 10)
-  print(n)
+  -- print(n)
   local l = with_alpha and 8 or 6
   return string.format("#%0" .. l .. "x", n)
 end

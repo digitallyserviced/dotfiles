@@ -1,0 +1,97 @@
+#!/bin/zsh
+emulate -L zsh
+function wipeout(){
+  local lines=${1}
+  until [[ ${lines} -eq 0 ]]; do 
+    echoti cuu 1 && echoti ed
+    let lines--
+  done
+}
+local -F 4 start="`date +%s.%N`"
+local -a attrcmd=()
+local -A tags=()
+local -A bads=()
+local -A index=()
+typeset -A icons=()
+source ~/.config/zsh/icons2.zsh
+local -A atoms=(class WM_CLASS name WM_NAME icon WM_ICON_NAME)
+win_info()
+{
+  local WINDOW_ID=${1}
+  typeset -A props=()
+  
+  for k v in ${(kv)atoms}; do 
+    local cmd="atomx ${v} ${WINDOW_ID}"
+    val=$(${(z)cmd[@]})
+    props[$k]=$val
+    [[ ${k} = "icon" && -n ${val} ]] && icon_set=${val}
+  done
+
+  print -raC 2 --  ${(v)props}
+}
+{
+
+  local REPLY=""
+  typeset -A reply2=()
+  typeset -a reply=() reply3=()
+
+  function get_icns(){
+    typeset -a icns
+    find_icns ${pattern}   
+    # echo ${(kv)reply2}
+    icns=(${(kv)reply2})
+  }
+
+  function find_icns(){
+      _log get_icns $@
+    emulate -L zsh
+    local pattern="${1}"
+    # _log pat $pattern
+    typeset -a found=()
+    {
+      typeset -A icons=()
+      source ~/.config/zsh/icons2.zsh
+      typeset -a result=(${(kM)icons##*${~pattern}*}); 
+      # _log result ${result}
+      for line in ${result[@]}; do
+        found+=(${(qq)${line}} "${(qq)icons[${line}]}")
+      done
+      icons=()
+    }
+    reply2=(${(z)found[@]}) 
+  }
+  
+  _log(){
+    echo ${functrace[@]}
+    echo ${@}
+    echo ${(P)@}
+  } >&2
+
+  function get_icon_for_win ()
+  {
+    _log get_icns $@
+    WIN=${1}
+    local wins_info=$(win_info $WIN)
+    echo ${wins_info} | read -A windata
+    windata=(${(qq)${(z)windata//[^[:alnum:]]/ }})
+    icofn "${windata[@]}"
+  }
+  function main(){
+    [[ ! -n "${pattern//0x*/}" ]] && get_icon_for_win ${pattern} || get_icns ${pattern}
+    print -v ${outvar} -n -P ${(kvz)reply2}
+  }
+  
+  local type=*
+  [[ $# -gt 1 ]] && {type="${1}"; shift} 
+  local pattern=${1}
+  local outvar="ICON"
+  # _log $@
+
+  noglob main 
+
+  local -F 4 ended="`date +%s.%N`" elaps=0.0
+  (( elaps=ended-start ))
+  # _log elapsed ${elaps}
+  # _log ${(P)outvar}
+}
+

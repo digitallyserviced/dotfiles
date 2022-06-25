@@ -1,0 +1,36 @@
+#! /bin/zsh
+
+icon=
+
+cmd=$(date +"%R")
+LETTERS="🯰🯱🯲🯳🯴🯵🯶🯷🯸🯹"
+letters=("${(ps::)LETTERS}")
+# typeset letters="${=LETTERS[@]}"
+# echo ${letters[@]}
+getchar()
+{
+  NUM=$1
+  NUM=$((NUM+1))
+  printf "%s" ${letters[$NUM]}
+}
+gettime()
+{
+  typeset -A b=()
+  typeset -Z2 HOURS MIN SEC
+  HOURS=`date +%I`
+  MIN=`date +%M`
+  SEC=`date +%S`
+  # printf "%s %s %s" ${HOURS} ${MIN} ${SEC}
+  b+=$(getchar ${HOURS[1]}) 
+  b+=$(getchar ${HOURS[2]}) 
+  b+="."
+  b+=$(getchar ${MIN[1]}) 
+  b+=$(getchar ${MIN[2]}) 
+  b+="."
+  b+=$(getchar ${SEC[1]}) 
+  b+=$(getchar ${SEC[2]}) 
+  printf "%s\n" ${b[@]}
+}
+# echo -n "^c#0f111a^^b#bf616a^ $icon $cmd ^d^"
+gettime
+# ~/.local/bin/daily-update & # update wallpaper as well

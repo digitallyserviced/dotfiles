@@ -1,0 +1,28 @@
+#package line
+#regexp=([a-z0-9-_]+)/([a-zA-Z0-9_\.-]+) ([+0-9a-z-_:\.]+) \((.*?)\) 
+regexp=^([^A-Z0-9a-z]+)(Checking.*\.\.\.)
+colours=dark green,red,underline bold green,dark blue,magenta,yellow bold
+=====
+#installed token
+regexp=\((Installed)\)
+colours=dark cyan,bold yellow
+=====
+#orphaned token
+regexp=\((Orphaned)\)
+colours=dark magenta,dark red blink
+=====
+#orphaned token
+regexp=\[([A-Za-z0-9_-]+)\]
+colours=dark green,bold dark blue
+=====
+#orphaned token
+regexp=\((Out-of-date: ([0-9-]+))\)
+count=more
+colours=bold cyan,bold dark yellow blink,green
+=====
+#description text
+regexp=^[^A-Za-z0-9]+.*
+colours=dark white
+=====
+
+# vim: ft=dosini ts=2

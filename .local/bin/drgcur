@@ -1,0 +1,150 @@
+#!/usr/bin/python3
+# Python code for Julia Fractal
+from datetime import time
+import math
+from os import environ, wait
+import random
+from PIL import Image
+from typing import List, Tuple
+from rich.console import Console, ConsoleOptions, Group, RenderResult
+from rich.live import Live
+from rich.pretty import pprint
+from rich.segment import Segment, SegmentLines, Segments
+from rich.text import Text
+from rich.style import Style
+from rich.color import Color, ColorSystem, ColorType
+from random import randint
+# driver function
+# chrlines = []
+# chrlines.append((" ", 0))
+# chrlines[0]=(" ", 0)
+# outmap: List[Text]=[]
+outmap=[]
+chrlines=(' ','🮠', '🮡','🮧','🮣', '🮩', '🮥','🮬', '🮢', '🮤','🮨','🮦','🮭', '🮫', '🮪', '🮮')
+rand = True
+# for k in range(1,16):
+#     chars=(chr(0x1fba0+(k-1)), k)
+#     rawchrs.append(chr(0x1fba0+(k-1)))
+#     chrlines.append(chars)
+# print(rawchrs)
+jmap={}
+def issetthresh(a):
+    return 1 if a<32 else 0
+
+def isset(a):
+    return 1 if a[0]!=255 else 0
+
+def samplepix(x,y):
+    if x-1<=0 or y-1<=0:
+        return
+    if x+1>=int(wi) or y+1>=int(hi):
+        return
+
+    if not jmap.get((x,y)):
+        return
+    jgrid=[
+            jmap[(x-1,y-1)],
+            jmap[(x,y-1)],
+            jmap[(x,y)],
+            jmap[(x-1,y)],
+    ]
+    v=0
+    v+=1 if issetthresh(jgrid[0]) else 0
+    v+=2 if issetthresh(jgrid[1]) else 0
+    v+=4 if issetthresh(jgrid[2]) else 0
+    v+=8 if issetthresh(jgrid[3]) else 0
+    vchr=chrlines[v]
+    return vchr
+    
+import sys
+hi: int = 70 
+wi: int = 20 
+zo: int = 1
+def scaleBetween(unscaledNum, minAllowed, maxAllowed, min, max):
+    return (maxAllowed - minAllowed) * (unscaledNum - min) / (max - min) + minAllowed
+def colorize(l,x,y):
+    sx = scaleBetween(x, -1, 1, 1, wi)/4
+    sy = scaleBetween(y, -1, 1, 1, hi)/4
+
+    n=2-(3.14**math.sin(sx)+math.cos(sy)**3.14)
+    r = math.sqrt(x**2 + y**2)
+    r=round(r*3.14*100.0*256 % 32)
+    n=round(n*128*jmap[(x,y)]*0.75) % 256 
+    # print(n)
+    # ran=32
+    # ran=96
+    col = Color(
+        jmap[(x,y)],
+        type=ColorType.EIGHT_BIT,
+        number=(ran+(n%8)%256-16)+1
+    )
+    sty = Style.from_color(col)
+    return (l,sty)
+ran=0
+def doit(w=wi, h=hi, z=zo):
+    w=w or int(environ.get("COLUMNS", 20))
+    h=h or int(environ.get("LINES", 40)) 
+    zoom=z or 1
+    cX, cY = -0.7+(random.random()-0.5)*0.01, 0.27015
+    moveX, moveY = 0.0, 0.0
+    maxIter = 255
+    ran=randint(zoom,maxIter)
+
+    # bitmap = Image.new("LA", (w, h), (0,255))
+    # pix = bitmap.load()
+    
+    for x in range(wi):
+        for y in range(hi):
+            zx = 1.5*(x - w/2)/(0.5*zoom*w) + moveX
+            zy = 1.0*(y - h/2)/(0.5*zoom*h) + moveY
+            i = maxIter
+            while zx*zx + zy*zy < 4 and i > 1:
+                tmp = zx*zx - zy*zy + cX
+                zy,zx = 2.0*zx*zy + cY, tmp
+                i -= 1
+            jmap[(x,y)]=i
+
+console = Console(color_system="truecolor") 
+class MyObject:
+    def __init__(self, jmap):
+        self.jmap=jmap
+        
+    def columns(self, x):
+        for y in range(1, int(hi)):
+            l = samplepix(x,y)
+            (l,sty) = colorize(l, x, y)
+            yield Text(l,sty)
+
+    def rows(self, wi):
+        for x in range(1, int(wi)):
+            yield from self.columns(x)
+        
+    def __rich_console__(self, console: Console, options: ConsoleOptions) -> RenderResult:
+        yield from self.rows(wi)
+
+def liveupdate():
+    # map = Text()
+    # lw: List[int] = []
+    # glines: List[SegmentLines]=[]
+    glines: List[List[Segment]] = []
+    # wid=0
+    for x in range(1, int(wi)):
+        line=[]
+        # wid=x
+        for y in range(1, int(hi)):
+            l = samplepix(x,y)
+            if l:
+                (l,sty) = colorize(l, x, y)
+                # line.append(Text(l,style=sty).render(console))
+                line.append(Text(l,sty))
+                
+        glines.append(line)
+    return glines
+
+import time
+if __name__ == "__main__":
+    doit()
+    with Live(MyObject(jmap),console=console,auto_refresh=True, refresh_per_second=1) as live:
+        while True:
+            doit()
+            live.update(MyObject(jmap))

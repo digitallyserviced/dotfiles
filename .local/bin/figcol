@@ -1,0 +1,26 @@
+#!/bin/zsh
+# shellcheck disable=1071,2034,2296,2168
+# setopt xtrace
+
+typeset -a spaces=(" "); 
+local STUFF="SHIT"; 
+
+for i in ${(@s::)STUFF}; do 
+  # C=("$(toilet -d /usr/share/figlet -f future ${i})"); 
+  local -a goods=()
+  {
+    while read line; do
+      goods+=("${(qq)line}")
+      # echo -n $line;
+    done
+  } < <(toilet -d /usr/share/figlet -w 5 -Wk -f bfraktur "${i}" | tr ' ' '_'-)
+  local -a nl=("\n")
+  # echo -n ${(z)goods:^^nl}
+  for v in ${(v)goods}; do
+    echo ${v}
+  done
+  # local -a goods=(${${(z)C:gs/\n//}///}) 
+  # local -a chr=("${(s:;:)goods[@]}"); 
+  # chr=("${(z)chr}")
+  # print -f "%5s" ${spaces:^^chr}; 
+done

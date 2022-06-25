@@ -1,6 +1,6 @@
 local wezconf = {}
 
-wezconf.window_background_opacity = 0.9
+wezconf.window_background_opacity = 0.7
 wezconf.font_size = 10
 wezconf.tab_bar_at_bottom = true
 local wezterm_conf = require("wezterm_conf")(require("wezterm"))

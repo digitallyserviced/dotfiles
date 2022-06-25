@@ -1,0 +1,21 @@
+#!/bin/zsh
+
+# typeset -A dmenu=(dmenu -t -i -fn "Iosevka Term:size=12" -x 0 -y 20 -w 800 -p "  File  " -nb "#293e40" -nf "#e6eaea" -sb "#5a93aa" -sf "#0f1c1e" -h 30)
+
+IFORIG=$IFS
+IFS='+'
+list_dotfiles(){
+  { cat /dev/stdin } | \
+    fzf --ansi --cycle --keep-right --margin 10% --padding 1%\
+    --nth 1 --with-nth 3 --header-first --header "Dotfile Edit"\
+    --layout reverse --border rounded --preview-window="top,70%,border-sharp"\
+    -1 --preview='$HOME/.local/bin/fzf-previewer {3} {1}:{2}'
+}
+functions -T list_dotfiles
+read gitstat selected < <(list_dotfiles)
+selected=$(echo $selected| awk '{$1=$1};1');
+echo $selected
+
+if [ ! "$selected" = "" ]; then
+  $(dirname $0)/nvr "$HOME/$selected"
+fi

@@ -1,0 +1,87 @@
+#!/usr/bin/perl
+##
+##  USAGE
+##
+##      urxvt -g 23x3 -name fclock -e ./fclock
+##
+##  DEPENDENCIES
+##
+##      cpanm Text::FIGlet
+##      aptitude install toilet-fonts figlet libterm-size-perl libterm-extendedcolor-perl
+
+use v5.28 ;
+## use strictures ;
+use warnings ;
+
+use Term::Size ;
+use Time::Piece ;
+use Text::FIGlet ;
+use Encode qw( encode ) ;
+use Term::ExtendedColor ':attributes' ;
+
+##  Clock font and (ansi) color pattern.
+my $font = Text::FIGlet->new(
+    -d => '/usr/share/figlet',
+    -f => 'fauxcyrillic.tlf',
+) ;
+my @colors = qw(
+    3 4 4 4 5 5 5 4 4 4 3 3 2 2 1 1 1 2 2 3
+    3 4 4 4 5 5 5 4 4 4 3 3 2 2 1 1 1 2 2 3
+    3 4 4 4 5 5 5 4 4 4 3 3 2 2 1 1 1 2 2 3
+) ;
+
+##  Prepare terminal.
+$|++ ;                                      ##  always flush buffer
+system("tput civis") ;                      ##  hide cursor
+my $origin = readpipe("tput cup 0 0") ;     ##  tput code that moves cursor to 0,0
+Term::ExtendedColor::autoreset( 0 );
+clear ;
+
+my $count = 0 ;
+my ($before, $after, $spaces, $fmt) = @{ geometry() } ;     ##  to center the clock
+while (1) {
+    my @output ;
+    #my $t = localtime ;
+    #my $text = sprintf "%02d:%02d\n", $t->hour, $t->min ;
+    ##my $text = sprintf "%02d:%02d:%02d\n", $t->hour, $t->min, $t->sec ;
+    #my @clock = $font->figify(-A => $text) ;
+    my @clock = @{ figlet_clock() } ;
+    foreach my $row (0 .. $#clock)  {
+        my ($cols, $chars) = ( 0 ) ;
+        my $offset = $row*2 + int($count/5)%length($clock[0]) ;  ##  initial color offset
+        $chars .= fg($colors[$offset + $cols++], $_) foreach split //, $clock[$row] ;
+        $chars = sprintf $fmt, "", $chars, "" ;   ##  center horizontally with padspaces
+        push @output, encode('UTF-8', $chars) ;
+    }
+    print $origin ;                               ##  move cursor to 0,0
+    unshift @output, ( $spaces ) x $before ;      ##  pad with empty lines before
+    push    @output, ( $spaces ) x $after ;       ##  pad with empty lines after
+    foreach (@output) { print } ;                 ##  print clock to stdout
+    sleep 1 ;
+    $count++ ;
+}
+
+##  Calc the correct padding and format needed to center the clock.
+sub geometry {
+    my @clock = @{ figlet_clock() } ;
+    #my @clock = $font->figify(-A => '00:00') ;
+    my ($tw, $th) = Term::Size::chars ;                     ##  term  width/height
+    my ($cw, $ch) = (length($clock[0]), scalar(@clock)) ;   ##  clock width/height
+    die 'term too small' if $tw < $cw or $th < $ch ;
+    my $foo = int(($tw - $cw)/2) ;
+    my $bar = $tw - $cw - $foo ;
+    my $fmt = "%${foo}s%${cw}s%${bar}s" ;                   ##  printf format for clock lines
+    my $spaces = sprintf "%${tw}s", ' ' ;                   ##  an empty line of spaces
+    my $before = int(($th - $ch))/2 ;                       ##  num of pad lines before clock
+    my $after  = $th - $ch - int(($th - $ch))/2  ;          ##  num of pad lines after  clock
+    return [ $before, $after, $spaces, $fmt ] ;
+}
+
+sub figlet_clock  {
+    my $t = localtime ;
+    #my $text = sprintf "%02d:%02d:%02d\n", $t->hour, $t->min, $t->sec  ;
+    my $text = sprintf "%02d:%02d\n", $t->hour, $t->min ;
+    my @clock = $font->figify(-A => $text) ;
+    return \@clock ;
+} ;
+

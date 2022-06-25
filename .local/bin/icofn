@@ -1,0 +1,297 @@
+#!/bin/zsh
+emulate -L zsh
+local -F 4 start="`date +%s.%N`"
+
+local -A scores=()
+local highscore=-99999999 
+local highest=""
+# local parame="GitHub - EdenEast/nightfox.nvim: 🦊A highly customizable theme for vim and neovim with support for lsp, treesitter and a variety of plugins. — Mozilla Firefox"
+local parame="${@}"
+  local -A totry=()
+# VERBOSE=1
+check_words(){
+  local locscore=0
+    for word in ${(z)workingwords}; do 
+      local chekstr="${(L)matstr}"
+      local pat=${${:-${(j:*:)${(s::):-${word}}}}}
+      local plen=${#${pat//\*/}}
+      local matches=${(Mz)junk[@]#${~pat}}
+      local matched="${#${matched}}"
+      local restes=${(Rz)junk[@]#${~pat}}
+      [[ -n "${VERBOSE}" ]] && {
+        echo ${ico} ${words} ${score}
+        echo -n $matches
+        echo -n "------" $restes
+        echo 
+      }
+      local rmatched="${#${restes}}"
+      local alen=${#${chekstr}}
+      let locscore+="$matched"
+      let locscore-="$rmatched"
+    done
+
+    workingscore=locscore
+      # [[ -n "${VERBOSE}" ]] && echo $word $pat
+      # local ico=${(j:_:)sstr[@]}
+}
+{
+  local -A icons=()
+  source ~/.config/zsh/icons2.zsh
+  source ~/.config/zsh/functions/ico_funcs
+  echo ${(z)parame//[^A-Z0-9a-z]/ } | read -A junk
+  local matstr="${(j: :)junk[@]}"
+  for i in ${(L)junk[@]}; do 
+    local cword=${(L)i}
+    [[ -n "${ico_word_hash[${cword}]}" ]] && { 
+      hash=${ico_word_hash[${cword}]}; 
+      [[ -n "${VERBOSE}" ]] && echo $cword $hash;
+      local -a words=(${(z)ico_flat[$hash]}); 
+      for w in ${words[@]}; do 
+        local -a sstr=()
+        local wordgrp=""
+        for h in ${(s:_:)w}; do 
+          local hstr="${h/36\#/}"; 
+          local word=${(k)ico_word_hash[(r)36\#${hstr}]};
+          sstr+=("${word}")
+          wordgrp="${wordgrp} ${word}"
+        done; 
+        totry[${(j:_:)sstr[@]}]="${wordgrp}"
+      done 
+    }; 
+        [[ -n "${VERBOSE}" ]] && echo ${ico} ${highscore} ${highest} ${score}
+  done
+  for ico in ${(k)totry[@]}; do 
+    local words=(${totry[${ico}]})
+    local workingwords=()
+    # local score=-${#${matstr}}
+    local score=0
+    workingwords=${words}
+    workingscore=0
+    check_words
+    let score+=workingscore
+    workingwords=(${(s:_:)ico[@]})
+    workingscore=0
+    check_words
+    let score+=workingscore
+      [[ -n "${VERBOSE}" ]] && echo ${ico} ${words} ${score}
+      if (( ${highscore} < ${score} )) {
+        highscore=${score} 
+        highest=${ico}
+      } 
+  done
+  [[ -n "${icons[${highest}]}" ]] && echo ${icons[${highest}]:0:1} && exit
+
+}
+
+
+      # [[ -n "${VERBOSE}" ]] && echo $highest $highscore 
+{
+  local -A icons=()
+  source ~/.config/zsh/icons2.zsh
+  echo ${@} | read -A patr
+  local -a crap=(${patr//[!A-Za-z0-9]/ })
+  for c in ${crap[@]}; do 
+    local pat=${${:-${(j:*:)${(s::):-${c}}}}}
+    for i in ${(Mozk)icons:#${~pat}}; do       
+      local ico=$i
+      local plen=${#${pat//\*/}}
+      local matched="${#${(Mz)i:#${~pat}}}"
+      let score="$plen - $matched"
+      [[ -n "${VERBOSE}" ]] && echo ${plen} ${matched} ${score}
+      if (( ${highscore} <= ${score} )) {
+        highscore=${score} 
+        highest=${ico}
+      } 
+      # echo ${ico}
+    done
+  done
+  [[ -n "${VERBOSE}" ]] && echo ${highest} ${highscore}
+  [[ -n ${icons[${highest}]:0:1} ]] && echo -n ${icons[${highest}]:0:1} && exit
+}
+
+prefixer(){
+    local -a prefidx=()
+    local -a strs=("${@}")
+    source ~/.config/zsh/functions/icons_get_prefidx
+    local -a search=()
+    while [[ $# -gt 0 ]]; do 
+        for pre in ${(z)prefidx}; do
+            pat="$pre"
+            [[ $1 =~ $pat ]] && {
+              search+=($pre)
+              [[ -n "${VERBOSE}" ]] && echo ${pre}
+            }
+        done
+        shift
+    done
+    [[ -n "${VERBOSE}" ]] && echo ${(v)search[@]}
+    worder 
+}
+worder(){
+    local -A wrd_idx=()
+    source ~/.config/zsh/functions/icons_get_wrd_idx
+    local -a wrdsearch=()
+    local closest=""
+    # echo ${(z)search[@]}
+    local -a closers=()
+    for i in ${(z)search[@]}; do
+        local -a bar=('|')
+        local -a words=(${(z)wrd_idx[$i]})
+        local -a pat=(${bar:^^words})
+        [[ ${(j:_:)strs[@]} =~ $pat ]] && for w in ${words[@]} ; do 
+            [[ ${(j: :)strs[@]} =~ $w ]] && {
+                [[ -n "${VERBOSE}" ]] && echo $w
+                closers+=(${w})
+                iconer ${w}
+                [[ -n "${VERBOSE}" ]] && echo $closers
+                [[ ${#w} -gt ${#closest} ]] && closest=$w
+            }
+        done
+    done
+}
+    local -A scores=()
+    local highest="" highscore=0
+
+iconer(){
+    local -A ico_idx=()
+    source $HOME/.config/zsh/functions/ico_idx
+
+    local icon=""
+    [[ -n ${ico_idx[$1]} ]] && {
+        for ico in ${(z)ico_idx[$1]}; do
+          local -i score=0
+          for p in ${(z)closers[@]}; do 
+            local pat=${${:-*${(j:*:)${(s::):-${c}}}}}
+            [[ ${ico} =~ "${p}" ]] && {
+              local -i icolen=${#ico} plen=${#p} nlen=${#${(R)ico:#${p}}}
+              let score+="${plen} - ${nlen}"
+            [[ -n "${VERBOSE}" ]] && echo $p ${score}
+            }
+            # let score=score-${#${ico:#${p}}}
+          done
+          scores[${ico}]=$score
+          [[ -n "${VERBOSE}" ]] && echo ${(kv)scores}
+          [[ -n "${VERBOSE}" ]] && echo ${icons[${ico}]}
+          (( ${highscore} < ${score} )) && (( ${#highest} < ${#ico} )) && highest=${ico}; highscore=${score}
+        done
+    }
+}
+local -A icons=()
+source $HOME/.config/zsh/icons2.zsh
+
+local -A static=(["wezbar"]="terminal" ["wezterm"]="terminal" ["pavucontrol"]="volume_high")
+for pat in ${(k)static}; do 
+  [[ -n ${icons[${pat}]} ]] && echo -n ${${icons[${static[$pat]}]}:0:1} && exit 0
+  [[ "${@}" =~ "${pat}" ]] && echo -n ${${icons[${static[$pat]}]}:0:1} && exit 0
+done
+prefixer $@
+[[ -n "${icons[$highest]}" ]] && {
+  echo -n ${${icons[$highest]}:0:1} 
+} || {
+  echo ${${icons[image_broken_variant]}:0:1}
+}
+  [[ -n "${VERBOSE}" ]] && {
+    echo "scores:" ${(kv)scores}
+    echo "highest highscore: " ${highest} ${highscore}
+    echo "icon:" ${highest}
+    echo "actual" ${icons[${highest//i_/}]}
+  } || {
+    exit 0
+  }
+
+exit
+
+{
+
+  # [[ -z ${outvar} ]] || print "need outvar set" ; exit 1
+  local REPLY=""
+  typeset -A reply2=()
+  typeset -a reply=() reply3=()
+
+  function get_icns(){
+    typeset -a icns
+    find_icns ${pattern}   
+    # echo ${(kv)reply2}
+    icns=(${(kv)reply2})
+  }
+
+  function find_icns(){
+    emulate -L zsh
+    local pattern="${1}"
+    typeset -a found=()
+    {
+      typeset -A icons=()
+      source ~/.config/zsh/icons2.zsh
+      typeset -a result=(${(kM)icons##*${~pattern}*}); 
+      # _log result ${result}
+      for line in ${result[@]}; do
+        found+=(${(qq)${line}} "${(qq)icons[${line}]}")
+      done
+      icons=()
+    }
+    reply2=(${(z)found[@]}) 
+  }
+  
+  _log(){
+    echo ${functrace[@]}
+    echo ${@}
+    echo ${(P)@}
+  } >&2
+
+  function get_icon_for_win ()
+  {
+    WIN=${1}
+    NAME=
+  }
+  function main(){
+    [[ ! -n "${pattern//0x*/}" ]] && get_icon_for_win ${pattern} || get_icns ${pattern}
+    print -v ${outvar} -n -P ${(kvz)reply2}
+  }
+  
+  local type=*
+  [[ $# -gt 1 ]] && {type="${1}"; shift} 
+  local pattern=${1}
+  local outvar="ICON"
+  # _log $@
+
+  # noglob main 
+
+  local -F 4 ended="`date +%s.%N`" elaps=0.0
+  (( elaps=ended-start ))
+  # _log elapsed ${elaps}
+  # _log ${(P)outvar}
+}
+function wipeout(){
+  local lines=${1}
+  until [[ ${lines} -eq 0 ]]; do 
+    # echoti cuu 1 && echoti ed
+    let lines--
+  done
+}
+
+# for k in ${(k)icons}; do 
+#   local tag=${k//i_/}
+#   local -a words=(${(s._.)tag})
+#   words=(${words%%${(v)bads}})
+#   for i in ${words[@]}; do 
+#     if [[ ! -n "${tags[$i]}" ]] {
+#       tags[$i]=1 
+#     } 
+#     if [[ -n "${tags[$i]}" ]] { 
+#       local count=${tags[$i]}
+#       let count++
+#       tags[$i]=$count
+#       if [[ ${count} -gt 40 ]] {
+#         bads[$i]=$count
+#         continue
+#       } 
+#     }
+#     [[ -n "${index[$i]}" ]] && index[$i]+=" "
+#     index[$i]+="${k}"
+#     # wipeout 1
+#     # print -n -P -f "%s %d" ${i} ${count} # "${(@qq)bads}"
+#   done
+# done
+#   # echo ${(kv)bads}
+# print -raC 2 -- ${(qqkv)index}
+# exit

@@ -1,0 +1,13 @@
+/*
+*Trash*
+.local/share
+!.gitignore
+!.config
+!.config/
+!.config/zsh/
+!.config/wezterm/
+!.config/clipcat/
+!.config/metaprint/
+!.config/nvim/lua/custom/
+!.local/bin/
+!.tmux/plugins/tmux-customs/

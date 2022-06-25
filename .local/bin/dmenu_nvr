@@ -1,0 +1,10 @@
+#!/bin/zsh
+
+typeset dmenu=(dmenu -t -i -fn "Iosevka Term:size=12" -x 0 -y 20 -w 800 -p "  File  " -nb "#293e40" -nf "#e6eaea" -sb "#5a93aa" -sf "#0f1c1e" -h 30)
+
+items=($(cat /dev/stdin))
+selection=$( echo ${(j:\n:)items[@]} | (${dmenu[@]}) ) 
+
+if [ ! "$selection" = "" ]; then
+  $(dirname $0)/nvr "$HOME/$selection"
+fi

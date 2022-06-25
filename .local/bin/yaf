@@ -1,0 +1,95 @@
+#!/bin/zsh
+emulate zsh
+#!/bin/zsh
+emulate zsh
+ZERODIR=$(dirname $0)
+0="${ZERO:-${${0:#$ZSH_ARGZERO}:-${(%):-%N}}}"
+0="${${(M)0:#/*}:-$PWD/$0}"
+ARGZERO=$0
+
+if (( ZDEBUG )); then
+  emulate -L zsh -o err_return -o no_unset -o xtrace
+  print -rn -- $'\e]0;ZDEBUG\a' >$TTY
+  # export PROFILE_STARTUP=true
+fi
+blacklist="\.git|powerlevel10k|secret|gitignore|log|patches|config/surf|BetterDiscord|\.ccls-cache|png|jpg|ttf|cpp|\.h|Makefile|powerline|\.vim"
+
+# 🮦🮦🮧🮧🮧🮧🮧🮧 ━━╺━━━━━ 🮠🮡 🮨 🮨🮨🮨🮨🮣 🮨🮨🮨🮦🮨🮦🮨🮦🮨🮤🮥🮵🮶🮷🮸🮼 
+# files="$(git --git-dir="$HOME/.cfg/" --work-tree="$HOME" ls-files --full-name $HOME | tee /tmp/cfiles)"
+humanize(){
+  local value=$1
+  REPLY=$(numfmt --to=si ${value})
+}
+listgits(){
+  typeset -a dotfiles=(git --git-dir="$HOME/.cfg" --work-tree="$HOME")
+  initial=$(${dotfiles[@]} rev-list --max-parents=0 "HEAD")
+  cmd=(${dotfiles[@]} diff-index --numstat ${initial} -- $HOME);
+  ${cmd}
+}
+
+listall(){
+  cmd=(fd --max-depth 2 --glob '*' --type 'f' -- $HOME/.config/); 
+  ${cmd}
+}
+
+accept(){
+  [[ $# -ge 1 ]] || return 1
+  local editor=$1
+  while read add sub file; do
+    echo $file;
+    # ${ZERODIR}/nvr $HOME/$file
+  done
+}
+
+fzfs(){
+  local lister=$1
+  local query=$2
+  (){
+    while read line; do echo $line; done
+  } < <(cat ${lister}) > >(fzf_list)
+}
+
+previewer(){
+  # echo $@
+  [[ $# -eq 2 ]] || return 1
+  local lister=$1 regex=$2
+  cat $lister | crex -ix -r "${regex}" # | bat --syntax="Regular Expression" --color=always --style "grid,rule,snip" -- $1 2>/dev/null
+}
+typeset -a binds=("change:preview(${previewer})" "?:put" "enter:execute(echo {q} | tmux paste-buffer)" "ctrl-c:print-query")
+
+fzf_list(){
+  print -v HEADER -f "Regex"
+  typeset -a previewer=("$ARGZERO" "previewer" "${lister}" '{q}') bind=('--bind')
+  local WHFZF="fzf-tmux"
+  {
+    {cat /dev/stdin} | \
+    ${WHFZF} --ansi --query "${query}" --height=30 --cycle --keep-right --no-expect \
+       --history=$HOME/.cache/fzf_hist \
+    --layout reverse-list --preview-window="down,28,border-rounded,nofollow,nohidden"\
+    ${bind:^^binds}\
+    -1 --preview="${previewer}"
+  } > >(accept nvr)
+}
+
+# functions -T fzf_list previewer
+
+{
+  typeset -a cmd=()
+  LISTER=${1:-git}
+  case "$LISTER" in
+  previewer) previewer ${@:2}
+    ;;
+    *)   fzfs $1 ${@:2}
+    ;;
+  esac
+
+}
+
+# yfz $@
+# # ⬤⭕⭘⬠⬡⯁⯂   ⌬⌼⌻⌺⌹⌸⌷  ⎔⎊⎊⎊   ⍁⍂⍃⍄⍅⍆⍇⍈⍊⍋⍌⍍⍎⍏⍐⍑⍓⍔⏣⎆    ◍◢◣◤◥🞅🞔🞕🞖🞦🞗🞘🞙🞚🞛🞜🞝🞞🞟🞟🞠v
+# # ︻︼︽︾︿﹀﹇﹈︵︶⌍⌎⌏⌟⌞⌝⌜⚸⟁⟐
+# # ᳀᳁᳂᳃᳄᳅᳆᳇ᮄᮅᮆᮇᮈᮉᮊᮋᮌᮍᮎᮏᮐᮑᮒᮓᮔᮔᮕᮖᮗᮘᮙᮚᮛᮜᮝᮞᮟᮠᮡᮢᮣᮤᮥᮦᮧᮨᮩ᮪᮫ᮬᮭᮮᮯ᮰᮱᮲᮳
+# # ᮴᮵᮶᮷᮸᮹ᮺᮻᮼᮽᮾᮿ𑗊𑗋𑗌𑗍𑗎𑗏𑗐𑗑𑗒𑗓𑗔𑗕𑗖𑗗𑗘ꤰꤱꤲ
+# # ꤳꤴꤵꤶꤷꤸꤹꤹꤺꤻꤼꤽꤾꤿꥀꥁꥁꥂꥃꥄꥅꥆꥇ𐇺🙹🙺🙻🙼🙽🙾🙿⑀⑀
+# # ⑁⑂⑃⑄⑅⑆⑇⑈⑉⑊⌌⌍⌎⌏⌟⌞⌝⌜⚸⟁⟐
+# #

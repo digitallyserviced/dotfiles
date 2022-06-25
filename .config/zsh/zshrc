@@ -1,0 +1,58 @@
+bindkey -v
+
+## ZSH ZI Chunks
+# echo "Doing ZSHRC ${ZDOTDIR}"
+unset watchConfigs
+typeset -a watchConfigs=($(find  $HOME/.config/zsh -maxdepth 1 -iname 'z*.zsh'))
+for zshConfig in ${watchConfigs}; do
+  MOD=$(date -r ${zshConfig} "+%s")
+  jit-source ${zshConfig}
+done
+
+source ${ZDOTDIR}/snippets/wezterm.zsh
+PATH=$PATH:$HOME/.cargo/bin:$HOME/.local/bin:$HOME/go/bin
+PATH=$PATH:$HOME/.local/share/cargo/bin
+unset NO_COLOR
+
+() {
+    local white_b=$fg_bold[white] blue=$fg[blue] rst=$reset_color
+    TIMEFMT=("$white_b%J$rst"$'\n'
+        "User: $blue%U$rst"$'\t'"System: $blue%S$rst  Total: $blue%*Es$rst"$'\n'
+        "CPU:  $blue%P$rst"$'\t'"Mem:    $blue%M MB$rst")
+}
+
+SPROMPT="%B%F{yellow}zsh: correct '%R' be '%r' [nyae]?%f%b "
+WORDCHARS=''
+DIRSTACKSIZE=100
+# PROMPT_EOL_MARK="⏎"
+
+# hash -d target=~/.cache/cargo-build
+hash -d zsh=~/.config/zsh
+hash -d dot=~/.cfg
+hash -d localbin=~/.local/bin
+hash -d zi=$ZDOTDIR/.zi
+hash -d zinit=$ZDOTDIR/.zi
+hash -d cache=$XDG_CACHE_HOME
+hash -d share=$XDG_DATA_HOME
+hash -d config=$XDG_CONFIG_HOME
+hash -d tpm=$HOME/.tmux/plugins
+hash -d nvim=$HOME/.config/nvim
+hash -d nvimshare=$XDG_DATA_HOME/nvim
+
+export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
+--pointer="-"
+--marker="+"
+--info=inline
+--layout=reverse-list
+--prompt="%"
+--preview-window="up,5,border-sharp,nohidden"
+--color=fg:#cbd9d8,bg:#1d3337,hl:#ff8349:underline,preview-bg:#152528
+--color=fg+:#4d7d90,bg+:#254147,hl+:#fda47f:underline,gutter:#254148
+--color=info:#e85c51,prompt:#ff8349,pointer:#e6eaea
+--color=marker:#e85c51,border:#293e40,spinner:#e85c51,header:#73a3b7'
+bindkey -M emacs '^R' fzf-history-widget-unique
+bindkey -M vicmd '^R' fzf-history-widget-unique
+bindkey -M viins '^R' fzf-history-widget-unique
+
+export EDITOR=nvim
+

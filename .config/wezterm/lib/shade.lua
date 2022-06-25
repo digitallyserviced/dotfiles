@@ -29,6 +29,10 @@ function Shade.new(base, bright, dim, light)
   return self
 end
 
+function Shade.__tostring(self)
+  return self.base:to_css()
+end
+
 Shade.__call = function(self)
   return self.base
 end

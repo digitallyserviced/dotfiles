@@ -1,0 +1,174 @@
+
+# 2022-05-22 15:13:47.699447
++help
+
+# 2022-05-22 15:13:53.546186
++.databases
+
+# 2022-05-22 15:13:57.059026
++.tables
+
+# 2022-05-22 15:14:01.962657
++.schema places
+
+# 2022-05-22 15:15:15.961558
++select * from history join commands on commands.id = history.command_id
+
+# 2022-06-08 16:16:34.951415
++.load ~/.config/zsh/.zsh_history.db
++;
+
+# 2022-06-08 16:16:59.704614
++.tables
++;
+
+# 2022-06-08 16:17:09.508071
++.schema *;
+
+# 2022-06-08 16:17:30.998436
++select explain commands;
+
+# 2022-06-08 16:17:34.568618
++explain commands;
+
+# 2022-06-08 16:17:50.743307
++.status
++
++;
+
+# 2022-06-08 16:18:06.468261
++select * from history join commands on commands.id = history.command_id limit 20;
+
+# 2022-06-08 16:18:51.858003
++select * from history join commands on commands.id = history.command_id order by command_id desc limit 20;
+
+# 2022-06-08 16:19:41.976010
++.mode
++;
+
+# 2022-06-08 16:19:56.552068
++.mode fancy_grid;
+
+# 2022-06-08 16:20:00.906547
++select * from history join commands on commands.id = history.command_id order by command_id desc limit 20;
+
+# 2022-06-08 16:20:09.577905
++.mode
++
++;
+
+# 2022-06-08 16:20:46.308853
++.mode
++moinmoin
++;
+
+# 2022-06-08 16:20:52.621376
++.mode moinmoin
++;
+
+# 2022-06-08 16:20:57.988265
++select * from history join commands on commands.id = history.command_id order by command_id desc limit 20;
+
+# 2022-06-08 16:23:08.394499
++.tables
++;
+
+# 2022-06-08 16:23:16.161682
++select * from places;
+
+# 2022-06-08 16:23:44.381271
++select count(*) from places;
+
+# 2022-06-08 16:23:51.580675
++select count(*) from commands;
+
+# 2022-06-08 16:23:56.628107
++select count(*) from history;
+
+# 2022-06-08 16:24:53.962137
++select * from commands;
+
+# 2022-06-08 16:25:11.383966
++select * from history;
+
+# 2022-06-08 16:50:01.360697
++select * from history limit 10;
+
+# 2022-06-08 16:52:51.285477
++.read
++;
+
+# 2022-06-08 16:52:54.744169
++.help read;
+
+# 2022-06-08 16:52:59.768182
++.load help;
+
+# 2022-06-08 16:53:11.031559
++.read help;
+
+# 2022-06-08 16:53:22.323137
++.help
++;
+
+# 2022-06-08 16:53:31.848355
++.open
++;
+
+# 2022-06-08 16:53:37.812734
++.status
++;
+
+# 2022-06-08 16:57:19.512391
++select * from history join commands on commands.id = history.command_id order by command_id desc limit 20;
+
+# 2022-06-08 16:59:14.446775
++select * from history join commands on commands.id = history.command_id GROUP BY commands.id order by command_id desc limit 20;
+
+# 2022-06-08 17:00:37.347448
++select history.exit_status as exitcode, history.duration as duration, commands.argv as cmd from history join commands on commands.id = history.command_id GROUP BY commands.id order by command_id desc limit 20;
+
+# 2022-06-08 17:00:53.741276
++select history.exit_status as exitcode, history.duration as duration, commands.argv as cmd from history join commands on commands.id = history.command_id GROUP BY commands.id order by command_id desc limit 40;
+
+# 2022-06-08 17:18:36.609486
++select count(command_id) as cmdtimes, avg(history.duration) as duration, SUBSTr(commands.argv,1 20) as cmd from history join commands on commands.id = history.command_id GROUP BY commands.id order by command_id desc limit 40;
+
+# 2022-06-08 17:19:22.957528
++select count(command_id) as cmdtimes, avg(history.duration) as duration, SUBSTr(commands.argv,1,20) as cmd from history join commands on commands.id = history.command_id GROUP BY commands.id order by command_id desc limit 40;
+
+# 2022-06-08 17:19:49.222707
++select count(command_id) as cmdtimes, avg(history.duration) as duration, SUBSTr(commands.argv,1,20) as cmd from history join commands on commands.id = history.command_id GROUP BY commands.id order by cmdtimes desc limit 40;
+
+# 2022-06-08 17:20:24.994136
++select count(command_id) as cmdtimes, SUM(history.duration) as duration, SUBSTr(commands.argv,1,20) as cmd from history join commands on commands.id = history.command_id GROUP BY commands.id order by cmdtimes desc limit 40;
+
+# 2022-06-08 17:22:12.984031
++select count(command_id) as cmdtimes, SUM(history.duration) as duration, concat(SUBSTr(commands.argv,1,10),substr(commands.argv,-10)) as cmd from history join commands on commands.id = history.command_id GROUP BY commands.id order by cmdtimes desc limit 40;
+
+# 2022-06-08 17:23:28.607448
++select count(command_id) as cmdtimes, SUM(history.duration) as duration, SUBSTr(commands.argv,1,10) || substr(commands.argv,-10) as cmd from history join commands on commands.id = history.command_id GROUP BY commands.id order by cmdtimes desc limit 40;
+
+# 2022-06-08 17:23:52.204261
++select count(command_id) as cmdtimes, SUM(history.duration) as duration, SUBSTr(commands.argv,1,10) || '...' || substr(commands.argv,-10) as cmd from history join commands on commands.id = history.command_id GROUP BY commands.id order by cmdtimes desc limit 40;
+
+# 2022-06-08 17:24:03.620863
++select count(command_id) as cmdtimes, SUM(history.duration) as duration, SUBSTr(commands.argv,1,10) || '...' || substr(commands.argv,-10) as cmd from history join commands on commands.id = history.command_id GROUP BY commands.id order by cmdtimes desc limit 100;
+
+# 2022-06-08 17:46:44.402132
++.mode 
++;
+
+# 2022-06-08 17:46:56.443527
++.mode minimal
++;
+
+# 2022-06-08 17:47:01.370398
++.show
++;
+
+# 2022-06-08 17:47:03.593643
++.status;
+
+# 2022-06-08 17:47:10.190594
++select count(command_id) as cmdtimes, SUM(history.duration) as duration, SUBSTr(commands.argv,1,10) || '...' || substr(commands.argv,-10) as cmd from history join commands on commands.id = history.command_id GROUP BY commands.id order by cmdtimes desc limit 40;
