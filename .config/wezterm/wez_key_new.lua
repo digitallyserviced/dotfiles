@@ -1,6 +1,6 @@
 -- the usual
 local wezterm = require('wezterm')
-
+local wezG = wezterm.GLOBAL
 -- Key mapper helper library
 require('lib.keys')
 
@@ -18,6 +18,8 @@ local pane_act = ACTIONMAP(act_pane_dir, {"LEADER"})
 local pane_size = ACTIONMAP(adj_pane_size, {"LEADER"})
 local tab_rel = ACTIONMAP(act_tab_rel, {"CTRL"})
 local disable_key = ACTIONMAP(disable, {"CTRL","SHIFT"})
+
+wezG.pane_resize_amount = wezG.pane_resize_amount or 5
 
 return function(M)
   local keys = {}
@@ -37,10 +39,10 @@ return function(M)
       -- { key = "RightArrow", mods = "LEADER", action = M.wezterm.action { ActivatePaneDirection = "Right" } },
       -- { key = "UpArrow", mods = "LEADER", action = M.wezterm.action { ActivatePaneDirection = "Up" } },
       -- { key = "DownArrow", mods = "LEADER", action = M.wezterm.action { ActivatePaneDirection = "Down" } },
-      pane_size("h", {"Left", 5}),
-      pane_size("l", {"Right", 5}),
-      pane_size("k", {"Up", 5}),
-      pane_size("j", {"Down", 5}),
+      pane_size("h", {"Left", wezG.pane_resize_amount}),
+      pane_size("l", {"Right", wezG.pane_resize_amount}),
+      pane_size("k", {"Up", wezG.pane_resize_amount}),
+      pane_size("j", {"Down", wezG.pane_resize_amount}),
       -- { key = "h", mods = "LEADER", action = M.wezterm.action { AdjustPaneSize = { "Left", 5 } } },
       -- { key = "j", mods = "LEADER", action = M.wezterm.action { AdjustPaneSize = { "Down", 5 } } },
       -- { key = "k", mods = "LEADER", action = M.wezterm.action { AdjustPaneSize = { "Up", 5 } } },
