@@ -9,11 +9,11 @@ I use wezterm a few different ways.
 - Status Bar / Quake Console
 - Debug Config for Debug compiled Wezterm
 
-| Preview | Preview |
-|   :--:   |   :--:   |
-| ![preview](preview/nice1.png) | ![preview](preview/nice2.png) |
-|  :--:  |  :--:  |
-| Status at top main taking majority of the screen| stuff j|
+| Preview Main Desktop |
+|   :--:   |
+| ![main desktop preview](preview/nice1.png) |
+| The status bar at the top and the main terminal are both wezterm |
+| ![wezbar](preview/wezbar.png) |
 
 ### Config Entry Points 
 

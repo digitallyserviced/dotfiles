@@ -32,7 +32,7 @@ end
 --#endregion
 
 
---#region Useful function for styling wezterm.format content
+--#region Functions used for defining attributes to apply to a segment of text
 
 ---Returns a Foreground attribute
 ---@param v string a css styled color definition "#027bcd", "rgb(0.5,0.5,0.5)", "hsl(0.5,0.5,0.5)" etc...
@@ -100,7 +100,9 @@ end
 function TEXT(v)
   return FormatItem('Text', v)
 end
+--#endregion
 
+--#region Main style function the top-level initial style creation
 ---Returns a function that takes a string of text and returns the attribute table structures
 ---required to apply the created style to the supplied text
 ---@param attrs any
@@ -125,7 +127,7 @@ function SYM(name)
     return wezterm.nerdfonts[name]
   end
 end
-
+--#endregion
 ROUND_LEFT = SYM('ple_left_half_circle_thick')
 ROUND_RIGHT = SYM('ple_right_half_circle_thick')
 SLANT_LEFT = SYM('ple_upper_right_triangle')
