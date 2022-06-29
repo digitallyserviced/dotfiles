@@ -61,6 +61,8 @@ end)
 
 events.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
   local num = tab.tab_index
+  local inspect = require('inspect')
+  wezterm.log_info(inspect(panes))
   local pcol = (num % #palette) + 1
   local bg = palette[pcol]
   local txt = "#444444"
@@ -87,8 +89,8 @@ events.on("format-tab-title", function(tab, tabs, panes, config, hover, max_widt
     end
   end
 
-  local LEFT_SLASH = SYM('ple_backslash_separator_redundant')
-  local RIGHT_SLASH = SYM('ple_forwardslash_separator')
+  local LEFT_SLASH = SYM('ple_left_hard_divider')
+  local RIGHT_SLASH = SYM('ple_right_hard_divider')
   local ico = tab.is_active and '⬤' or '⭘'
   local SYNLEDGE = STYLE({ BG("#000000"), FG(bg) })
   local SYEDGE = STYLE({ UL("Single"), BG("#000000"), FG(bg) })

@@ -11,9 +11,14 @@ datetime:
   tmux:
     format: 15:04:05
 
+cpuinfo:
+  tmux:
+    format: " #[bold,fg=colour0]%cpus% #[nobold] #[bold,fg=colour8 dim]%avgghz%㎓"
+    rounding: 2
+    
 loadavg:
   tmux:
-    format: "%avg1min% (%running%)[%procs%]"
+    format: "龍#{p-5:#{l:%avg1min%}} (ﰌ #{p-3:#{l:%running%}})[	#{p-3:#{l:%procs%}}]"
     rounding: 2
     
 ram:
@@ -22,15 +27,15 @@ ram:
     unit: Go
     rounding: 2
   tmux:
-    format: "%used% ╱ %total%G"
+    format: " %used%/#[bold]%total%㎇"
     unit: Go
     rounding: 1
-    
+    #  %fakewpm%/fwpm 
 hackspeed:
   tmux:
-    format: "%speed%"
-    unit: Go
-    rounding: 2
+    format: " %keys%/kps וּ %shorties%/s  %wpm%/wpm"
+    unit: ps
+    rounding: 1
 ip:
   tmux:
     interface: ['wlan0']
@@ -54,7 +59,7 @@ pulseaudio:
 
 storage:
   tmux:
-    format: "%pused%%"
+    format: "%pused%%"
     mount_point: /
     rounding: 1
 

@@ -6,10 +6,16 @@ require('lib.keys')
 
 -- Setup a few local vars to make things a bit easier
 -- and less repetetive and more verbose
+wezG.pane_resize_amount = wezG.pane_resize_amount or 5
 local act = wezterm.action
 local act_tab_rel = act.ActivateTabRelative
 local act_pane_dir = act.ActivatePaneDirection
 local adj_pane_size = act.AdjustPaneSize
+
+local adj_pane_size_amountadj = wezterm.action_callback(function(win, pane)
+  win:perform_action(adj_pane_size{})
+end
+)
 local rot_pane = act.RotatePanes
 
 local disable = act.DisableDefaultAssignment
@@ -19,7 +25,6 @@ local pane_size = ACTIONMAP(adj_pane_size, {"LEADER"})
 local tab_rel = ACTIONMAP(act_tab_rel, {"CTRL"})
 local disable_key = ACTIONMAP(disable, {"CTRL","SHIFT"})
 
-wezG.pane_resize_amount = wezG.pane_resize_amount or 5
 
 return function(M)
   local keys = {}
@@ -75,6 +80,14 @@ return function(M)
       },
     },
   }
+
+if wezG.debug then
+  local confirm_prompt = act.ConfirmPrompt
+  local cp = ACTIONMAP("ConfirmPrompt", {"CTRL","LEADER"})
+  -- keys.keys = table.insert(keys.keys, {key = "P", mods="LEADER|CTRL", action=M.wezterm.action{ConfirmPrompt={prompt="WTF", mode="AnyKey"}}})
+  -- keys.keys = 
+  table.insert(keys.keys, cp("M", {prompt = "X"}))
+end
 
   return keys
 

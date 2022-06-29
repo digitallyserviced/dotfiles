@@ -1,4 +1,5 @@
-local wezterm = require('wezterm')
+local wezterm = require("wezterm")
+local tablelib = require("tablelib")
 
 ---Maps a key assignment
 ---@param key string | table a string for the key or define all arguments in a positional table
@@ -19,6 +20,48 @@ function KEYMAP(key, mods, action)
   map["mods"] = type(mods) == "string" and mods or table.concat(mods, "|")
   map["action"] = action or wezterm.action_callback(function() end)
   return map
+end
+
+
+function MAKEACTION(obj, action, default_args, arg_func)
+  obj = assert(obj, "obj needs to be provided as window or pane object")
+  default_args = default_args or {}
+  local event = nil
+  if type(action) == "string" then
+    if assert(wezterm.action[action], "Action does not exist") == nil then
+      event = action
+    else
+      action = wezterm.action[action]
+    end
+  elseif type(action) == "userdata" then
+    wezterm.log_info(string.format("MAKEACTION provided with action userdata (direct from wezterm object) with default args of %s", default_args))
+  end
+
+  local callargs = nil
+  local fun = function (pane, args, force_args)
+    if force_args then
+      callargs = args
+    elseif type(arg_func) == "function" then
+      callargs = arg_func(callargs, args, pane)
+    elseif type(args) == "table" then
+      tablelib.merge_all(default_args, args)
+    end
+    if event then
+      wezterm.emit(event, callargs, pane)
+    else
+      local callaction = action
+      if type(action) == "userdata" and callargs ~= nil then
+        callaction = action(callargs)
+      else
+        wezterm.log_info({event, callargs, pane})
+      end
+      obj:perform_action(callaction, pane)
+    end
+  end
+  fun.current_args = callargs 
+  fun.default_args = default_args
+
+  return fun
 end
 
 --[[
@@ -43,6 +86,7 @@ Or use it as a modmapper with the following
 @param action function
 @param mods string | table if string then like "CTRL|SHIFT" otherwise {"CTRL","SHIFT"}
 @return function helper function to bind multiple keys to the same action with arguments ]]
+
 function ACTIONMAP(action, mods)
   wezterm.log_info(wezterm.action)
   local modmap = false

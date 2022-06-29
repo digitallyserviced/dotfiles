@@ -24,14 +24,14 @@ function options_dynamic(M)
     },
     font = M.helper.wezterm.font_with_fallback {
       { family = "ShureTechMono NF", weight = "Regular" },
-      { family = "Iosevka Term", weight = "Regular" },
+      -- { family = "Iosevka Term", weight = "Regular" },
       -- { family = "MesloLGL Nerd Font Mono", weight = "Regular" },
-      { family = "PragmataPro Mono", weight = "Regular" },
-      { family = "BitstreamVeraSansMono Nerd Font Mono", weight = "Regular" },
+      -- { family = "PragmataPro Mono", weight = "Regular" },
+      -- { family = "BitstreamVeraSansMono Nerd Font Mono", weight = "Regular" },
       -- { family = "Hack Nerd Font", weight = "Regular" },
       -- { family = "FuraCode Nerd Font", weight = "Regular" },
       -- { family = "JetBrains Mono", weight = "Light" },
-      { family = "Terminus", weight = "Bold" },
+      -- { family = "Terminus", weight = "Bold" },
       "Noto Color Emoji",
     },
   }

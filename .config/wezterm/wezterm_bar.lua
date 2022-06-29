@@ -1,7 +1,8 @@
 local wezconf = {}
 
 wezconf.enable_tab_bar = false;
-wezconf.window_background_opacity = 0.5;
+wezconf.custom_block_glyphs = true
+wezconf.window_background_opacity = 0.7;
 wezconf.window_padding = {
   top = 0,
   bottom = 0,

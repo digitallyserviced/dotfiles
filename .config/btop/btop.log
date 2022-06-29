@@ -461,3 +461,38 @@
 2022/06/23 (20:09:01) | ERROR: Stall in Runner thread, restarting!
 2022/06/23 (20:09:01) | ERROR: Stall in Runner thread, restarting!
 2022/06/24 (19:56:30) | ERROR: Stall in Runner thread, restarting!
+2022/06/25 (22:18:08) | WARNING: Failed to join _runner thread on exit!
+2022/06/25 (22:18:08) | DEBUG: Writing new config file
+2022/06/25 (22:18:08) | INFO: Quitting! Runtime: 6d 03:36:05
+
+2022/06/27 (14:04:22) | ===> btop++ v.1.2.7
+2022/06/27 (14:04:22) | INFO: Logger set to DEBUG
+2022/06/27 (14:04:22) | DEBUG: Using locale en_US.UTF-8
+2022/06/27 (14:04:22) | INFO: Running on /dev/pts/6
+2022/06/27 (14:04:22) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+
+2022/06/27 (15:23:58) | ===> btop++ v.1.2.7
+2022/06/27 (15:23:58) | INFO: Logger set to DEBUG
+2022/06/27 (15:23:58) | DEBUG: Using locale en_US.UTF-8
+2022/06/27 (15:23:58) | INFO: Running on /dev/pts/8
+2022/06/27 (15:23:58) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/27 (15:25:14) | DEBUG: Writing new config file
+2022/06/27 (15:25:14) | INFO: Quitting! Runtime: 01:20:52
+2022/06/27 (15:37:08) | DEBUG: Writing new config file
+2022/06/27 (15:37:08) | INFO: Quitting! Runtime: 00:13:10
+
+2022/06/27 (20:49:53) | ===> btop++ v.1.2.7
+2022/06/27 (20:49:53) | INFO: Logger set to DEBUG
+2022/06/27 (20:49:53) | DEBUG: Using locale en_US.UTF-8
+2022/06/27 (20:49:53) | INFO: Running on /dev/pts/8
+2022/06/27 (20:49:53) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/27 (20:52:19) | DEBUG: Writing new config file
+2022/06/27 (20:52:19) | INFO: Quitting! Runtime: 00:02:26
+
+2022/06/28 (21:20:52) | ===> btop++ v.1.2.7
+2022/06/28 (21:20:52) | INFO: Logger set to DEBUG
+2022/06/28 (21:20:52) | DEBUG: Using locale en_US.UTF-8
+2022/06/28 (21:20:52) | INFO: Running on /dev/pts/7
+2022/06/28 (21:20:52) | DEBUG: Loading theme file: /home/chris/.config/btop/themes/terafox.theme
+2022/06/29 (10:41:06) | DEBUG: Writing new config file
+2022/06/29 (10:41:06) | INFO: Quitting! Runtime: 13:20:14

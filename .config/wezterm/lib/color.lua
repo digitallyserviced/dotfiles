@@ -121,11 +121,17 @@ function Color.from_hex(c)
     end
   end
 
+  -- return Color.init(
+  --   bitopt.rshift(n, 24) / 0xff,
+  --   bitopt.band(bitopt.rshift(n, 16), 0xff) / 0xff,
+  --   bitopt.band(bitopt.rshift(n, 8), 0xff) / 0xff,
+  --   bitopt.band(n, 0xff) / 0xff
+  -- )
   return Color.init(
-    bitopt.rshift(n, 24) / 0xff,
-    bitopt.band(bitopt.rshift(n, 16), 0xff) / 0xff,
-    bitopt.band(bitopt.rshift(n, 8), 0xff) / 0xff,
-    bitopt.band(n, 0xff) / 0xff
+    n >> 24,
+    ((n >> 16) & 0xff),
+    ((n >> 8) & 0xff),
+    (n & 0xff)
   )
 end
 

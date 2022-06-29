@@ -1,2 +1,2 @@
 #!/bin/sh
-feh --no-fehbg --bg-center '/home/chris/.cache/cap.png'
+feh --no-fehbg --bg-fill '/home/chris/backups/backuj/inverty.png'
