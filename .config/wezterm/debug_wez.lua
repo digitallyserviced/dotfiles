@@ -8,6 +8,7 @@ wezconf.tab_bar_at_bottom = true
 wezconf.window_padding = { top = "4pt", left = "0pt", bottom = "0pt", right = "0pt" }
 wezconf.automatically_reload_config = true;
 wezconf.enable_kitty_keyboard = true
+wezconf.custom_block_glyphs = true
 local color_list = { "red", "green", "yellow", "blue", "magenta", "cyan" }
 -- wezconf.window_background_gradient = {
 --      colors = {
@@ -77,6 +78,7 @@ wezconf.background = {
   },
 }
 local wez = require("wez")
+wezterm.GLOBAL.debug=true
 local wezterm_conf = require("lib.wez_config")
 require('my_events')
 local config = wezterm_conf.override(wezconf)

@@ -1,20 +1,6 @@
 ---@diagnostic disable: unused-local
 -- Print contents of `tbl`, with indentation.
 -- `indent` sets the initial level of indentation.
-function dump(o)
-  if type(o) == "table" then
-    local s = "{ "
-    for k, v in pairs(o) do
-      if type(k) ~= "number" then
-        k = '"' .. k .. '"'
-      end
-      s = s .. "[" .. k .. "] = " .. dump(v) .. ","
-    end
-    return s .. "} "
-  else
-    return tostring(o)
-  end
-end
 require('styles')
 function helper(wt)
   local M = {}
@@ -164,24 +150,32 @@ function helper(wt)
       end
     end
 
-    local LEFT_SLASH = SYM('ple_backslash_separator_redundant')
-    local RIGHT_SLASH = SYM('ple_forwardslash_separator')
+  local RIGHT_SLASH = SYM('pl_left_hard_divider')
+  local LEFT_SLASH = SYM('pl_right_hard_divider')
+  local SOFT_RIGHT_SLASH = SYM('pl_left_soft_divider')
+  local SOFT_LEFT_SLASH = SYM('pl_right_soft_divider')
     local ico = tab.is_active and '⬤' or '⭘'
-    local SYNLEDGE = STYLE({ BG("#000000"), FG(bg) })
-    local SYEDGE = STYLE({ UL("Single"), BG("#000000"), FG(bg) })
-    local ACTIVE = STYLE({ UL("Single"), FG(bg) })(" " .. ico .. " ")
+    local SOFT_SYNLEDGE = STYLE({ BG(bg), BL(true), FG('#000000') })
+    local SOFT_SYEDGE = STYLE({ BG(bg), BL(true), FG('#000000') })
+    local SYNLEDGE = STYLE({ BG("#000000"), BL(true), FG(bg) })
+    local SYEDGE = STYLE({ BG("#000000"), BL(true), FG(bg) })
+    local ACTIVE = STYLE({ FG(txt), BG(bg) })(" " .. ico .. " ")
     -- local LEFT=SYEDGE(ROUND_LEFT)
     -- local RIGHT=SYEDGE(ROUND_RIGHT)
+    local SOFT_LEFT = SOFT_SYNLEDGE(SOFT_LEFT_SLASH)
+    local SOFT_RIGHT = SOFT_SYEDGE(SOFT_RIGHT_SLASH)
     local LEFT = SYNLEDGE(LEFT_SLASH)
-    local RIGHT = SYEDGE(LEFT_SLASH)
-    local PAD = STYLE({ UL("Single") })
+    local RIGHT = SYEDGE(RIGHT_SLASH)
+    local PAD = STYLE({ BG(bg)})
     -- local MAINTXT=STYLE({BG("#222222"), HL('https://www.google.com'), FG(bg), UL(tab.is_active and "Single" or "None"), BL(tab.is_active)})
-    local MAINTXT = STYLE({ UL("Single"), FG(bg), BL(tab.is_active), HL('https://www.google.com') })
+    local MAINTXT = STYLE({ BG(bg), FG(txt), BL(tab.is_active), HL('https://www.google.com') })
     append(LEFT)
-    append(PAD(" "))
+    append(SOFT_LEFT)
+    -- append(PAD(" "))
     append(ACTIVE)
     append(MAINTXT(" " .. title .. " "))
     append(PAD(" "))
+    append(SOFT_RIGHT)
     append(RIGHT)
     return out
   end)
@@ -219,7 +213,7 @@ function helper(wt)
     end
     -- wezterm:toast_notification("wezterm", pane.foreground_process_name, nil, 4000)
     local cwd_uri = pane:get_current_working_dir()
-    -- M.wezterm.log_info(pane:get_user_vars())
+    M.wezterm.log_info(pane:get_user_vars())
     -- M.wezterm.log_error(cwd_uri)
     if cwd_uri then
       cwd_uri = cwd_uri:sub(8)
