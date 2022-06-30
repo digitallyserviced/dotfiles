@@ -59,7 +59,8 @@ bspc rule -r *:*
 # 1 > terminal
 bspc rule -a wezterm desktop='^1' follow=on focus=on
 bspc rule -a wezbar desktop='^1' rectangle=1920x40+0+0 state=floating border_width=0
-bspc rule -a wezdebug desktop='^7' rectangle=800x600+500+300 state=floating border_width=0
+bspc rule -a wezssh desktop='^3' rectangle=1884x982+16+16 
+bspc rule -a wezdebug desktop='^7' rectangle=1884x982+16+16 
 # bspc rule -a wezmodal state=floating manage=off
 bspc rule -a wezmodal desktop='^1' rectangle=800x600+500+300 state=floating
 bspc rule -a Xfce4-terminal desktop='^1' follow=on focus=on

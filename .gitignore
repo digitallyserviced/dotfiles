@@ -1,5 +1,6 @@
 /*
 *Trash*
+*.log
 .local/share
 !.gitignore
 !.config

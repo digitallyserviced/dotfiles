@@ -11,9 +11,23 @@ wezconf.window_padding = {
 };
 wezconf.initial_rows = 3;
 wezconf.check_for_updates = false;
-wezconf.font_size = 12;
+wezconf.font_size = 10;
+wezconf.line_height=1.0;
 wezconf.automatically_reload_config = false;
-local wezterm_conf = require("wezterm_conf")(require("wezterm"))
+wezterm = require("wezterm")
+local wezterm_conf = require("wezterm_conf")(wezterm)
+wezconf.font = wezterm.font_with_fallback {
+      -- { family = "BitstreamVeraSansMono Nerd Font Mono", weight = "Regular" },
+      -- { family = "ShureTechMono NF", weight = "Regular" },
+      -- { family = "FuraCode Nerd Font", weight = "Regular" },
+      -- { family = "Iosevka Term", weight = "Regular" },
+      -- { family = "MesloLGL Nerd Font Mono", weight = "Regular" },
+      -- { family = "PragmataPro Mono", weight = "Regular" },
+      -- { family = "Hack Nerd Font", weight = "Regular" },
+      -- { family = "JetBrains Mono", weight = "Light" },
+      -- { family = "Terminus", weight = "Bold" },
+      "Noto Color Emoji",
+    }
 local config = wezterm_conf.override(wezconf)
 
 return config;

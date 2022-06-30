@@ -15,6 +15,10 @@ cpuinfo:
   tmux:
     format: " #[bold,fg=colour0]%cpus% #[nobold] #[bold,fg=colour8 dim]%avgghz%㎓"
     rounding: 2
+cpuusage:
+  tmux:
+    format: " #{p-3:#{l:%pusage%}}%#[bold,fg=colour#{?#{e|<:%pusage%,70},2,1}] "
+    rounding: 0
     
 loadavg:
   tmux:
