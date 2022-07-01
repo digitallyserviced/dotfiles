@@ -104,28 +104,53 @@ end
 ---@param a number Float [0,1]
 ---@return Color
 function Color.from_rgba(r, g, b, a)
-  return Color.init(r / 0xff, g / 0xff, b / 0xff, a or 1)
+  return Color.init(r / 255, g / 255, b / 255, a or 1)
+end
+local function rgb_to_hsl(r, g, b)
+  --r, g, b = r/255, g/255, b/255
+  local min = math.min(r, g, b)
+  local max = math.max(r, g, b)
+  local delta = max - min
+
+  local h, s, l = 0, 0, ((min + max) / 2)
+
+  if l > 0 and l < 0.5 then s = delta / (max + min) end
+  if l >= 0.5 and l < 1 then s = delta / (2 - max - min) end
+
+  if delta > 0 then
+    if max == r and max ~= g then h = h + (g - b) / delta end
+    if max == g and max ~= b then h = h + 2 + (b - r) / delta end
+    if max == b and max ~= r then h = h + 4 + (r - g) / delta end
+    h = h / 6;
+  end
+
+  if h < 0 then h = h + 1 end
+  if h > 1 then h = h - 1 end
+
+  return h * 360, s, l
+end
+function rgb_string_to_hsl(rgb)
+  return rgb_to_hsl(tonumber(rgb:sub(2, 3), 16) / 255,
+    tonumber(rgb:sub(4, 5), 16) / 255,
+    tonumber(rgb:sub(6, 7), 16) / 255)
 end
 
 ---Create a color from a hex number
 ---@param c number|string Either a literal number or a css-style hex string ('#RRGGBB[AA]')
 ---@return Color
 function Color.from_hex(c)
-  local n = c
-  if type(c) == "string" then
-    local s = c:lower():match("#?([a-f0-9]+)")
-    n = tonumber(s, 16)
-    if #s <= 6 then
-      -- print(string.format("%s, %s", s, bitopt.lshift(n, 8) + 0xff))
-      n = bitopt.lshift(n, 8) + 0xff
-    end
-  end
 
+  -- return Color.init(
+  --   bitopt.rshift(n, 24) / 0xff,
+  --   bitopt.band(bitopt.rshift(n, 16), 0xff) / 0xff,
+  --   bitopt.band(bitopt.rshift(n, 8), 0xff) / 0xff,
+  --   bitopt.band(n, 0xff) / 0xff
+  -- )
   return Color.init(
-    bitopt.rshift(n, 24) / 0xff,
-    bitopt.band(bitopt.rshift(n, 16), 0xff) / 0xff,
-    bitopt.band(bitopt.rshift(n, 8), 0xff) / 0xff,
-    bitopt.band(n, 0xff) / 0xff
+    tonumber(c:sub(2, 3), 16) / 255,
+    tonumber(c:sub(4, 5), 16) / 255,
+    tonumber(c:sub(6, 7), 16) / 255,
+    0.0
   )
 end
 
@@ -222,23 +247,28 @@ function Color:to_hex(with_alpha)
   --   ((self.blue * 0xff) | ((RO(self.green) * 0xff) << 8)) |
   --   ((self.red * 0xff) << 16)
   -- )
-  local n = bitopt.bor(
-    bitopt.bor((self.blue * 0xff), bitopt.lshift((self.green * 0xff), 8)),
-    bitopt.lshift((self.red * 0xff), 16)
-  )
-  return with_alpha and bitopt.lshift(n, 8) + (self.alpha * 0xff) or n
+  -- local n = bitopt.bor(
+  --   bitopt.bor((self.blue * 0xff), bitopt.lshift((self.green * 0xff), 8)),
+  --   bitopt.lshift((self.red * 0xff), 16)
+  -- )
+  -- return with_alpha and bitopt.lshift(n, 8) + (self.alpha * 0xff) or n
   -- return with_alpha and (n << 8) + (self.alpha * 0xff) or n
+  local buffer="#"
+  for i, v in ipairs({self.red, self.green, self.blue}) do
+    buffer = buffer .. string.format("%02x", math.floor(v * 255 + 0.5))
+  end
+  return buffer
 end
 
 ---Convert the color to a css hex color (`#RRGGBB[AA]`).
 ---@param with_alpha boolean Include the alpha component.
 ---@return string
 function Color:to_css(with_alpha)
-  local num = string.format("%.0f", self:to_hex(with_alpha))
-  local n = tonumber(num, 10)
-  -- print(n)
-  local l = with_alpha and 8 or 6
-  return string.format("#%0" .. l .. "x", n)
+  local buffer="#"
+  for i, v in ipairs({self.red, self.green, self.blue}) do
+    buffer = buffer .. string.format("%02x", math.floor(v * 255 + 0.5))
+  end
+  return buffer
 end
 
 --#endregion

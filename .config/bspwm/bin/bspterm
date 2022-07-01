@@ -1,0 +1,27 @@
+#!/bin/zsh
+## Copyright (C) 2020-2021 Aditya Shakya <adi1090x@gmail.com>
+## Everyone is permitted to copy and distribute copies of this file under GNU-GPL3
+
+## launch wezterm with bspwm config
+CONFIG_DIR="$HOME/.config/wezterm/"
+CONFIG="${CONFIG_DIR}/wezterm.lua"
+
+if [ "$1" = "-f" ]; then
+        CONFIG="${CONFIG_DIR}/wezterm_bar.lua"
+  wezterm --config-file "$CONFIG" start --class 'wezbar' -- tmux -L mainbar new -A -s mainbar -t bar 
+elif [ "$1" = "-s" ]; then
+  wezterm --config-file "$CONFIG"  \
+          start \
+          --class 'weztmux' -- tmux new -A -t main -s  
+elif [ "$1" = "-s" ]; then
+        CONFIG="${CONFIG_DIR}/wezterm_modal.lua"
+  wezterm --config-file "$CONFIG"  \
+          start \
+          --class 'wezmodal' -- ${@:2}  
+elif [ "$1" = "-m" ]; then
+  wezterm --config-file "$CONFIG"  \
+          connect \
+          --class 'wezssh' -- maindesk   
+else
+  wezterm --config-file "$CONFIG"
+fi

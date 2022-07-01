@@ -1,0 +1,15 @@
+#!/bin/zsh
+emulate -L zsh
+WINID=${1}
+CLASS=${2}
+INST=${3}
+CONS=${4}
+[[ ${CLASS} =~ "*wezbar*" ]] && {
+  bspc config -n ${WINID} border_width 0
+}
+
+[[ ${CLASS} =~ "*wezterm*" ]] && {
+  bspc config -n ${WINID} border_width 0
+}
+
+## Environtment

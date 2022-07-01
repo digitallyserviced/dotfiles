@@ -4,7 +4,7 @@ emulate zsh
 FZF_COLORS="
 --color=fg:regular:green:dim,fg+:regular:bright-green:dim
 --color=hl:regular:red:dim:bold,hl+:regular:yellow:dim:bold
---color=bg:-1,bg+:0
+--color=bg:234,bg+:0
 --color=pointer:#fabd2f,marker:#fe8019,spinner:#b8bb26
 --color=header:#fb4934,prompt:#b16286
 "
@@ -21,7 +21,7 @@ export FZF_DEFAULT_OPTS="
 --marker '┃'
 --cycle
 $FZF_COLORS
---reverse --min-height 14 --ansi --info=hidden
+--reverse --min-height 14 --ansi
 --bind=ctrl-s:toggle-sort
 --bind=alt-p:preview-up,alt-n:preview-down
 --bind=ctrl-k:preview-up,ctrl-j:preview-down
@@ -51,33 +51,42 @@ accept(){
     # ${ZERODIR}/nvr $HOME/$file
   done
 }
-local clipcatctl="/home/chris/Documents/clipcat/target/debug/clipcatctl"
+local clipcatctl="/home/chris/Documents/clipcat/target/release/clipcatctl"
 fzfs(){
   (){
     cat - | sort | uniq | sort 
-  } < <(${clipcatctl} list) > >(fzf_list)
+  } < <(${clipcatctl} info) > >(fzf_list)
 }
 
 previewer(){
-  
   {
-    ${clipcatctl} info ${1}
-    ${clipcatctl} get ${1} 
-  } > >(grcat conf.common | bat --color=always --style "grid,snip") # 2>/dev/null
-}
-typeset -a binds=("enter:accept-non-empty" "change:first" "ctrl-space:execute(nvr {})" "ctrl-g:reload:$0 all")
-typeset -a previewer=("$ARGZERO" "previewer" '{q}' '{1}' ) bind=('--bind')
+    typeset -A clipinfo=(${(z)@:2})
+    print -v clipstat -raC4 -- ${(kv)clipinfo}
+    header=$(echo ${clipstat})
+    echo ${(l[${FZF_PREVIEW_COLUMNS}][─])}
+    echo ${header}
+    echo ${(l[${FZF_PREVIEW_COLUMNS}][─])}
+    clipstat="\n\n$(${clipcatctl} get ${1})"
+    echo ${clipstat}
+  }
+} > >(bat -l lua --color=always --style "snip")
+# typeset -a binds=("enter:accept-non-empty" "change:first" "ctrl-space:execute(nvr {})" "ctrl-g:reload:$0 all")
+typeset -a binds=("change:reload:${clipcatctl} search -C {q}" "ctrl-space:reload:${clipcatctl} search {q}")
+typeset -a previewer=("$ARGZERO" "previewer" '{q}' '{2}' '{1} {2} {3} "{4,5}" {6} {7} {8} {9}' ) bind=('--bind')
 
 fzf_list(){
   print -v HEADER -f "Clipboard Selection"
+  local -a bindsa=(${bind:^^binds})
+  echo ${bindsa}
   local WHFZF="fzf" # ,~4,+3/2"
   {
     {cat /dev/stdin} | \
-      ${WHFZF} --with-nth 3 --header "${HEADER}"\
+      ${WHFZF} --header "${HEADER}"\
       --tabstop=2 \
-      --delimiter=":" --nth=2.. --with-nth=2..\
-      --preview-window="down,99%,border-rounded,nofollow,nohidden,~2,+3/2"\
-      -1 --preview="${previewer}" --header-first --disabled 
+      ${bindsa}
+      --delimiter=" " --nth=2.. --with-nth=2,4,5,7,9\
+      --preview-window="down,68%,border-rounded,nofollow,nohidden,~4"\
+      -1 --preview="${previewer}" --header-first
   } > >(accept nvr)
 }
 

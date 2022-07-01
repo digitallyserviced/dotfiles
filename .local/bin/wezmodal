@@ -1,0 +1,10 @@
+#!/bin/zsh
+
+CONFIG_DIR="$HOME/.config/wezterm/"
+PATH="$PATH:$HOME/.local/share/cargo/bin/:$HOME/.local/bin/"
+CONFIG="${CONFIG_DIR}/wezterm_modal.lua"
+wezterm --config-file "$CONFIG" start --class 'wezmodal' -- $@ 
+
+# if [ 1 -eq 1 ]; then
+#         CONFIG="${CONFIG_DIR}/wezterm_modal.lua"
+# fi

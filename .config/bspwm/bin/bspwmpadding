@@ -1,0 +1,9 @@
+#!/bin/zsh
+emulate -L zsh
+
+for desktop in $( bspc query -D -m ); do 
+  for i v in top 70 left 8 bottom 8 right 8; do
+    bspc config -d $desktop ${i}_padding ${v} ; 
+  done; 
+done
+## Environtment

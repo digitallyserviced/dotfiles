@@ -34,6 +34,8 @@ super + alt + n
     ~/.local/bin/wezbar expand
 super + alt + r
     ~/.local/bin/wezbar runline
+super + V 
+    ~/.local/bin/wezmodal fzf-clipcat
 super + {x,s}
 	sh ~/.config/bspwm/rofi/bin/{powermenu,screenshot}
 # super + {w,m,x,r,s,i}
