@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xv
 # emulate -L zsh
 xrdb ~/.Xresources
 ## Environtment
@@ -40,7 +40,6 @@ bspc config normal_border_color "$MAGENTA"
 bspc config active_border_color "$BLUE"
 bspc config presel_feedback_color "$GREEN"
 
-bspc config external_rules_command wmrules
 
 # bspc config borderless_monocle true
 bspc config gapless_monocle true
@@ -55,10 +54,11 @@ bspc config pointer_follows_focus true
 
 # remove all rules first
 bspc rule -r *:*
+# bspc config external_rules_command /home/chris/.config/bspwm/bin/wmrules
 
 # 1 > terminal
 bspc rule -a wezterm desktop='^1' follow=on focus=on
-bspc rule -a wezbar desktop='^1' rectangle=1920x40+0+0 state=floating border_width=0
+bspc rule -a wezbar desktop='^1' rectangle=1920x40+0+0 state=floating border=off
 bspc rule -a wezssh desktop='^3' rectangle=1884x982+16+16 
 bspc rule -a wezdebug desktop='^7' rectangle=1884x982+16+16 
 # bspc rule -a wezmodal state=floating manage=off

@@ -233,10 +233,10 @@ export ZSH_AUTOSUGGEST_HISTORY_IGNORE='?(#c100,)'
 export ZSH_AUTOSUGGEST_COMPLETION_IGNORE='[[:space:]]*'
 typeset ZSH_AUTOSUGGEST_ORIGINAL_WIDGET_PREFIX=autosuggest-orig-
 typeset -a ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=( end-of-line vi-end-of-line vi-add-eol ) # forward-char vi-forward-char 
-typeset -a ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=( forward-word emacs-forward-word vi-forward-word vi-forward-word-end vi-forward-blank-word vi-forward-blank-word-end vi-find-next-char vi-find-next-char-skip forward-char vi-forward-char )
+typeset -a ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=( forward-word emacs-forward-word vi-forward-word vi-forward-word-end vi-forward-blank-word vi-forward-blank-word-end vi-find-next-char vi-find-next-char-skip )
 
 # Deny fzf bindings. We have our own.
-
+# forward-char vi-forward-char 
 # FZF_TAB_SHOW_GROUP=brief
 # FZF_TAB_SINGLE_GROUP=()
 

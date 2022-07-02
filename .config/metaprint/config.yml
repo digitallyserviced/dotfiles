@@ -75,6 +75,9 @@ uptime:
     no_minutes_format: "%seconds% seconds"
 
 custom:
+  ssid:
+    command: /home/chris/.local/bin/wifi
+    format: "%output%"
   my_custom_script:
     prefix: ☁️
     command: curl wttr.in/Paris?format=%t

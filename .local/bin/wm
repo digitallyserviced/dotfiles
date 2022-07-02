@@ -245,13 +245,13 @@ emulate -L zsh
       done
       local -a wm_apps=()
       for d in ${(ok)dwins}; do 
-        echo ${d} ${desktops[${d}]} ${dwins[${d}]}
+        # echo ${d} ${desktops[${d}]} ${dwins[${d}]}
         for w in ${(z)dwins[${d}]}; do 
           wm_apps+=(${wsegments[${w}]})
         done
       done
       local -a s=("TT")
-print -raC2 -- ${(j. .)wm_apps[@]}
+# print -raC2 -- ${(j. .)wm_apps[@]}
       [[ -n "${VERBOSE}" ]] && print -raC2 -- ${(j. .)wm_apps[@]}
       reply=(${all[@]})
       tmux setw -g @wm_apps "${(j. .)wm_apps[@]}" # "$(echo ${(j. .)reply[@]})"

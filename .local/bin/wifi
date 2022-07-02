@@ -1,0 +1,19 @@
+#!/bin/zsh 
+emulate zsh 
+
+
+# local -a chars=('𑨋' '𑨌' '𑨍' '𑨎' '𑨏' '𑨟' '𑨞' '𑨜' '𑨛' '𑨚' '𑨙' '𑨘' '𑨗' '𑨖' '𑨕' '𑨔' '𑨓' '𑨒' '𑨑' '𑨐' '𑨠' '𑨡' '𑨢' '𑨤' '𑨥' '𑨦' '𑨧' '𑨨' '𑨩' '𑨪' '𑨫' '𑨬' '𑨭' '𑨮' '𑨯' '𑨿' '𑨰' '𑨱' '𑨲' '𑩀' '𑩂' '𑩃' '𑩄' '𑩅' '𑩆')
+# local -a TS=("	" "	")
+# print -x 16 -aC 2 -f "	%s 	%s" -- ${(@z)${TS:^^chars}} 
+local -a wifistr=('🬞🬻' '🬵 ' '🬞 ')
+local ssid=$(iwgetid -r)
+cat /proc/net/wireless | tail +3 | read iface wstatus link level noise nwid crypt frag retry misc missed
+typeset -F 0 sig=${link}
+
+[[ ${sig} -le 100 ]] && { sigchr="${wifistr[1]}"; color=2; }
+[[ ${sig} -lt 70 ]] && { sigchr="${wifistr[2]}"; color=4; }
+[[ ${sig} -lt 50 ]] && { sigchr="${wifistr[3]}"; color=1; }
+
+print -v outstr -f '#[fg=colour0,push-default] %s #[fg=colour%4$d]%02s#[fg=default] (#[fg=colour%4$d,dim,bold]%d%%#[fg=default])#[pop-default]' "${ssid}" "${sigchr}" ${sig} $color
+
+echo ${outstr}

@@ -258,7 +258,7 @@ declare -gA keybindings; keybindings=(
   'mode=+ M-,'            frd                # cd interactively recent dir
   # 'mode=+ M-;'            fcd                # cd interactively
 
-  'mode=menuselect Space' .accept-line
+  # 'mode=menuselect Space' .accept-line
   'mode=menuselect C-r'   history-incremental-search-backward
   'mode=menuselect C-f'   history-incremental-search-forward
 

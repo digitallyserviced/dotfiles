@@ -4,12 +4,18 @@ WINID=${1}
 CLASS=${2}
 INST=${3}
 CONS=${4}
+echo ${@} | tee --append ~/.cache/wmrules.log > /dev/null 2>&1
 [[ ${CLASS} =~ "*wezbar*" ]] && {
-  bspc config -n ${WINID} border_width 0
+  echo -n "border=off ${@:4}"
+  echo
+  exit 0
 }
 
 [[ ${CLASS} =~ "*wezterm*" ]] && {
-  bspc config -n ${WINID} border_width 0
+  echo -n "border=off ${@:4}"
+  echo
+  exit 0
 }
-
+echo ${@:4}
+exit 0
 ## Environtment
