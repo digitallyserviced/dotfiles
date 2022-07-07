@@ -1,18 +1,18 @@
 #!/bin/zsh
 emulate -L zsh
-WINID=${1}
-CLASS=${2}
-INST=${3}
-CONS=${4}
+WINID="${1}"
+CLASS="${2}"
+INST="${3}"
+CONS="${@:4}"
 echo ${@} | tee --append ~/.cache/wmrules.log > /dev/null 2>&1
-[[ ${CLASS} =~ "*wezbar*" ]] && {
+[[ ${CLASS} =~ "wezbar" ]] && {
   echo -n "border=off ${@:4}"
   echo
   exit 0
 }
 
-[[ ${CLASS} =~ "*wezterm*" ]] && {
-  echo -n "border=off ${@:4}"
+[[ ${CLASS} =~ "wezterm" ]] && {
+  echo -n "border=on ${@:4}"
   echo
   exit 0
 }

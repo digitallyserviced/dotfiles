@@ -1,5 +1,8 @@
+# ⚙ ● ✚ ⍟ ↓ ↑ ☿  → 
+# typeset -g POWERLEVEL9K_BATTERY_STAGES='\uf58d\uf579\uf57a\uf57b\uf57c\uf57d\uf57e\uf57f\uf580\uf581\uf578'
 battery:
   tmux:
+    ramp: ""
     charging_text: 
     discharging_text: 
     format: "%percentage%%"
@@ -11,16 +14,23 @@ datetime:
   tmux:
     format: 15:04:05
 
-cpuinfo:
+cpu_info:
   tmux:
     format: " #[bold,fg=colour0]%cpus% #[nobold] #[bold,fg=colour8 dim]%avgghz%㎓"
     rounding: 2
-cpuusage:
+    
+net_usage:
+  tmux:
+    format: "↓ #{p-6:#{l:%rx%}} ↑ #{p-6:#{l:%tx%}} "
+    device: wlan0
+    rounding: 0
+    
+cpu_usage:
   tmux:
     format: " #{p-3:#{l:%pusage%}}%#[bold,fg=colour#{?#{e|<:%pusage%,70},2,1}] "
     rounding: 0
     
-loadavg:
+load_avg:
   tmux:
     format: "龍#{p-5:#{l:%avg1min%}} (ﰌ #{p-3:#{l:%running%}})[	#{p-3:#{l:%procs%}}]"
     rounding: 2
@@ -35,6 +45,7 @@ ram:
     unit: Go
     rounding: 1
     #  %fakewpm%/fwpm 
+
 hackspeed:
   tmux:
     format: " %keys%/kps וּ %shorties%/s  %wpm%/wpm"

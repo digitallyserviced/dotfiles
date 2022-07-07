@@ -34,6 +34,10 @@ super + alt + n
     ~/.local/bin/wezbar expand
 super + alt + r
     ~/.local/bin/wezbar runline
+super + M
+    ~/.local/bin/wezmodal zsh
+super + S 
+    bspterm -m
 super + V 
     ~/.local/bin/wezmodal fzf-clipcat
 super + {x,s}

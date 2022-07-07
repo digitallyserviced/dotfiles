@@ -1,6 +1,6 @@
 daemonize = true          # run as a traditional UNIX daemon
 max_history = 250          # max clip history limit
-log_level = 'DEBUG'        # log level
+log_level = 'TRACE'        # log level
 
 [monitor]
 load_current = true       # load current clipboard content at startup

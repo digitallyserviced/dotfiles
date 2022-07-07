@@ -51,16 +51,36 @@ accept(){
     # ${ZERODIR}/nvr $HOME/$file
   done
 }
-local clipcatctl="/home/chris/Documents/clipcat/target/release/clipcatctl"
+local clipcatctl="/home/chris/Documents/clipcat/target/debug/clipcatctl"
 fzfs(){
   (){
     cat - | sort | uniq | sort 
   } < <(${clipcatctl} info) > >(fzf_list)
 }
 
+searcher(){
+  typeset -a clipcatsearch=(${clipcatctl} "search" --shell --context)
+  local q=${1}
+  clipcatsearch+=(${q})
+  while read -A line; do # id ts ts2 size ctype context; do 
+    # local cid=${${(s:=:)id}:1}  # cts=${${(@s:=:)ts}[@]}
+    # echo $cid $cts
+    # echo $id $ts $size $ctype $context
+    echo ${(q)line[2,3]}
+    for i in ${(qq)line}; do 
+      # echo eval "${(qq)i}";
+    done
+    # eval "${line}";
+    # noglob typeset -pm CLIP_*
+    echo "${CLIP_TIMESTAMP}" "${CLIP_CONTEXT}";
+    # echo ${CLIP_ID}
+  done < <(${clipcatsearch[@]})
+}
+
 previewer(){
   {
-    typeset -A clipinfo=(${(z)@:2})
+    typeset -A clipinfo=("" "")
+    echo ${@}
     print -v clipstat -raC4 -- ${(kv)clipinfo}
     header=$(echo ${clipstat})
     echo ${(l[${FZF_PREVIEW_COLUMNS}][─])}
@@ -83,9 +103,9 @@ fzf_list(){
     {cat /dev/stdin} | \
       ${WHFZF} --header "${HEADER}"\
       --tabstop=2 \
-      ${bindsa}
+      ${bindsa} \
       --delimiter=" " --nth=2.. --with-nth=2,4,5,7,9\
-      --preview-window="down,68%,border-rounded,nofollow,nohidden,~4"\
+      --preview-window="down,68%,border-rounded,nofollow,nohidden"\
       -1 --preview="${previewer}" --header-first
   } > >(accept nvr)
 }
@@ -95,6 +115,8 @@ fzf_list(){
   LISTER=${1:-${stdinput[@]}}
   case "$LISTER" in
     accept) echo ${@:2} | accept nvr;
+    ;;
+  searcher) searcher ${@:2};
     ;;
   previewer) previewer ${@:2};
     ;;

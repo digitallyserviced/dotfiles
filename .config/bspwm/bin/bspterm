@@ -20,8 +20,8 @@ elif [ "$1" = "-s" ]; then
           --class 'wezmodal' -- ${@:2}  
 elif [ "$1" = "-m" ]; then
   wezterm --config-file "$CONFIG"  \
-          connect \
-          --class 'wezssh' -- maindesk   
+          ssh \
+          --class 'wezssh' chris@192.168.68.104   
 else
   wezterm --config-file "$CONFIG"
 fi
