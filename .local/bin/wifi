@@ -10,6 +10,6 @@ typeset -F 0 sig=${link}
 [[ ${sig} -le 70 ]] && { sigchr="${wifistr[2]}"; color=9; }
 [[ ${sig} -lt 50 ]] && { sigchr="${wifistr[3]}"; color=1; }
 
-print -v outstr -f '#[fg=colour0,push-default] %s #[fg=colour%4$d]%02s#[fg=default] (#[fg=colour%4$d,bright,bold]%d%%#[fg=default])#[pop-default]' "${ssid}" "${sigchr}" ${sig} $color
+print -v outstr -f '#[fg=colour0,push-default]  %s #[fg=colour%4$d]%02s#[fg=default] (#[fg=colour%4$d,bright,bold]%d%%#[fg=default])#[pop-default]' "${ssid}" "${sigchr}" ${sig} $color
 
 echo ${outstr}

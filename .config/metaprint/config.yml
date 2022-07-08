@@ -3,8 +3,8 @@
 battery:
   tmux:
     ramp: ""
-    charging_text: 
-    discharging_text: 
+    charging_text: 
+    discharging_text: 
     format: "%percentage%%"
 
 datetime:
@@ -16,23 +16,23 @@ datetime:
 
 cpu_info:
   tmux:
-    format: " #[bold,fg=colour0]%cpus% #[nobold] #[bold,fg=colour8 dim]%avgghz%㎓"
+    format: " #[bold,fg=colour0]%cpus% #[nobold] #[bold,fg=colour8 dim]%avgghz%㎓"
     rounding: 2
     
 net_usage:
   tmux:
-    format: "↓ #{p-6:#{l:%rx%}} ↑ #{p-6:#{l:%tx%}} "
+    format: "↓#{p-6:#{l:%rx%}} ↑#{p-6:#{l:%tx%}} "
     device: wlan0
     rounding: 0
     
 cpu_usage:
   tmux:
-    format: " #{p-3:#{l:%pusage%}}%#[bold,fg=colour#{?#{e|<:%pusage%,70},2,1}] "
+    format: " #{p-3:#{l:%pusage%}}%#[bold,fg=colour#{?#{e|<:%pusage%,70},2,1}] "
     rounding: 0
     
 load_avg:
   tmux:
-    format: "龍#{p-5:#{l:%avg1min%}} (ﰌ #{p-3:#{l:%running%}})[	#{p-3:#{l:%procs%}}]"
+    format: "龍#{p-5:#{l:%avg1min%}} (ﰌ#{p-3:#{l:%running%}})[ #{p-3:#{l:%procs%}}]"
     rounding: 2
     
 ram:
@@ -48,7 +48,7 @@ ram:
 
 hackspeed:
   tmux:
-    format: " %keys%/kps וּ %shorties%/s  %wpm%/wpm"
+    format: "  %keys%/kps גּ %shorties%/s  %wpm%/wpm"
     unit: ps
     rounding: 1
 ip:
@@ -74,7 +74,7 @@ pulseaudio:
 
 storage:
   tmux:
-    format: "%pused%%"
+    format: "%pused%% "
     mount_point: /
     rounding: 1
 
@@ -92,3 +92,27 @@ custom:
   my_custom_script:
     prefix: ☁️
     command: curl wttr.in/Paris?format=%t
+  awesome_format:
+    scripts:
+      - wifi:
+          # shell: ["zsh", "-c"
+          # script:
+          inline: true
+          args: []
+          content: |2
+            #!/bin/zsh 
+            emulate zsh 
+
+            local -a wifistr=('🬞🬻' '🬵 ' '🬞 ')
+            local ssid=$(iwgetid -r)
+            cat /proc/net/wireless | tail +3 | read iface wstatus link level noise nwid crypt frag retry misc missed
+            typeset -F 0 sig=${link}
+
+            [[ ${sig} -le 100 ]] && { sigchr="${wifistr[1]}"; color=2; }
+            [[ ${sig} -le 70 ]] && { sigchr="${wifistr[2]}"; color=9; }
+            [[ ${sig} -lt 50 ]] && { sigchr="${wifistr[3]}"; color=1; }
+
+            print -v outstr -f '#[fg=colour0,push-default]  %s #[fg=colour%4$d]%02s#[fg=default] (#[fg=colour%4$d,bright,bold]%d%%#[fg=default])#[pop-default]' "${ssid}" "${sigchr}" ${sig} $color
+
+            echo ${outstr}
+
