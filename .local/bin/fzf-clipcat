@@ -91,7 +91,7 @@ previewer(){
   }
 } > >(bat -l lua --color=always --style "snip")
 # typeset -a binds=("enter:accept-non-empty" "change:first" "ctrl-space:execute(nvr {})" "ctrl-g:reload:$0 all")
-typeset -a binds=("change:reload:${clipcatctl} search -C {q}" "ctrl-space:reload:${clipcatctl} search {q}")
+typeset -a binds=("enter:accept-non-empty" "change:reload:${clipcatctl} search -C {q}" "ctrl-space:reload:${clipcatctl} search {q}")
 typeset -a previewer=("$ARGZERO" "previewer" '{q}' '{2}' '{1} {2} {3} "{4,5}" {6} {7} {8} {9}' ) bind=('--bind')
 
 fzf_list(){
@@ -107,7 +107,7 @@ fzf_list(){
       --delimiter=" " --nth=2.. --with-nth=2,4,5,7,9\
       --preview-window="down,68%,border-rounded,nofollow,nohidden"\
       -1 --preview="${previewer}" --header-first
-  } > >(accept nvr)
+  } > >(accept)
 }
 
 {

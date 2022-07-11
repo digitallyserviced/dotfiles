@@ -149,7 +149,7 @@ function helper(wt)
         table.insert(out, v)
       end
     end
-
+-- ︰︱︲︳︴︵︶︷︸︹︺︻︼︽︾︿﹀﹁﹂﹃﹄﹅﹆﹇﹈﹉﹊﹋﹌﹍﹎﹏🯁🯂🯃       🮲🮳🬫🬛     🬸🬴      🬜🬪     🮹🮺      🬕🬷       🬲🬨     🬛🬤   🬥🬶    🬺🬬    🬻🬝     🬝🬻  🬴🬸  🬱🬊     🬍🬖    🬍🬚    🬱🬵     🬚🬩    🬕🬘🬡    🬡🬲🬵🬮🬰    
   local RIGHT_SLASH = SYM('pl_left_hard_divider')
   local LEFT_SLASH = SYM('pl_right_hard_divider')
   local SOFT_RIGHT_SLASH = SYM('pl_left_soft_divider')

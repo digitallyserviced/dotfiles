@@ -12,7 +12,6 @@ local palette = {
 }
 
 local timed = 0
-
 events.on("window-config-reloaded", function(window, pane)
   local str = "Reloaded config"
 
@@ -84,13 +83,15 @@ events.on("format-tab-title", function(tab, tabs, panes, config, hover, max_widt
 
   local out = {}
   function append(val2)
-    for i, v in ipairs(val2) do
-      table.insert(out, v)
-    end
+      -- print(wezterm.format(val2))
+      table.insert(out, val2)
+    -- for i, v in ipairs(val2) do
+    --   table.insert(out, v)
+    -- end
   end
 
-  local LEFT_SLASH = SYM('ple_left_hard_divider')
-  local RIGHT_SLASH = SYM('ple_right_hard_divider')
+  local LEFT_SLASH = SYM('pl_left_hard_divider')
+  local RIGHT_SLASH = SYM('pl_right_hard_divider')
   local ico = tab.is_active and '⬤' or '⭘'
   local SYNLEDGE = STYLE({ BG("#000000"), FG(bg) })
   local SYEDGE = STYLE({ UL("Single"), BG("#000000"), FG(bg) })
@@ -99,16 +100,19 @@ events.on("format-tab-title", function(tab, tabs, panes, config, hover, max_widt
   -- local RIGHT=SYEDGE(ROUND_RIGHT)
   local LEFT = SYNLEDGE(LEFT_SLASH)
   local RIGHT = SYEDGE(LEFT_SLASH)
+  local WRAPPER = WRAP_STYLE(LEFT_SLASH, RIGHT_SLASH, STYLE({BG("#000000"), FG(bg)}))
   local PAD = STYLE({ UL("Single") })
   -- local MAINTXT=STYLE({BG("#222222"), HL('https://www.google.com'), FG(bg), UL(tab.is_active and "Single" or "None"), BL(tab.is_active)})
-  local MAINTXT = STYLE({ HL('https://www.google.com'), UL("Single"), FG(bg), BL(tab.is_active) })
-  append(LEFT)
-  append(PAD(" "))
-  append(ACTIVE)
-  append(MAINTXT(" " .. title .. " "))
-  append(PAD(" "))
-  append(RIGHT)
-  return out
+  -- local MAINTXT = STYLE({ HL('https://www.google.com'), UL("Single"), FG(bg), BL(tab.is_active) })
+  local MAINTXT = STYLE({ HL('https://www.google.com'), UL("Single"), FG(palette[1]), BL(tab.is_active) })
+  append(WRAPPER(" " .. title .. " ", MAINTXT))
+  -- append(LEFT)
+  -- append(PAD(" "))
+  -- append(ACTIVE)
+  -- append(MAINTXT(" " .. title .. " "))
+  -- append(PAD(" "))
+  -- append(RIGHT)
+  return table.concat(out, "") 
 end)
 
 events.on("update-right-status", function(window, pane)

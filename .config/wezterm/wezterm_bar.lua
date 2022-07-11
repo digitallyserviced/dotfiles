@@ -17,15 +17,15 @@ wezconf.automatically_reload_config = false;
 wezterm = require("wezterm")
 local wezterm_conf = require("wezterm_conf")(wezterm)
 wezconf.font = wezterm.font_with_fallback {
-      { family = "Iosevka Term", weight = "Regular" },
+      { family = "Iosevka Term", weight = "Regular"},
       -- { family = "BitstreamVeraSansMono Nerd Font Mono", weight = "Regular" },
       -- { family = "ShureTechMono NF", weight = "Regular" },
       -- { family = "FuraCode Nerd Font", weight = "Regular" },
       -- { family = "Iosevka Term", weight = "Regular" },
       -- { family = "MesloLGL Nerd Font Mono", weight = "Regular" },
       -- { family = "PragmataPro Mono", weight = "Regular" },
-      -- { family = "Hack Nerd Font", weight = "Regular" },
-      { family = "JetBrains Mono", weight = "Regular" },
+      -- { family = "Hack Nerd Font", weight = "Regular" , stretch = "UltraCondensed" },
+      -- { family = "JetBrains Mono", weight = "Regular", stretch = "UltraCondensed" },
       -- { family = "Terminus", weight = "Bold" },
       "Noto Color Emoji",
     }

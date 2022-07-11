@@ -82,11 +82,91 @@ return function(M)
   }
 
 if wezG.debug then
-  local confirm_prompt = act.ConfirmPrompt
-  local cp = ACTIONMAP("ConfirmPrompt", {"CTRL","LEADER"})
-  -- keys.keys = table.insert(keys.keys, {key = "P", mods="LEADER|CTRL", action=M.wezterm.action{ConfirmPrompt={prompt="WTF", mode="AnyKey"}}})
-  -- keys.keys = 
-  table.insert(keys.keys, cp("M", {prompt = "X"}))
+  require("lib.styles")
+  local palette = {
+    "#e85c51",
+    "#7aa4a1",
+    "#fda47f",
+    "#5a93aa",
+    "#ad5c7c",
+    "#a1cdd8",
+    "#ebebeb",
+    "#ff8349",
+    "#cb7985",
+  }
+
+  local ROUND_LEFT = SYM('ple_left_half_circle_thick')
+  local ROUND_RIGHT = SYM('ple_right_half_circle_thick')
+  local SLANT_LEFT = SYM('ple_upper_right_triangle')
+  local SLANT_RIGHT = SYM('ple_lower_left_triangle')
+  local TOP_TRIANGLE = SYM('pl_right_hard_divider')
+  local NEXT_TRIANGLE = SYM('pl_left_hard_divider')
+
+  local num_cells = 0
+  local out = {}
+  function append(val2)
+    -- out = table.move(out, 0, #out, 0, val2)
+    -- for i, v in ipairs(out) do
+      table.insert(out, wezterm.format(val2))
+    -- end
+    -- out = val2
+  end
+
+  local prevbg = nil
+  local nextbg = nil
+  local bg = "#000000"
+  local fg = "#222222"
+
+  local segments = -3
+  local styler = function(cell, cap, ender)
+    segments = segments + 1
+    cell = cell or nil
+    prevbg = palette[(math.abs(segments) - 1 % #palette) + 1]
+    bg = palette[(math.abs(segments) % #palette) + 1]
+    nextbg = palette[(math.abs(segments) + 1 % #palette) + 1]
+    local MAINTXT = STYLE({ BG(bg), FG("#000000") })
+    if cell ~= nil then
+      append(MAINTXT(cell))
+    end
+  ender = ender or TOP_TRIANGLE
+    if segments > 0 then
+      append(STYLE({ BG("#000000"), FG(bg) })(ender))
+      if not cap then
+        append(STYLE({ BG(nextbg), FG("#000000") })(ender))
+      end
+    else
+      append(STYLE({ BG(nextbg), FG("#000000") })(ender))
+      if not cap then
+        append(STYLE({ BG("#000000"), FG(bg) })(ender))
+      end
+    end
+  end
+
+  local palette = {
+    "#e85c51",
+    "#7aa4a1",
+    "#fda47f",
+    "#5a93aa",
+    "#ad5c7c",
+    "#a1cdd8",
+    "#ebebeb",
+    "#ff8349",
+    "#cb7985",
+    "#2f2239"
+  }
+  local out = {
+    wezterm.format(STYLE({BG(palette[10]), FG(palette[8])})("Close: ")),
+    wezterm.format(STYLE({FG(palette[1]),  BG(palette[10]), UL("Single")})(" y")),
+    wezterm.format(STYLE({BG(palette[10]), FG(palette[3])})(" / ")),
+    wezterm.format(STYLE({FG(palette[2]),  BG(palette[10]), UL("Single")})("n ")),
+  }
+--   local confirm_prompt = act.ConfirmPrompt
+-- -- local emit = act.EmitEvent
+-- -- wezterm.emit("refresh_exec_domains")
+--   local cp = ACTIONMAP("ConfirmPrompt", {"CTRL","LEADER"})
+--   -- keys.keys = table.insert(keys.keys, {key = "P", mods="LEADER|CTRL", action=M.wezterm.action{ConfirmPrompt={prompt="WTF", mode="AnyKey"}}})
+--   -- keys.keys =
+--   table.insert(keys.keys, cp("M", {prompt=table.concat(out, " ")}))
 end
 
   return keys

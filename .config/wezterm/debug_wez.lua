@@ -1,6 +1,16 @@
+wezterm = require 'wezterm'
+require('lib.styles')
+
+-- Equivalent to POSIX basename(3)
+-- Given "/foo/bar" returns "bar"
+-- Given "c:\\foo\\bar" returns "bar"
+local function basename(s)
+  return string.gsub(s, "(.*[/\\])(.*)", "%2")
+end
+
 local wezconf = {}
 
-wezconf.window_background_opacity = 0.5
+wezconf.window_background_opacity = 0.8
 wezconf.font_size = 12
 wezconf.line_height = 1.0
 -- wezconf.tab_bar_at_bottom = false
@@ -9,7 +19,43 @@ wezconf.window_padding = { top = "4pt", left = "0pt", bottom = "0pt", right = "0
 wezconf.automatically_reload_config = true;
 wezconf.enable_kitty_keyboard = true
 wezconf.custom_block_glyphs = true
+-- local ed = require('docker_domains')
+-- wezconf.exec_domains=ed
 local color_list = { "red", "green", "yellow", "blue", "magenta", "cyan" }
+-- wezconf.window_background_gradient = {
+--      colors = {
+--     "#e85c51",
+--     "#7aa4a1",
+--     "#fda47f",
+--     "#5a93aa",
+--     "#ad5c7c",
+--     "#a1cdd8",
+--     "#ebebeb",
+--     "#ff8349",
+--     "#cb7985",
+--        "#012302",
+--   },
+--      orientation = {
+--        Radial={
+--          -- Specifies the x coordinate of the center of the circle,
+--          -- in the range 0.0 through 1.0.  The default is 0.5 which
+--          -- is centered in the X dimension.
+--          cx = 0.75,
+--
+--          -- Specifies the y coordinate of the center of the circle,
+--          -- in the range 0.0 through 1.0.  The default is 0.5 which
+--          -- is centered in the Y dimension.
+--          cy = 0.75,
+--
+--          -- Specifies the radius of the notional circle.
+--          -- The default is 0.5, which combined with the default cx
+--          -- and cy values places the circle in the center of the
+--          -- window, with the edges touching the window edges.
+--          -- Values larger than 1 are possible.
+--          radius = 0.725,
+--        }
+--      },
+--   }
 -- wezconf.window_background_gradient = {
 --      colors = {
 --     "#e85c51",
@@ -60,27 +106,10 @@ local color_list = { "red", "green", "yellow", "blue", "magenta", "cyan" }
 -- },
 
 local dimmer = { brightness = 0.4 }
-wezconf.background = {
-  -- This is the deepest/back-most layer. It will be rendered first
-  {
-    source = { File = "/home/chris/backups/backuj/inverty.png" },
-    opacity=0.8,
-    hsb=dimmer,
-    width="Contain",
-    height="100%",
-    vertical_align="Middle",
-    -- width = "Contain",
-    -- height="Contain",
-    horizontal_align="Center", 
-    repeat_y = "NoRepeat",
-    repeat_x = "NoRepeat",
-    attachment = "Fixed",
-  },
-}
 local wez = require("wez")
 wezterm.GLOBAL.debug=true
 local wezterm_conf = require("lib.wez_config")
-require('my_events')
+-- require('my_events')
 local config = wezterm_conf.override(wezconf)
 config.font = wezterm.font_with_fallback {
   -- { family = "ShureTechMono NF", weight = "Regular" },
@@ -98,15 +127,15 @@ config.font = wezterm.font_with_fallback {
 -- wez.on('quick-selected', function (window, pane, data)
 --   wez.log_error(window, pane, data)
 -- end)
-wezterm.on('gui-startup', function()
-  local mux = wezterm.mux
-  local tab, pane, window = mux.spawn_window { width = 100, height = 40 }
-  pane:split { direction = "Top", size = 3, top_level = true }
-  -- Create a split occupying the right 1/3 of the screen
-  -- pane:split{size=0.3}
-  -- Create another split in the right of the remaining 2/3
-  -- of the space; the resultant split is in the middle
-  -- 1/3 of the display and has the focus.
-  -- pane:split{size=0.5}
-end)
+-- wezterm.on('gui-startup', function()
+--   local mux = wezterm.mux
+--   local tab, pane, window = mux.spawn_window { width = 100, height = 40 }
+--   pane:split { direction = "Top", size = 3, top_level = true }
+--   -- Create a split occupying the right 1/3 of the screen
+--   -- pane:split{size=0.3}
+--   -- Create another split in the right of the remaining 2/3
+--   -- of the space; the resultant split is in the middle
+--   -- 1/3 of the display and has the focus.
+--   -- pane:split{size=0.5}
+-- end)
 return config
