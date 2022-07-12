@@ -146,7 +146,7 @@ vec4 shit( vec4 fragColor, vec2 fragCoord ){
     st.y *= u_resolution.y/u_resolution.x;
     vec3 color = vec3(0.0);
 
-    float t = u_time*1.25;
+    float t = u_time*2.75;
     float rows = floor(50.);
     vec2 ipos = floor(st*rows);
     vec2 fpos = fract(st*rows);
@@ -216,7 +216,7 @@ void main() {
     // Solid color block
     color = fg_color;
   /* color=junk(fg_color, o_position); */
-  color=mix(shit(color, o_tex), fg_color, o_fg_color_mix);
+  color=mix(shit(color, o_position), fg_color, 0.7);
     colorMask = vec4(1.0);
   } else if (o_has_color == 2.0) {
     // The window background attachment

@@ -198,15 +198,13 @@ void main() {
   color=mix(color, junk(color, o_position), 0.2);
   } else if (o_has_color == 1.0) {
     // the texture is full color info (eg: color emoji glyph)
-    /* color = texture(atlas_nearest_sampler, o_tex); */
+    color = texture(atlas_nearest_sampler, o_tex);
     // this is the alpha
-  color=junk(color, o_position);
     colorMask = color.aaaa;
   } else if (o_has_color == 4.0) {
     // Grayscale poly quad for non-aa text render layers
     colorMask = texture(atlas_nearest_sampler, o_tex);
     color = fg_color;
-  color=junk(color, o_position);
     color.a *= colorMask.a;
   } else if (o_has_color == 0.0) {
     // the texture is the alpha channel/color mask
@@ -218,24 +216,7 @@ void main() {
     }
     color = apply_hsv(color, foreground_text_hsb);
   }
-/* vec2 st = o_position * (o_position.x/o_position.y); */
-/* vec2 st = o_position.xy / (vec2(1800.0,900.0).xy); */
-/**/
-/* st = st * 2.0 - 1.0; */
-/*     // Step will return 0.0 unless the value is over 0.5, */
-/*     // in that case it will return 1.0 */
-/*     float y = step(0.5,st.x); */
-/**/
-/**/
-/*     vec3 fgColor = vec3(y); */
-/**/
-/*     float pct = plot(st,y); */
-/*     fgColor = (1.0-pct)*fgColor+pct*vec3(0.0,1.0,0.0); */
-/**/
-/*     vec4 gColor = vec4(fgColor,1.0); */
-  /*   color = mix(color, gColor, 0.5); */
   color = apply_hsv(color, o_hsv);
-  /* color = apply_hsv(vec4(color.rgb * (st.x+1.0), 1.0), o_hsv); */
   /**/
   /* // We MUST output SRGB and tell glium that we do that (outputs_srgb), */
   /* // otherwise something in glium over-gamma-corrects depending on the gl setup. */

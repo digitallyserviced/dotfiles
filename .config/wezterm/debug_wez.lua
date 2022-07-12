@@ -10,7 +10,7 @@ end
 
 local wezconf = {}
 
-wezconf.window_background_opacity = 0.8
+wezconf.window_background_opacity = 0.5
 wezconf.font_size = 12
 wezconf.line_height = 1.0
 -- wezconf.tab_bar_at_bottom = false
@@ -19,6 +19,11 @@ wezconf.window_padding = { top = "4pt", left = "0pt", bottom = "0pt", right = "0
 wezconf.automatically_reload_config = true;
 wezconf.enable_kitty_keyboard = true
 wezconf.custom_block_glyphs = true
+wezconf.foreground_text_hsb = {
+    hue = 1.0,
+    saturation = 1.3,
+    brightness = 3.3,
+  }
 -- local ed = require('docker_domains')
 -- wezconf.exec_domains=ed
 local color_list = { "red", "green", "yellow", "blue", "magenta", "cyan" }
