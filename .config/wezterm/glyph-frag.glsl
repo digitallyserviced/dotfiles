@@ -6,6 +6,7 @@ precision highp float;
 #define PI 3.14159265359
 
 in vec2 o_position;
+in vec4 o_cursor_position;
 in float o_has_color;
 in vec2 o_tex;
 in vec3 o_hsv;
@@ -24,6 +25,7 @@ uniform sampler2D atlas_nearest_sampler;
 uniform sampler2D atlas_linear_sampler;
 uniform bool subpixel_aa;
 uniform float time;
+uniform float delta;
 /* uniform float delta; */
 uniform vec2 resolution;
 /* #define iResolution (vec2(1800.0,900.0).xy) */
@@ -206,12 +208,20 @@ vec4 junk( vec4 fragColor, vec2 fragCoord ){
 }
 void main() {
   vec4 fg_color = mix(o_fg_color, o_fg_color_alt, o_fg_color_mix);
-  /* vec4 fg_color = mix(o_fg_color, junk(o_fg_color, o_position), o_fg_color_mix); */
+    /* fg_color=vec4(1.0); */
   if (o_has_color == 9.0) {
     // Solid color block
     /* color = fg_color * (o_position.xyyx * sin(delta) / 0.15) ; */
-    color = fg_color;
+  vec4 fg_color = mix(o_fg_color, junk(o_fg_color, o_cursor_position.xy), dot(o_cursor_position.xy,o_cursor_position.zw));
+  vec2 pos = o_position + vec2(cos(time)*100.0, sin(time)*100.0);
+  fg_color = mix(vec4(0.0), fg_color, dot(pos, o_position));
+   
+    color = fg_color * sin(delta);
+    /* fg_color=vec4(1.0); */
+    /* color=(mix(vec4(0.0), fg_color, (normalize(o_position).y * 0.5) + sin(delta))); */
+    /* color = junk(fg_color, o_position); */
     colorMask = vec4(1.0);
+    return;
   } else if (o_has_color == 3.0) {
     // Solid color block
     color = fg_color;
@@ -235,13 +245,15 @@ void main() {
     color = texture(atlas_nearest_sampler, o_tex);
     // this is the alpha
   /* color=junk(color, o_position); */
-  color=mix(shit(color, o_tex), color, o_fg_color_mix);
+  /* color=mix(shit(color, o_tex), color, o_fg_color_mix); */
+  color *=1.25;
     colorMask = color.aaaa;
   } else if (o_has_color == 4.0) {
     // Grayscale poly quad for non-aa text render layers
     colorMask = texture(atlas_nearest_sampler, o_tex);
     color = fg_color;
   color=junk(color, o_position);
+  color*=1.25;
     color.a *= colorMask.a;
   } else if (o_has_color == 0.0) {
     // the texture is the alpha channel/color mask

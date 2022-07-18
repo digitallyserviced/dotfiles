@@ -1,4 +1,4 @@
-local wezterm = require 'wezterm'
+local wezterm = require("wezterm")
 require("lib.styles")
 
 local default_shell = "/bin/bash" -- "/bin/zsh" "/bin/ash" "/bin/dash" "/bin/fish" "/bin/sh"
@@ -45,7 +45,6 @@ function docker_list(all)
   assert(exit, string.format("Did not run docker container command successfully: %q", err))
   local containers = assert(load(string.format("return {%s}", out)), "Invalid lua syntax returned from command")
 
-
   -- the output is a table of tables
   -- each table in the root table is a container
   -- the structure is {id,name,command,status,running}
@@ -61,7 +60,7 @@ function docker_state(id)
     "container", -- we run container subcommand
     "ls", -- list containers
     "--filter",
-    "id=" .. id
+    "id=" .. id,
   }
   table.insert(cmd, "--format") -- we are gonna specify a format so we can parse easie
   table.insert(cmd, [[
@@ -81,7 +80,6 @@ function docker_state(id)
 end
 
 function make_docker_fixup_func(id)
-
   return function(cmd)
     cmd.args = cmd.args or { default_shell }
     local wrapped = {
@@ -99,28 +97,16 @@ function make_docker_fixup_func(id)
   end
 end
 
-CAPPER = function(head, tail, wrap_style, inner_style)
-  return function(content)
-    local wrap = WRAP_STYLE(head, tail, wrap_style)
-    return wrap(content, inner_style)
-  end
-end
-ROUNDCAP = function(wrap, inner)
-  return function(content)
-    local w = CAPPER(ROUND_LEFT, ROUND_RIGHT, wrap, inner)
-    return w(content)
-  end
-end
 function get_state_icon(st)
   if st > 0 then
-    TAG = ROUNDCAP(STYLE({ BG("#2f3239"), FG("#7baf00") }), STYLE({ BG("#2f3239"), FG("#7baf00") }))
+    TAG = ROUNDCAP(STYLE({ BG("#2f3239"), FG("#7baf00") }), STYLE({ FG("#2f3239"), BG("#7baf00") }))
     return TAG(" 省 RUNNING ")
   end
   if st < 0 then
-    TAG = ROUNDCAP(STYLE({ BG("#2f3239"), FG("#fdb292") }), STYLE({ BG("#2f3239"), FG("#fdb292") }))
+    TAG = ROUNDCAP(STYLE({ BG("#2f3239"), FG("#fdb292") }), STYLE({ BG("#2f3239"), BG("#fdb292") }))
     return TAG(" C CREATED ")
   end
-  TAG = ROUNDCAP(STYLE({ BG("#2f3239"), FG("#eb746b") }), STYLE({ BG("#2f3239"), FG("#eb746b") }))
+  TAG = ROUNDCAP(STYLE({ BG("#2f3239"), FG("#eb746b") }), STYLE({ BG("#2f3239"), BG("#eb746b") }))
   return TAG("    EXITED ")
 end
 
@@ -128,8 +114,7 @@ end
 function make_label(container, state)
   local id, name, entrypoint, status, _ = table.unpack(container)
 
-
-  local appender, printer = OUTPUT()
+  local appender, printer = NEW_FORMATTER(true)
 
   local IDTXT = WRAP_STYLE("<", ">")
   local NAMETXT = WRAP_STYLE(ROUND_THIN_LEFT, ROUND_THIN_RIGHT, STYLE({ FG("#7baf00") }))
@@ -139,14 +124,14 @@ function make_label(container, state)
   local STATUSTXT = STYLE({ FG("#b97490") })
   local state_ico = get_state_icon(tonumber(state))
 
+  appender(state_ico)
   appender(IDTXT(id, STYLE({ FG("#027bad"), BL(true) })))
   appender(NAMETXT(" " .. name .. " ", STYLE({ FG("#7baf00") })))
-  appender(TESTTXT("SHITS"), false)
-  appender(CMDTXT(entrypoint))
-  -- appender(state_ico)
-  appender(STATUSTXT(status))
+  appender(wezterm.format(TESTTXT("SHITS")))
+  appender(wezterm.format(CMDTXT(entrypoint)))
+  appender(wezterm.format(STATUSTXT(status)))
 
-  return printer("  ")
+  return printer(" ")
 end
 
 function make_docker_label_func(id, container)
@@ -154,7 +139,6 @@ function make_docker_label_func(id, container)
   return function(ed_id)
     local current_status = docker_state(id)
 
-    print(current_status)
     -- local label = string.format("Docker Container: (%s) %s `%s` [%s]", id, name, entrypoint, status)
     -- TODO: query the container state and show info about
     -- whether it is running or stopped.
@@ -167,22 +151,16 @@ end
 function make_docker_exec_domain(container)
   local id, name, entrypoint, status, state = table.unpack(container)
   local ed_id = string.format("docker-%s", id)
-  print(ed_id)
   return ed_id, make_docker_fixup_func(id), make_docker_label_func(id, container)
 end
 
 local exec_domains = {}
 local docker_containers = assert(docker_list(false), "Failed fetching docker containers.")
-print(docker_containers)
 for _, container in ipairs(docker_containers) do
   local ed_id, fixup_func, label_func = make_docker_exec_domain(container)
-  table.insert(exec_domains,
-    wezterm.exec_domain(ed_id, fixup_func, label_func)
-  )
-  print(exec_domains)
-  -- require("os").exit(0, true)
+  table.insert(exec_domains, wezterm.exec_domain(ed_id, fixup_func, label_func))
 end
 
 return {
-  exec_domains = exec_domains
+  exec_domains = exec_domains,
 }

@@ -2,7 +2,7 @@ local wezconf = {}
 wezterm = require("wezterm")
 
 wezconf.enable_tab_bar = false;
-wezconf.window_background_opacity = 0.85;
+wezconf.window_background_opacity = 0.01;
 wezconf.window_padding = {
        top = 0,
     bottom = 0,

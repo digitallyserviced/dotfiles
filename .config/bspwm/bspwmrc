@@ -153,6 +153,7 @@ ksuperkey -e 'Super_R=Alt_L|F1' &
 xfce4-power-manager &
 
 # Fix cursor
+xset r rate 220 30
 xsetroot -cursor_name left_ptr
 setxkbmap -option caps:none
 # Restore wallpaper

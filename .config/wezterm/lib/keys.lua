@@ -22,7 +22,6 @@ function KEYMAP(key, mods, action)
   return map
 end
 
-
 function MAKEACTION(obj, action, default_args, arg_func)
   obj = assert(obj, "obj needs to be provided as window or pane object")
   default_args = default_args or {}
@@ -34,11 +33,16 @@ function MAKEACTION(obj, action, default_args, arg_func)
       action = wezterm.action[action]
     end
   elseif type(action) == "userdata" then
-    wezterm.log_info(string.format("MAKEACTION provided with action userdata (direct from wezterm object) with default args of %s", default_args))
+    wezterm.log_info(
+      string.format(
+        "MAKEACTION provided with action userdata (direct from wezterm object) with default args of %s",
+        default_args
+      )
+    )
   end
 
   local callargs = nil
-  local fun = function (pane, args, force_args)
+  local fun = function(pane, args, force_args)
     if force_args then
       callargs = args
     elseif type(arg_func) == "function" then
@@ -53,12 +57,12 @@ function MAKEACTION(obj, action, default_args, arg_func)
       if type(action) == "userdata" and callargs ~= nil then
         callaction = action(callargs)
       else
-        wezterm.log_info({event, callargs, pane})
+        wezterm.log_info({ event, callargs, pane })
       end
       obj:perform_action(callaction, pane)
     end
   end
-  fun.current_args = callargs 
+  fun.current_args = callargs
   fun.default_args = default_args
 
   return fun
@@ -94,25 +98,26 @@ function ACTIONMAP(action, mods)
     assert(wezterm.action[action], "Action does not exist")
     action = wezterm.action[action]
   elseif action == nil then
-    wezterm.log_info(string.format("ACTIONMAP without original action for mods (%s) will require action later.", table.concat(mods, "|")))
+    -- wezterm.log_info(string.format("ACTIONMAP without original action for mods (%s) will require action later.", table.concat(mods, "|")))
     modmap = true
   elseif type(action) == "userdata" then
-    wezterm.log_info(string.format("ACTIONMAP provided with action userdata (direct from wezterm object) for %s", table.concat(mods, "|")))
+    -- wezterm.log_info(string.format("ACTIONMAP provided with action userdata (direct from wezterm object) for %s", table.concat(mods, "|")))
   else
-    wezterm.log_error(string.format("ACTIONMAP provided with invalid value for action %s", table.concat(mods, "|")))
+    _ = true
+    -- wezterm.log_error(string.format("ACTIONMAP provided with invalid value for action %s", table.concat(mods, "|")))
   end
   mods = mods or {}
   ---@param key string
   ---@param action_args string | table
   ---       single arguments (i.e. RotatePanes="ClockWise") provide "Clockwise"
   ---       otherwise if there are multiple arguments provide a table (i.e. AdjustPaneSize = {"Left", 5}) provide {"Left", 5}
-  return function (key, action_args)
-    wezterm.log_info(string.format("ACTIONMAP for mods (%s) mapped %s for %s(%s).", table.concat(mods, "|"), key, action, action_args))
+  return function(key, action_args)
+    -- wezterm.log_info(string.format("ACTIONMAP for mods (%s) mapped %s for %s(%s).", table.concat(mods, "|"), key, action, action_args))
     -- make action the action with args or use args as the action
     local call_action = action
     if modmap then
       call_action = action_args
-    elseif action ~= nil and action_args ~=nil then
+    elseif action ~= nil and action_args ~= nil then
       call_action = action(action_args)
     end
     return KEYMAP(table.pack(key, mods, call_action))

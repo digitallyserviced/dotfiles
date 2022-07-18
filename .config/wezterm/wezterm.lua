@@ -5,6 +5,11 @@ wezconf.window_background_opacity = 0.7
 wezconf.font_size = 11
 wezconf.tab_bar_at_bottom = true
 local wezterm_conf = require("wezterm_conf")(wezterm)
+wezconf.foreground_text_hsb = {
+  hue = 1.0,
+  -- saturation = 1.3,
+  -- brightness = 3.3,
+}
 wezconf.font=wezterm.font_with_fallback {
       -- { family = "ShureTechMono NF", weight = "Regular", cell_width=1.2 },
       { family = "Iosevka Term", weight = "Regular" },
