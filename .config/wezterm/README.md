@@ -20,5 +20,6 @@ I use wezterm a few different ways.
 
 | Syntax      | Description |
 | ----------- | ----------- |
-| Main Terminal      | wezterm.conf       |
-| Status Bar / Quake Console   | wezterm_bar.conf        |
+| Main Terminal      | [wezterm.lua](wezterm.lua) [launchscript](../../.config/bspwm/bin/bspterm)       |
+| Status Bar / Quake Console   | [wezterm_bar.lua](wezterm_bar.lua) [launch script](../../.local/bin/wezbar)       |
+| Modal/Dialog   | [wezterm_modal.lua](wezterm_modal.lua)  [launch script](../../.local/bin/wezmodal)      |
