@@ -25,6 +25,7 @@ Example:
 "
   exit 1
 }
+# vars [[[
 typeset -ga reply=()
 # typeset -gA reply2=()
 typeset -g REPLY=""
@@ -63,7 +64,7 @@ typeset -ga wezbar=(${xdotool[@]} search --sync --class wezbar)
 typeset -ga wezbarinfo=(${wezbar[@]} ${wininfo[@]})
 typeset -ga wezbarpid=(${wezbar[@]} getwindowpid)
 typeset -ga currentwininfo=(${xdotool[@]} getwindowfocus -f ${wininfo[@]})
-
+# ]]]
 
 getxdowinstate(){
   typeset -a states=(${@:1})
@@ -109,6 +110,8 @@ makexdoopt(){
   printf -v reply "${format}" ${wid} ${(s. .)params}
 }
 
+# [[[ runline ()
+
 runline (){
   typeset -a col=()
   
@@ -125,7 +128,7 @@ runline (){
   reply=(${(j. .)reply[@]})
   # reply3=(${wezbar[@]} behave %@ blur sleep 1 )
 }
-
+# ]]]
 collapse (){
   typeset -a col=()
   
@@ -257,3 +260,5 @@ currentwindowinfo(){
  #   ꤳ ꤴ ꤵ ꤶ ꤷ ꤸ ꤹ ꤹꤺꤻꤼꤽꤾꤿꥀꥁꥁꥂꥃꥄꥅꥆꥇ𐇺🙹🙺🙻🙼🙽🙾🙿⑀⑀
 # ⑁⑂⑃⑄⑅⑆⑇⑈⑉⑊⌌⌍⌎⌏⌟⌞⌝⌜⚸⟁⟐
 #
+
+# vim: set sw=0 ts=2 sts=2 et ft=zsh fdm=marker fmr=[[[,]]]:

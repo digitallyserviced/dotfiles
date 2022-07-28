@@ -25,7 +25,7 @@ events.on("window-config-reloaded", function(window, pane)
 end)
 
 events.on('open-uri', function(window, p, uri)
-      wezterm.log_info(uri)
+      wezterm.log_info("nvr" .. uri)
   local start, match_end = uri:find("nvr:")
   if start == 1 then
     local filepath = uri:sub(match_end + 1)

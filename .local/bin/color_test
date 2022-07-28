@@ -1,7 +1,31 @@
 #!/bin/zsh
 
-colors=$@
-for (( n=0; n < $colors; n++ )) do
-    printf " [%d] $(tput setaf $n)%s$(tput sgr0)" $n "wMwMwMwMwMwMw
-"
+colors=254
+typeset -a out=()
+hr -t "base16" -s ' ' -f cyan-bright -BU -a left
+for (( n=0; n < 15; n++ )) do
+    print -v col -f "$(tput setaf $n)%s$(tput sgr0)" "░▒▓▓▒░"
+    out+=($col)
 done
+print -raC 8 -- ${out[@]}
+print
+
+out=()
+hr -t "6*6*6 rgb" -s ' ' -f cyan-bright -BU -a left
+for (( n=16; n < 232; n++ )) do
+    # print -v col -f "%d $(tput setaf $n)%s$(tput sgr0)" $n "░▒▓▓▒░"
+    print -v col -f "$(tput setaf $n)%s$(tput sgr0)" "░▒▓▓▒░"
+    out+=($col)
+done
+
+print -C 12 -- ${out[@]}
+print
+out=()
+hr -t "greyscale" -s ' ' -f cyan-bright -BU -a left
+for (( n=232; n < 256; n++ )) do
+    print -v col -f "$(tput setaf $n)%s$(tput sgr0)" "░▒▓▓▒░"
+    out+=($col)
+done
+
+print -raC 6 -- ${out[@]}
+print

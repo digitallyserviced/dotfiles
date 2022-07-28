@@ -17,14 +17,15 @@ function getcolors() {
 	# CYAN=$(xrdb -query | grep 'color6:' | awk '{print $NF}')
 	# WHITE=$(xrdb -query | grep 'color7:' | awk '{print $NF}')
 getcolors
-chars=('🬲🬨' '🬗🬤' '🬴🬸' '🬻🬺' '🬤🬗' '🬫🬛' '🬛🬫' '🬴🬗🬤🬸') #  '🬲🬺' '🬺🬷🬸' '🬴' '🬛' '🬫' '🬺' '🬻' '🬴🬗🬤🬸' '🬴' '🬸' '🬷')
+chars=("'🬲🬨' '🬗🬤' '🬴🬸' '🬻🬺'" " '🬤🬗' '🬫🬛' '🬛🬫' '🬺🬷🬸' '🬴🬗🬤🬸'") #  '🬲🬺' '🬺🬷🬸' '🬴' '🬛' '🬫' '🬺' '🬻' '🬴🬗🬤🬸' '🬴' '🬸' '🬷')
 ## Configurations --------------------------------------------#
 workspaces() {
 	name=1
 	for monitor in $(bspc query -M); do
 		#bspc monitor ${monitor} -n "$name" -d 'I' 'II' 'III' 'IV' 'V' 'VI' 'VII' 'VIII'
 		# bspc monitor ${monitor} -n "$name" -d '' '' '' '' '' '' '' ''
-		bspc monitor ${monitor} -n "$name" -d ${chars[@]}
+		bspc monitor ${monitor} -n "$name" -d ${chars[1]}
+                chars=${chars[2]}
 	done
 }
 
@@ -67,7 +68,8 @@ bspc rule -a Xfce4-terminal desktop='^1' follow=on focus=on
 
 # 2 > web
 bspc rule -a firefox desktop='^2' follow=on focus=on
-bspc rule -a chromium desktop='^2' follow=on focus=on
+# bspc rule -a chromium desktop='^2' follow=on focus=on
+bspc rule -a Google-chrome desktop='^2' follow=on focus=on
 
 # 3 > files
 declare -a files=(Nautilus Thunar qBittorrent)
@@ -143,7 +145,7 @@ if [[ ! $(pidof xfce-polkit) ]]; then
 fi
 
 # Lauch keybindings daemon
-sxhkd &
+sxhkd -r ~/.cache/sxhkd.log -s ~/.local/state/sxhkd.fifo &
 
 # Enable Super Keys For Menu
 ksuperkey -e 'Super_L=Alt_L|F1' &

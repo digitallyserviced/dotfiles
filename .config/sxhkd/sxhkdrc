@@ -1,6 +1,6 @@
 ## Copyright (C) 2020-2021 Aditya Shakya <adi1090x@gmail.com>
 ## Everyone is permitted to copy and distribute copies of this file under GNU-GPL3
-# vim:filetype=shell
+# vim:filetype=sh
 ##---------- Keybindings for bspwm ----------##
 
 # Terminal (alacritty)
@@ -44,8 +44,8 @@ super + {x,s}
 	sh ~/.config/bspwm/rofi/bin/{powermenu,screenshot}
 # super + {w,m,x,r,s,i}
 # 	sh ~/.config/bspwm/rofi/bin/{windows,mpd,powermenu,asroot,screenshot,network}
-ctrl + alt + b
-    tmux -L mainbar source-file ~/.tmux.bar.conf
+# ctrl + alt + b
+#     tmux -L mainbar source-file ~/.tmux.bar.conf
 
 ##---------- Applications ----------##
 
@@ -122,9 +122,9 @@ ctrl + shift + {q,r}
 	bspc {quit,wm -r}
 	
 # Split horizontal, vertical or cancel
-super + {h,v,c}
-	bspc node -p {east,south,cancel}
-
+# super + {h,v,c}
+# 	bspc node -p {east,south,cancel}
+#
 # Preselect the ratio
 super + ctrl + {1-9}
 	bspc node -o 0.{1-9}
@@ -164,6 +164,9 @@ super + {Tab,grave}
 	bspc {node,desktop} -f last
 
 # Send focused window to another workspace
+# hyper + k; hyper + {_,shift + }{1-8}
+# 	bspc {desktop -f,node -d} '^{9-16}'
+#
 super + {_,shift + }{1-8}
 	bspc {desktop -f,node -d} '^{1-8}'
 
