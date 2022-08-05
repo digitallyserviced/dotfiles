@@ -221,14 +221,17 @@ currentwindowinfo(){
     typeset -i 32 existing=0
     
     typeset -gA barinfo=($(wezbarinfo && echo ${(kv)reply2}))
-    chwb -s 0 ${barinfo[WID]}
+    # chwb -s 0 ${barinfo[WID]}
+    if [[ $# -eq 0 ]]; then
+      usage; exit0
+    fi
     while [ $# -ne 0 ]; do
       case $1 in
         (collapse) opts+="collapse" ;;
         (runline) opts+="runline" ;;
         (expand) opts+="expand" ;;
         (reset) opts+="reset" ;;
-        (*) [[ ${#opts} = "0" ]] && usage ; exit 0 || usage ; exit 1 ;;
+        (*) usage ; exit 0 || usage ; exit 1 ;;
       esac
       shift
     done
