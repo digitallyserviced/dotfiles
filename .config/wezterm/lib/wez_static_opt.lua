@@ -15,7 +15,7 @@ local options = {
   -- color_scheme = "test",
 --  default_gui_startup_args = { "connect", "main" },
   selection_word_boundary = " \t\n{}[]()\"'`%",
-  use_resize_increments = true,
+  -- use_resize_increments = true,
   audible_bell = "Disabled",
   visual_bell = {
     fade_in_function = "EaseIn",
@@ -75,7 +75,7 @@ local options = {
     left = "0pt",
     right = "0pt",
   },
-  allow_square_glyphs_to_overflow_width = "Always",
+  -- allow_square_glyphs_to_overflow_width = "Always",
   window_background_opacity = 0.9,
   text_background_opacity = 0.9,
   window_close_confirmation = "NeverPrompt",

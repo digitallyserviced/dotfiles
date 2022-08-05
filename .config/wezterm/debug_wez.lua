@@ -14,11 +14,11 @@ local wezconf = {}
 
 wezconf.window_background_opacity = 0.5
 wezconf.text_background_opacity = 0.5
-wezconf.font_size = 12
-wezconf.line_height = 1.0
+wezconf.font_size = 11
+wezconf.line_height = 0.9
 -- wezconf.tab_bar_at_bottom = false
-wezconf.tab_bar_at_bottom = true
-wezconf.window_padding = { top = "4pt", left = "0pt", bottom = "0pt", right = "0pt" }
+wezconf.tab_bar_at_bottom = false
+-- wezconf.window_padding = { top = "4pt", left = "0pt", bottom = "0pt", right = "0pt" }
 wezconf.automatically_reload_config = true
 wezconf.enable_kitty_keyboard = true
 wezconf.custom_block_glyphs = true
