@@ -1,0 +1,6 @@
+#compdef ignw
+
+_arguments \
+         '*:file:_files' \
+		'-r[Reset wid Ns \\(cqs override_redirect value to 0, unignoring the window.]' \
+		'-s[Set wid Ns \\(cqs override_redirect value to 1, ignoring the window.]'

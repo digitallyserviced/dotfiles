@@ -1,0 +1,21 @@
+#!/bin/zsh
+
+# typeset -A dmenu=(dmenu -t -i -fn "Iosevka Term:size=12" -x 0 -y 20 -w 800 -p "  File  " -nb "#293e40" -nf "#e6eaea" -sb "#5a93aa" -sf "#0f1c1e" -h 30)
+
+IFORIG=$IFS
+IFS='+'
+read gitstat selected < <({
+  { cat /dev/stdin } | \
+    fzf --ansi --cycle --keep-right --margin 1% --padding 1%\
+    --header-first --header "Dotfile Edit"\
+    --layout reverse --border rounded --preview-window="down,30%,border-sharp"\
+    -1 --preview='bat --color=always -- $3 2>/dev/null'
+  })
+  selected=$(echo $selected| awk '{$1=$1};1');
+  echo $selected
+# items=($(cat /dev/stdin))
+# selection=$( echo ${(j:\n:)items[@]} | (${dmenu[@]}) ) 
+
+if [ ! "$selected" = "" ]; then
+  $(dirname $0)/nvr "$HOME/$selected"
+fi

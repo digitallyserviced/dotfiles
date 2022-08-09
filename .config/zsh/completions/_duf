@@ -1,0 +1,29 @@
+#compdef duf
+
+# zsh completions for 'duf'
+# automatically generated with http://github.com/RobSis/zsh-completion-generator
+local arguments
+
+arguments=(
+  '-all[include pseudo, duplicate, inaccessible file systems]'
+  '-avail-threshold[specifies the coloring threshold (yellow, red) of the avail column, must be integer with optional SI prefixes (default "10G,1G")]'
+  '-hide[hide specific devices, separated with commas:]'
+  '-hide-fs[hide specific filesystems, separated with commas]'
+  '-hide-mp[hide specific mount points, separated with commas (supports wildcards)]'
+  '-inodes[list inode information instead of block usage]'
+  '-json[output all devices in JSON format]'
+  '-only[show only specific devices, separated with commas:]'
+  '-only-fs[only specific filesystems, separated with commas]'
+  '-only-mp[only specific mount points, separated with commas (supports wildcards)]'
+  '-output[output fields: mountpoint, size, used, avail, usage, inodes, inodes_used, inodes_avail, inodes_usage, type, filesystem]'
+  '-sort[sort output by: mountpoint, size, used, avail, usage, inodes, inodes_used, inodes_avail, inodes_usage, type, filesystem (default "mountpoint")]'
+  '-style[style: unicode, ascii (default "unicode")]'
+  '-theme[color themes: dark, light, ansi (default "dark")]'
+  '-usage-threshold[specifies the coloring threshold (yellow, red) of the usage bars as a floating point number from 0 to 1 (default "0.5,0.9")]'
+  '-version[display version]'
+  '-warnings[output all warnings to STDERR]'
+  '-width[max output width]'
+  '*:filename:_files'
+)
+
+_arguments -s $arguments

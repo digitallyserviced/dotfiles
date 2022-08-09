@@ -1,0 +1,18 @@
+#compdef wezterm-mux-server
+
+# zsh completions for 'wezterm-mux-server'
+# automatically generated with http://github.com/RobSis/zsh-completion-generator
+local arguments
+
+arguments=(
+  '--daemonize[detach from the foreground and become a background process]'
+  {-h,--help}'[prints help information]'
+  '-n[skip loading wezterm.lua]'
+  {-V,--version}'[prints version information]'
+  '--config-file[specify the configuration file to use, overrides the normal configuration file]'
+  '--cwd[specify the current working directory for the initially spawned program]'
+  '--config[value>...       Override specific configuration values]'
+  '*:filename:_files'
+)
+
+_arguments -s $arguments

@@ -1,0 +1,25 @@
+#compdef bitlbee
+
+# zsh completions for 'bitlbee'
+# automatically generated with http://github.com/RobSis/zsh-completion-generator
+local arguments
+
+arguments=(
+  '-I[classic/InetD mode. (Default)]'
+  '-D[daemon mode. (one process serves all)]'
+  '-F[forking daemon. (one process per client)]'
+  '-u[run daemon as specified user.]'
+  '-P[specify PID-file (not for inetd mode)]'
+  '-i[specify the interface (by IP address) to listen on.]'
+  '-p[port number to listen on. (Default: 6667)]'
+  '-n[dont fork.]'
+  '-v[be verbose (only works in combination with -n)]'
+  '-c[load alternative configuration file]'
+  '-d[specify alternative user configuration directory]'
+  '-x[command-line interface to password encryption/hashing]'
+  '-h[show this help page.]'
+  '-V[show version info.]'
+  '*:filename:_files'
+)
+
+_arguments -s $arguments

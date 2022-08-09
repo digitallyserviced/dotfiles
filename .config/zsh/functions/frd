@@ -1,0 +1,14 @@
+# Desc: fzf recent directories
+
+zmodload -F zsh/parameter p:dirstack
+
+frd() {
+  local dir
+  # dir=$(builtin dirs -pl | fzf)
+  dir=$(print -rl -- "$dirstack[@]" | lscolors | fzf +m)
+  [[ -d "$dir" ]] && cd "$dir"
+}
+
+frd
+
+# vim:ft=zsh:

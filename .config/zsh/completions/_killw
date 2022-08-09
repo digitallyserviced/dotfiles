@@ -1,0 +1,5 @@
+#compdef killw
+
+_arguments \
+         '*:file:_files' \
+		'-p[Kill the parent application of the window instead of the window itself.]'

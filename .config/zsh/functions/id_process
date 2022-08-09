@@ -1,0 +1,25 @@
+# Desc: get num of process by id
+
+# probably a much much better way to do this
+
+id_process() {
+  ps -ef | q -H "SELECT UID, COUNT(*) cnt FROM - GROUP BY UID ORDER BY cnt DESC" --beautify
+
+  # local process_n_id
+  # process_n_id="$(ps -ef | q -H "SELECT UID, COUNT(*) cnt FROM - GROUP BY UID ORDER BY cnt")"
+
+  # local -a uids pids
+  # local -A usernames final
+  # uids=("${(@f)$(awk '{print $1}' <<<"$process_n_id")}")
+  # pids=("${(@f)$(awk '{print $2}' <<<"$process_n_id")}")
+  #
+  # for id ( ${(@)uids} ) { usernames[$id]="$(/usr/bin/id -un "$id")" }
+  # for (( i=0; i<=${#usernames}; i++ )) { final[${usernames[(e)${uids[$i]}]}]="${pids[$i]}" }
+  #
+  # print -raC 2 -- ${(@kv)final}
+  # print -Prl -- ${${(@k)final}//(#b)(*)/%F{1}$match[1] %F{2}$ass[$match[1]]}
+}
+
+id_process
+
+# vim:ft=zsh:

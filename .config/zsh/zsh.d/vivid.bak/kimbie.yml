@@ -1,0 +1,160 @@
+# Author: https://github.com/lmburns
+colors:
+  black: '293e40'        
+  red: 'e85c51'          
+  green: '7aa4a1'        
+  orange: 'fda47f'       
+  yellow: 'f79a32'       
+  blue: '5a93aa'  # #ebebeb        
+  magenta: 'b97490' # #ad5c7c      
+  cyan: 'a1cdd8'         
+  pink: 'DC3958' # #ff8349       
+              # #cb7985
+  yellow_orange: 'ff8349' 
+  dark_red: 'e85c51'      
+  dark_purple: '934e69'   
+  dark_green: '2d4f56'    
+  bright_yellow: 'fda47f' 
+  bright_green: '6d7f8b'  
+
+  base0: 'eaeeee'         
+  base1: 'e6eaea'         
+  grey0: 'cbd9d8'         
+  grey1: '587b7b'         
+  grey2: '293e40'         
+  grey3: '0f1c1e'         
+  operator_base: '587b7b' 
+  darkgrey: '293e40'      
+  darkergrey: '425e5e'    
+
+core:
+  regular_file:
+    foreground: base0
+
+  directory:
+    foreground: dark_red
+    font-style: bold
+
+  executable_file:
+    foreground: bright_green
+    font-style: bold
+
+  symlink:
+    foreground: dark_green
+    font-style: underline
+
+  broken_symlink:
+    foreground: base1
+    background: red
+    font-style: bold
+
+  missing_symlink_target:
+    foreground: red
+    background: base1
+    font-style: bold
+
+  fifo:
+    foreground: yellow
+
+  socket:
+    foreground: magenta
+    font-style: bold
+
+  character_device:
+    foreground: yellow
+    background: black
+    font-style: bold
+
+  block_device:
+    foreground: yellow
+    background: black
+    font-style: bold
+
+  normal_text:
+    foreground: base0
+
+  other_writable:
+    {}
+
+  sticky:
+    {}
+
+  sticky_other_writable:
+    {}
+    # foreground; black
+    # background: green
+
+text:
+  special:
+    foreground: magenta
+
+  todo:
+    foreground: dark_purple
+    font-style: bold
+
+  licenses:
+    foreground: cyan
+
+  configuration:
+    foreground: yellow
+    font-style: bold
+
+    zshrc:
+      foreground: magenta
+      font-style: bold
+
+  gpg:
+    foreground: cyan
+
+  other:
+    foreground: pink
+
+markup:
+  foreground: blue
+
+programming:
+  source:
+    foreground: yellow_orange
+
+  tooling:
+    foreground: orange
+
+    build:
+      foreground: orange
+      font-style: bold
+
+    continuous-integration:
+      foreground: green
+
+media:
+  image:
+    foreground: magenta
+
+  audio:
+    foreground: yellow
+
+  video:
+    foreground: magenta
+
+  fonts:
+    foreground: dark_green
+
+office:
+  foreground: cyan
+  font-style: bold
+
+archives:
+  foreground: pink
+  font-style: bold
+
+executable:
+  foreground: bright_green
+
+unimportant:
+  foreground: darkgrey
+
+macos:
+  foreground: red
+
+torrent:
+  foreground: dark_purple

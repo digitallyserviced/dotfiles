@@ -1,0 +1,5 @@
+#compdef wtp
+
+_arguments \
+         '*:file:_files' \
+

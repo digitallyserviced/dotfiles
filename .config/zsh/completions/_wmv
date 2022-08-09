@@ -1,0 +1,5 @@
+#compdef wmv
+
+_arguments \
+         '*:file:_files' \
+		'-a[Absolute mode. The window will be centered to the x and y coordinates.]'

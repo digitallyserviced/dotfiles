@@ -1,0 +1,5 @@
+#compdef wrs
+
+_arguments \
+         '*:file:_files' \
+		'-a[Absolute mode. The window will be resized up to the x and y coordinates.]'

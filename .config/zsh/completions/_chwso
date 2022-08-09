@@ -1,0 +1,7 @@
+#compdef chwso
+
+_arguments \
+         '*:file:_files' \
+		'-i[Invert wid Ns \\(cqs position in the window stack.]' \
+		'-l[Put wid at the bottom of the window stack.]' \
+		'-r[Put wid on top of the window stack.]'

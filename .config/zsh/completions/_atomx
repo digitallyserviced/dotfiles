@@ -1,0 +1,5 @@
+#compdef atomx
+
+_arguments \
+         '*:file:_files' \
+		'-d[Delete atom atom from the window.]'

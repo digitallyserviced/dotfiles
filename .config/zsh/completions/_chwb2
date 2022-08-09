@@ -1,0 +1,8 @@
+#compdef chwb2
+
+_arguments \
+         '*:file:_files' \
+		'-I[.]' \
+		'-O[Set the inner/outer border color of wid to color.]' \
+		'-i[.]' \
+		'-o[Sets the inner/outer border width of wid to size.]'

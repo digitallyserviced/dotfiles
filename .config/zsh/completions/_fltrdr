@@ -1,0 +1,16 @@
+#compdef fltrdr
+
+# zsh completions for 'fltrdr'
+# automatically generated with http://github.com/RobSis/zsh-completion-generator
+local arguments
+
+arguments=(
+  {-h,--help}'[print the help output.]'
+  {-v,--version}'[print the program version.]'
+  '--license[print the program license.]'
+  {-u,--config}'[use the commands in the config file file for initialization.]'
+  '--config-base[use dir as the base config directory.]'
+  '*:filename:_files'
+)
+
+_arguments -s $arguments

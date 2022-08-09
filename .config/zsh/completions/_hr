@@ -1,0 +1,24 @@
+#compdef hr
+
+# zsh completions for 'hr'
+# automatically generated with http://github.com/RobSis/zsh-completion-generator
+local arguments
+
+arguments=(
+  {-h,--help}'[print the programs help output.]'
+  {-v,--version}'[print the programs version.]'
+  '--license[print the programs license.]'
+  {-B,--bold}'[set the output text to use bold styling]'
+  {-U,--underline}'[set the output text to use underline styling]'
+  {-s,--string}'[set the output fill string]'
+  {-t,--text}'[set the output text]'
+  {-a,--align}'[set the output text alignment]'
+  {-f,--colour-fg}'[set the output foreground colour]'
+  {-b,--colour-bg}'[set the output background colour]'
+  {-r,--rows}'[number of rows to print]'
+  {-c,--columns}'[number of columns to print]'
+  {-C,--colour}'[set the output colour preference]'
+  '*:filename:_files'
+)
+
+_arguments -s $arguments

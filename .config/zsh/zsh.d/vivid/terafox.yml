@@ -1,0 +1,193 @@
+# Author: https://github.com/lmburns
+#"#2F3239", "#4e5157", "#282a30"
+# "#e85c51", "#eb746b", "#c54e45"
+# "#7aa4a1", "#8eb2af", "#688b89"
+# "#fda47f", "#fdb292", "#d78b6c"
+# "#5a93aa", "#73a3b7", "#4d7d90"
+# "#ad5c7c", "#b97490", "#934e69"
+# "#a1cdd8", "#afd4de", "#89aeb8"
+# "#ebebeb", "#eeeeee", "#c8c8c8"
+# "#ff8349", "#ff9664", "#d96f3e"
+# "#cb7985", "#d38d97", "#ad6771"
+# "#6d7f8b"
+# "#75d445"         
+# "#659264"
+# "#7adc72"
+# "#7ab7ab"
+# "#0f1c1e"
+# "#152528"
+# "#1d3337"
+# "#254147"
+# "#2d4f56"
+#          
+# "#eaeeee"
+# "#e6eaea"
+# "#cbd9d8"
+# "#587b7b"
+#          
+# "#293e40"
+# "#425e5e"
+colors:
+  black: '201f1f'        # #201f1f
+  red: 'e85c51'          # #EF1D55
+  magenta: 'ad5c7c'      # #A06469
+  orange: 'ff8349'       # #FF5813
+  green: '688b89'        # #819C3B
+  yellow: 'fdb292'       # #FF9500
+  aqua: '7EB2B1'         # #7EB2B1
+  blue: '4C96A8'         # #4C96A8
+  purple: '98676A'       # #98676A
+
+  yellow_orange: 'fe8019' # fe8019
+  dark_red: 'DC3958'      # #DC3958
+  dark_purple: '733e8b'   # #733e8b
+  dark_green: '088649'    # #088649
+  bright_yellow: 'fdb292' ##fdb292 #f79a32
+  bright_green: '7adc72'  # #7adc72
+  sat_red: 'd38d97'
+  # #8eb2af
+  base0: '2d4f56'         # #D9AE80
+  base1: 'c2a383'         # #c2a383
+  grey0: 'eaeeee'         # #7E602C
+  grey1: 'e6eaea'         # #a89984
+  grey2: 'cbd9d8'         # #676767
+  grey3: '587b7b'         # #51412c
+  operator_base: 'e8c097' # #e8c097
+  darkgrey: '6b7089'      # #6b7089
+  darkergrey: '36384a'    # #36384a
+
+core:
+  regular_file:
+    foreground: base0
+
+  directory:
+    foreground: blue
+    font-style: italic
+
+  executable_file:
+    foreground: bright_green
+    font-style: underline 
+
+  symlink:
+    foreground: dark_green
+    font-style: underline
+
+  broken_symlink:
+    foreground: base1
+    background: red
+    font-style: bold
+
+  missing_symlink_target:
+    foreground: red
+    background: base1
+    font-style: bold
+
+  fifo:
+    foreground: yellow
+
+  socket:
+    foreground: magenta
+    font-style: bold
+
+  character_device:
+    foreground: yellow
+    background: black
+    font-style: bold
+
+  block_device:
+    foreground: yellow
+    background: black
+    font-style: bold
+
+  normal_text:
+    foreground: base0
+
+  other_writable:
+    {}
+
+  sticky:
+    {}
+
+  sticky_other_writable:
+    {}
+    # foreground; black
+    # background: green
+
+text:
+  special:
+    foreground: grey1
+    background: dark_purple
+
+  todo:
+    foreground: dark_purple
+    font-style: bold
+
+  licenses:
+    foreground: dark_purple
+
+  configuration:
+    foreground: yellow
+    font-style: bold
+
+    zshrc:
+      foreground: magenta
+      font-style: bold
+
+  gpg:
+    foreground: aqua
+
+  other:
+    foreground: purple
+
+markup:
+  web:
+    foreground: blue
+  other:
+    foreground: grey1
+    background: base0
+
+programming:
+  source:
+    foreground: yellow_orange
+
+  tooling:
+    foreground: orange
+
+    build:
+      foreground: orange
+      font-style: bold
+
+    continuous-integration:
+      foreground: green
+
+media:
+  image:
+    foreground: magenta
+
+  audio:
+    foreground: yellow
+
+  video:
+    foreground: magenta
+
+  fonts:
+    foreground: dark_green
+
+office:
+  foreground: aqua
+  font-style: bold
+
+archives:
+  foreground: purple
+  font-style: bold
+
+executable:
+  foreground: bright_green
+
+unimportant:
+  foreground: base1
+macos:
+  foreground: red
+
+torrent:
+  foreground: dark_purple

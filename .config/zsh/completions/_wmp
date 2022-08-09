@@ -1,0 +1,5 @@
+#compdef wmp
+
+_arguments \
+         '*:file:_files' \
+

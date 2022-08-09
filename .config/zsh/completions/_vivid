@@ -1,0 +1,15 @@
+#compdef vivid
+
+# zsh completions for 'vivid'
+# automatically generated with http://github.com/RobSis/zsh-completion-generator
+local arguments
+
+arguments=(
+  {-m,--color-mode}'[type of ANSI colors to be used \[default: 24-bit\]]'
+  {-d,--database}'[path to filetypes database (filetypes.yml)]'
+  {-h,--help}'[prints help information]'
+  {-V,--version}'[prints version information]'
+  '*:filename:_files'
+)
+
+_arguments -s $arguments

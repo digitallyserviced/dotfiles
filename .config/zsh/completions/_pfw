@@ -1,0 +1,5 @@
+#compdef pfw
+
+_arguments \
+         '*:file:_files' \
+

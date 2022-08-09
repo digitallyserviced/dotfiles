@@ -1,0 +1,6 @@
+#compdef chwb
+
+_arguments \
+         '*:file:_files' \
+		'-c[Set border color of wid to color.]' \
+		'-s[Set border width of wid to size.]'

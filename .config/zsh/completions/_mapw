@@ -1,0 +1,7 @@
+#compdef mapw
+
+_arguments \
+         '*:file:_files' \
+		'-m[Map (show) wid.]' \
+		'-t[Toggle wid Ns \\(cqs visibility.]' \
+		'-u[Unmap (hide) wid.]'

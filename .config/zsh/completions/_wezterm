@@ -1,0 +1,16 @@
+#compdef wezterm
+
+# zsh completions for 'wezterm'
+# automatically generated with http://github.com/RobSis/zsh-completion-generator
+local arguments
+
+arguments=(
+  {-h,--help}'[prints help information]'
+  '-n[skip loading wezterm.lua]'
+  {-V,--version}'[prints version information]'
+  '--config-file[specify the configuration file to use, overrides the normal configuration file]'
+  '--config[value>...       Override specific configuration values]'
+  '*:filename:_files'
+)
+
+_arguments -s $arguments
